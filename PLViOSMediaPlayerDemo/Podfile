@@ -1,0 +1,33 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://gitee.com/polyv_ef/plvspecs.git'
+
+platform :ios, '11.0'
+inhibit_all_warnings!
+#use_frameworks!
+
+#指定workspace名称，没有则生成新的，路径是相对于Podfile路径
+workspace 'PolyvMediaPlayerSDKWK.xcworkspace'
+
+#配置默认xcodeproj ,路径相对于Podfile 路径
+project 'PolyvIOSMediaPlayerDemo/PolyvIOSMediaPlayerDemo.xcodeproj'
+  
+#点播 Demo
+target :PolyvIOSMediaPlayerDemo do
+    
+  pod 'PolyvMediaPlayerSDK', '~> 2.0.0'
+
+  pod 'SDWebImage', '4.4.0'
+  pod 'MJRefresh', '~> 3.5.0'
+    
+end
+
+post_install do |installer|
+  installer.generated_projects.each do |project|
+    project.targets.each do |target|
+        target.build_configurations.each do |config|
+            # 支持模拟器
+            config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+         end
+    end
+  end
+end
