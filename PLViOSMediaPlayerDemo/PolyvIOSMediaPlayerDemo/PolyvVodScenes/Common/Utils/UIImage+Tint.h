@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIImage *)imageWithCustomTintColor:(UIColor *)tintColor;
 
++ (UIImage *)boxblurImageWithBlur:(CGFloat)blur image:(UIImage *)image;
+
 @end
 
 NS_ASSUME_NONNULL_END

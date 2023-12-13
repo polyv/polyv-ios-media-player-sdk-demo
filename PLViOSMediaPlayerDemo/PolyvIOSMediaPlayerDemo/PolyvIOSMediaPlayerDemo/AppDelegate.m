@@ -6,10 +6,14 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "PLVTabBarViewController.h"
+#import "PLVNavigationController.h"
+#import "PLVEntranceViewController.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
 @interface AppDelegate ()
+
+@property (nonatomic, strong) UITabBarController *tabbar;
 
 @end
 
@@ -18,11 +22,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
-    self.window.rootViewController = [[ViewController alloc] init];
+
+    // tabbar 样式入口
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = [[PLVTabBarViewController alloc] init];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-    
+
+    // 非tabbar 样式入口
+//    self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
+//    self.window.rootViewController = [[PLVNavigationController alloc] initWithRootViewController:[[PLVEntranceViewController alloc] init]];
+//    self.window.backgroundColor = [UIColor whiteColor];
+//    [self.window makeKeyAndVisible];
+
     [self initMediaPlayerSDK];
     
     return YES;
@@ -45,14 +57,8 @@
     settings.viewerInfos.viewerExtraInfo3 = @"Custom param5";
 }
 
-
 - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
-    if (self.isSupportLandscape){
-        return  UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
-    }
-    else{
-        return  UIInterfaceOrientationMaskPortrait;
-    }
+    return  UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application{
@@ -71,21 +77,5 @@
 
 }
 
-#pragma mark - UISceneSession lifecycle
-
-
-//- (UISceneConfiguration *)application:(UIApplication *)application configurationForConnectingSceneSession:(UISceneSession *)connectingSceneSession options:(UISceneConnectionOptions *)options {
-//    // Called when a new scene session is being created.
-//    // Use this method to select a configuration to create the new scene with.
-//    return [[UISceneConfiguration alloc] initWithName:@"Default Configuration" sessionRole:connectingSceneSession.role];
-//}
-//
-//
-//- (void)application:(UIApplication *)application didDiscardSceneSessions:(NSSet<UISceneSession *> *)sceneSessions {
-//    // Called when the user discards a scene session.
-//    // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-//    // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-//}
-
-
 @end
+

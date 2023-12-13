@@ -1,0 +1,216 @@
+//
+//  PLVDemoVodViewController.m
+//  PolyvIOSMediaPlayerDemo
+//
+//  Created by polyv on 2023/9/9.
+//
+
+#import "PLVDemoVodMediaViewController.h"
+#import "PLVVodMediaAreaVC.h"
+#import "PLVMediaPlayerSkinOutMoreView.h"
+#import "PLVPictureInPictureRestoreManager.h"
+#import "AppDelegate.h"
+#import "PLVToast.h"
+#import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
+#import "PLVVodErrorUtil.h"
+#import "PLVOrientationUtil.h"
+
+/// UI View Hierarchy
+///
+/// (UIView) self.view
+///  ├── (PLVVodMediaAreaVC) vodMediaAreaVC
+///  ├── (PLVMediaPlayerSkinOutMoreView) skinOutMoreView
+
+@interface PLVDemoVodMediaViewController ()<
+PLVVodMediaAreaVCDelegate,
+PLVMediaPlayerSkinOutMoreViewDelegate
+>
+
+@property (nonatomic, strong) PLVVodMediaAreaVC *vodMediaAreaVC;
+@property (nonatomic, strong) PLVMediaPlayerSkinOutMoreView *skinOutMoreView;
+
+@end
+
+@implementation PLVDemoVodMediaViewController
+
+#pragma mark 【Life Cycle】
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    // Setup UI
+    [self setupUI];
+    
+    // Setup Data
+    if (!self.vid) {
+        NSLog(@"Warning -- Vid is null!!! Set test vid instead!");
+        self.vid = [self testVid];
+    }
+
+    // Play Vid
+    [self.vodMediaAreaVC playWithVid:self.vid];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
+- (void)viewWillLayoutSubviews{
+    [super viewWillLayoutSubviews];
+    [self updateUI];
+}
+
+#pragma mark 【UI setup & update】
+- (void)setupUI {
+    self.view.backgroundColor = [UIColor colorWithRed:15/255.0 green:32/255.0 blue:57.0/255.0 alpha:1.0];
+    
+    [self.view addSubview:self.vodMediaAreaVC.view];
+    [self.view addSubview:self.skinOutMoreView];
+}
+
+- (void)updateUI{
+    [self updateUIForOrientation];
+}
+
+#pragma mark 【Back 页面返回处理】
+- (void)back {
+    if (self.navigationController){
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+#pragma mark 【Getter & Setter】
+- (PLVVodMediaAreaVC *)vodMediaAreaVC{
+    if (!_vodMediaAreaVC){
+        _vodMediaAreaVC = [[PLVVodMediaAreaVC alloc] init];
+        _vodMediaAreaVC.mediaAreaVcDelegate = self;
+    }
+    return _vodMediaAreaVC;
+}
+
+- (PLVMediaPlayerSkinOutMoreView *)skinOutMoreView{
+    if (!_skinOutMoreView){
+        _skinOutMoreView = [[PLVMediaPlayerSkinOutMoreView alloc] init];
+        _skinOutMoreView.hidden = YES;
+        _skinOutMoreView.skinOutMoreViewDelegate = self;
+    }
+    return _skinOutMoreView;
+}
+
+#pragma mark 【Test Data 测试数据模拟】
+- (NSString *)testVid {
+    NSString *vid = @"a0f97cbb565ea16cbdea547040669841_a"; // 私有加密 lien
+//    vid = @"a0f97cbb567948c6d3544ca11d5e4b9e_a"; // 源视频 lien (ok)
+//    vid = @"a0f97cbb565ea16cbdea547040669841_a"; // 多分辨率加密视频 lien
+//    vid = @"a0f97cbb565c26a5e04055f135fb04bf_a";   // app级别加密
+    vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; // 公号点播
+    return vid;
+}
+
+#pragma mark 【Orientation 横竖屏设置】
+- (BOOL)shouldAutorotate{
+    return self.vodMediaAreaVC.mediaPlayerState.isLocking ? NO : YES;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIInterfaceOrientationPortrait;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    if (self.vodMediaAreaVC.mediaPlayerState.isLocking) {
+        return UIInterfaceOrientationMaskLandscape;
+    } else {
+        return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
+    }
+}
+
+/// 更新 播放器皮肤 —— 触发 竖向-半屏皮肤 和 横向-全屏皮肤 的切换
+- (void)updateUIForOrientation{
+    BOOL isFullScreen = [PLVOrientationUtil isLandscape];
+    if (isFullScreen){ // 横向-全屏
+        self.vodMediaAreaVC.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    } else { // 竖向-半屏
+        CGFloat y = 0;
+        if (@available(iOS 11.0, *)) {
+            UIEdgeInsets safeInset;
+            safeInset = self.view.safeAreaInsets;
+            y = safeInset.top;
+        }
+        self.vodMediaAreaVC.view.frame = CGRectMake(0, y, CGRectGetWidth(self.view.bounds), CGRectGetWidth(self.view.bounds)*9/16);
+        self.skinOutMoreView.frame = self.view.bounds;
+    }
+}
+
+#pragma mark 【PictureInPicture 画中画功能】
+- (void)changePictureInPictureState:(PLVPictureInPictureState)state {
+    if (state == PLVPictureInPictureStateDidStart) { // 启动 画中画
+        // 画中画已经开启
+        // 设定画中画恢复逻辑的处理者为PLVPictureInPictureRestoreManager
+        [PLVMediaPlayerPictureInPictureManager sharedInstance].restoreDelegate = [PLVPictureInPictureRestoreManager sharedInstance];
+        [PLVPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
+        [PLVPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
+    
+        // 退出当前界面
+        if (self.navigationController){
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
+    } else if (state == PLVPictureInPictureStateDidEnd) { // 关闭 画中画
+        // 画中画已经关闭
+        // 清理恢复逻辑的处理者
+        [[PLVPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
+    }
+}
+
+- (void)startPictureInPictureFailed:(NSError *)error {
+    if ([error.domain isEqualToString:PLVVodErrorDomain]) {
+        NSString *message = [NSString stringWithFormat:@"%@", [PLVVodErrorUtil getErrorMsgWithCode:error.code]];
+        [PLVToast showMessage:message];
+    } else {
+        NSString *message = [NSString stringWithFormat:@"%@", error.localizedFailureReason];
+        [PLVToast showMessage:message];
+    }
+}
+
+#pragma mark 【PLVVodMediaAreaVC Delegate - 视频区域 回调方法】
+/// 竖向-半屏 皮肤下，显示 外部的 更多弹层
+- (void)vodMediaAreaVC_ShowMoreView:(PLVVodMediaAreaVC *)playerVC{
+    [self.skinOutMoreView showMoreViewWithModel:self.vodMediaAreaVC.mediaPlayerState];
+}
+
+/// 返回 按钮事件回调
+- (void)vodMediaAreaVC_BackEvent:(PLVVodMediaAreaVC *)playerVC{
+    [self back];
+}
+
+/// 画中画 切换状态
+- (void)vodMediaAreaVC_PictureInPictureChangeState:(PLVVodMediaAreaVC *)playerVC state:(PLVPictureInPictureState)state{
+    [self changePictureInPictureState:state];
+}
+
+/// 画中画 错误回调
+- (void)vodMediaAreaVC_StartPictureInPictureFailed:(PLVVodMediaPlayer *)playerVC error:(NSError *)error{
+    [self startPictureInPictureFailed:error];
+}
+
+#pragma mark 【PLVMediaPlayerSkinOutMoreView Delegate - 更多弹层 回调方法】
+- (void)mediaPlayerSkinOutMoreView_SwitchPlayRate:(CGFloat)rate{
+    [self.vodMediaAreaVC setPlayRate:rate];
+}
+
+- (void)mediaPlayerSkinOutMoreView_SwitchQualityLevel:(NSInteger)qualityLevel{
+    [self.vodMediaAreaVC setPlayQuality:qualityLevel];
+}
+
+- (void)mediaPlayerSkinOutMoreView_SwitchToAudioMode{
+    [self.vodMediaAreaVC setPlaykMode:PLVVodPlaybackModeAudio];
+}
+
+- (void)mediaPlayerSkinOutMoreView_StartPictureInPicture{
+    [self.vodMediaAreaVC.player startPictureInPicture];
+}
+
+@end

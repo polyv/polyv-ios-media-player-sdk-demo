@@ -6,41 +6,101 @@
 //
 
 #import "PLVDemoVideoFeedViewController.h"
-//#import "PLVBaseNavigationController.h"
 #import "PLVFeedView.h"
-#import "PLVShortVideoFeedView.h"
+#import "PLVShortVideoMediaAreaVC.h"
 #import "PLVShortVideoFeedDataManager.h"
 #import "PLVPictureInPictureRestoreManager.h"
-#import "AppDelegate.h"
+#import "PLVOrientationUtil.h"
 
-@interface PLVDemoVideoFeedViewController ()<
-PLVFeedViewDataSource,
-PLVShortVideoFeedViewDelegate
->
-
-#pragma mark UI
-/// view hierarchy
+/// UI View Hierarchy
 ///
 /// (UIView) self.view
 ///   └── (PLVFeedView) feedView
-@property (nonatomic, strong) PLVFeedView *feedView; // feed组件
-@property (nonatomic, weak) PLVShortVideoFeedView *currentFeedItemView;
-@property (nonatomic, assign) NSInteger curIndex;
+///     └── (PLVShortVideoMediaAreaVC) feedViewItem
+
+@interface PLVDemoVideoFeedViewController ()<
+PLVFeedViewDataSource,
+PLVShortVideoMediaAreaVCDelegate
+>
+
+#pragma mark UI
+@property (nonatomic, strong) PLVFeedView *feedView; // Feed组件
+@property (nonatomic, weak) PLVShortVideoMediaAreaVC *currentFeedItemView; // 当前显示的Feed item
+@property (nonatomic, assign) NSInteger curIndex; // 当前显示的Feed item 索引
 
 @property (nonatomic, strong) NSMutableArray<PLVFeedData *> *dataSource;
 @property (nonatomic, strong) PLVShortVideoFeedDataManager *dataManager;
+
+@property (nonatomic, assign) BOOL isInited; // 是否已完成UI初始化
 
 @end
 
 @implementation PLVDemoVideoFeedViewController
 
 #pragma mark - [ Life Cycle ]
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    [self setupUI];
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    [self updateUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+    [self.navigationController setNavigationBarHidden:NO];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle{
+    return UIStatusBarStyleLightContent;
+}
 
 - (void)dealloc {
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
-- (void)develeperTest{
+#pragma mark 【UI setup & update】
+- (void)setupUI {
+    self.view.backgroundColor = [UIColor colorWithRed:32/255.0 green:38/255.0 blue:57.0/255.0 alpha:1.0];
+    
+    [self.view addSubview:self.feedView];
+    
+    [self setupOrientationNotification];
+    
+    [self loadData];
+}
+
+- (void)updateUI {
+    UIEdgeInsets safeInset;
+    if (@available(iOS 11.0, *)) {
+        safeInset = self.view.safeAreaInsets;
+    }
+    
+    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    if (isLandscape){ // 横向-全屏
+        // 不响应
+    } else { // 竖向-全屏
+        CGRect rect = CGRectMake(0, safeInset.top, self.view.bounds.size.width, self.view.bounds.size.height - safeInset.top -safeInset.bottom);
+        if (CGRectEqualToRect(rect, self.feedView.frame)) {
+            // 大小没变化，不需要重复设置
+        } else {
+            self.feedView.frame = rect;
+        }
+    }
+}
+
+#pragma mark 【Test Data 测试数据模拟】
+- (void)loadData{
     __weak typeof(self) weakSelf = self;
     [self.dataManager refreshDataWithCompletion:^{
         NSLog(@"PLVTEST 首次加载");
@@ -52,6 +112,7 @@ PLVShortVideoFeedViewDelegate
     }];
 }
 
+#pragma mark 【Getter & Setter】
 - (PLVShortVideoFeedDataManager *)dataManager {
     if (!_dataManager) {
         _dataManager = [[PLVShortVideoFeedDataManager alloc] init];
@@ -63,7 +124,6 @@ PLVShortVideoFeedViewDelegate
     if (!_dataSource){
         _dataSource = [[NSMutableArray alloc] init];
     }
-    
     return _dataSource;
 }
 
@@ -72,65 +132,49 @@ PLVShortVideoFeedViewDelegate
         self.feedView = [[PLVFeedView alloc] init];
         self.feedView.dataSource = self;
     }
-    
     return _feedView;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    AppDelegate *app = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    app.isSupportLandscape = YES;
-    
-    self.view.backgroundColor = [UIColor colorWithRed:32/255.0 green:38/255.0 blue:57.0/255.0 alpha:1.0];
-    
-    [self develeperTest];
-    
-    [self.view addSubview:self.feedView];
-    
-    [self setupModule];
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-    // 必须放在此处更新，safeAreaInset 才有值
-    [self updateUI];
-}
-
-- (void)updateUI{
-    UIEdgeInsets safeInset;
-    if (@available(iOS 11.0, *)) {
-        safeInset = self.view.safeAreaInsets;
-    }
-    BOOL fullScreen = [UIScreen mainScreen].bounds.size.width > [UIScreen mainScreen].bounds.size.height;
-    if (fullScreen){
-        self.feedView.frame = self.view.bounds;
-    }
-    else{
-        // 竖屏
-        self.feedView.frame = CGRectMake(0, safeInset.top, self.view.bounds.size.width, self.view.bounds.size.height - safeInset.top -safeInset.bottom);
+#pragma mark 【Orientation 横竖屏】
+#pragma mark 【Orientation 横竖屏设置】
+- (BOOL)shouldAutorotate{
+    if (self.currentFeedItemView.mediaPlayerState.ratio <= 1) { // 当前 feedIemtView 的视频方向是竖向的，不支持方向切换
+        return NO;
+    } else if (self.currentFeedItemView.mediaPlayerState.isLocking) { // 当前 feedIemtView 是锁屏状态，不支持方向切换
+        return NO;
+    } else { // 支持方向切换
+        return YES;
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-    [self.navigationController setNavigationBarHidden:YES];
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIInterfaceOrientationPortrait;
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations{
+    if (self.currentFeedItemView.mediaPlayerState.ratio <= 1) { // 当前 feedIemtView 视频方向是竖向的，只支持竖向
+        return UIInterfaceOrientationMaskPortrait;
+    } else if (self.currentFeedItemView.mediaPlayerState.isLocking) { // 当前 feedIemtView 是锁屏状态，只支持横向
+        return UIInterfaceOrientationMaskLandscape;
+    } else { // 同时 支持 竖向 和 横向
+        return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
+    }
 }
 
-#pragma mark - [ Override ]
+- (void)setupOrientationNotification{
+    // 通用的 配置
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(interfaceOrientationDidChange:)
+                                                 name:UIDeviceOrientationDidChangeNotification object:nil];
+}
 
-#pragma mark - [ Public Method ]
+- (void)interfaceOrientationDidChange:(NSNotification *)notification {
+    [self setNeedsStatusBarAppearanceUpdate];
+}
 
-#pragma mark - [ Private Method ]
+#pragma mark 【Back 页面返回处理】
 
 - (void)exitCurrentController {
-    [self.feedView clear];
-    
     if (self.navigationController) {
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -138,10 +182,7 @@ PLVShortVideoFeedViewDelegate
     }
 }
 
-#pragma mark - [ Delegate ]
-
-#pragma mark PLVFeedViewDataSource
-
+#pragma mark 【PLVFeedViewDataSource Delegate - Feed流 数据源 回调方法】
 - (NSInteger)numberOfSectionsInFeedView:(PLVFeedView *)feedView {
     return 1;
 }
@@ -150,27 +191,32 @@ PLVShortVideoFeedViewDelegate
     return [self.dataManager.feedDataArray count];
 }
 
-// 提供显示数据
 - (UIView <PLVFeedItemCustomViewDelegate>*)feedView:(PLVFeedView *)feedView contentViewForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.dataManager.feedDataArray.count == indexPath.row){
         return  nil;
     }
-    
     PLVFeedData *feedData = self.dataManager.feedDataArray[indexPath.row];
     feedData.index = indexPath.row;
-    PLVShortVideoFeedView *feedItemView = (PLVShortVideoFeedView *)[feedView dequeueReusableFeedItemCustomViewWithIdentifier:feedData.hashKey];
+    PLVShortVideoMediaAreaVC *feedItemView = (PLVShortVideoMediaAreaVC *)[feedView dequeueReusableFeedItemCustomViewWithIdentifier:feedData.hashKey];
     if (!feedItemView) {
-        feedItemView = [[PLVShortVideoFeedView alloc] initWithWatchData:feedData];
-        feedItemView.delegate = self;
+        feedItemView = [[PLVShortVideoMediaAreaVC alloc] init];
+        feedItemView.feedData = feedData;
+        feedItemView.mediaAreaVcDelegate = self;
+        if (self.isHideProtraitBackButton) {
+            [feedItemView hideProtraitBackButton];
+        }
+        
+        [feedItemView playWithVid:feedData.vid];
     }
-    
     return feedItemView;
 }
 
 - (void)feedViewNeedsRefresh:(PLVFeedView *)feedView completion:(void (^)(BOOL))completion {
     [self.dataManager refreshDataWithCompletion:^{
         NSLog(@"PLVTEST -请求刷新成功");
-        [self.feedView.collectionView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.feedView.collectionView reloadData];
+        });
         if (completion) {
             completion (YES);
         }
@@ -185,90 +231,79 @@ PLVShortVideoFeedViewDelegate
 - (void)feedViewNeedsLoadMore:(PLVFeedView *)feedView completion:(void (^)(BOOL))completion {
     [self.dataManager loadMoreDataWithCompletion:^(BOOL lastPage) {
         NSLog(@"PLVTEST -请求加载成功");
-        [self.feedView.collectionView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.feedView.collectionView reloadData];
+        });
         if (completion) {
             completion (lastPage);
         }
     } failure:^(NSError * error) {
+        NSLog(@"PLVTEST -请求加载失败");
         if (completion) {
             completion (NO);
         }
     }];
 }
 
-#pragma mark PLVShortVideoFeedViewDelegate
-- (void)sceneViewDidBecomeActive:(PLVShortVideoFeedView *)sceneView {
-    self.currentFeedItemView = sceneView;
-    _curIndex = sceneView.feedData.index;
+#pragma mark 【PLVShortVideoMediaAreaVCDelegate - Feed流Item 代理 回调方法】
+/// 返回事件
+- (void)shortVideoMediaAreaVC_BackEvent:(PLVShortVideoMediaAreaVC *)mediaAreaVC {
+    [self.feedView clear];
+    [self exitCurrentController];
+}
+
+/// 切换为激活状态
+- (void)shortVideoMediaAreaVC_BecomeActive:(PLVShortVideoMediaAreaVC *)mediaAreaVC {
+    self.currentFeedItemView = mediaAreaVC;
+    _curIndex = mediaAreaVC.feedData.index;
+    [PLVOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
     NSLog(@"%@ :curindex: %ld", NSStringFromSelector(_cmd), _curIndex);
 }
 
-- (void)sceneViewDidEndActive:(PLVShortVideoFeedView *)sceneView {
-    if (self.currentFeedItemView == sceneView){
+/// 切换为非激活状态
+- (void)shortVideoMediaAreaVC_EndActive:(PLVShortVideoMediaAreaVC *)mediaAreaVC {
+    if (self.currentFeedItemView == mediaAreaVC){
         self.currentFeedItemView = nil;
     }
 }
 
-- (void)sceneViewWillExitController:(PLVShortVideoFeedView *)sceneView {
-    [self exitCurrentController];
+/// 画中画状态回调
+- (void)shortVideoMediaAreaVC_PictureInPictureChangeState:(PLVShortVideoMediaAreaVC *)mediaAreaVC state:(PLVPictureInPictureState )state {
+    // 画中画状态回调
+    if (state == PLVPictureInPictureStateDidStart){
+        [PLVMediaPlayerPictureInPictureManager sharedInstance].restoreDelegate = [PLVPictureInPictureRestoreManager sharedInstance];
+        [PLVPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
+        [PLVPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
+
+        // 退出当前界面
+        [self exitCurrentController];
+    } else if (state == PLVPictureInPictureStateDidEnd){
+        [[PLVPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
+    }
 }
 
-- (BOOL)sceneView:(PLVShortVideoFeedView *)sceneView pushController:(UIViewController *)vctrl {
+/// 画中画开启失败
+- (void)shortVideoMediaAreaVC_StartPictureInPictureFailed:(PLVShortVideoMediaAreaVC *)mediaAreaVC error:(NSError *)error {
+    
+}
+
+/// 即将开始播放
+- (void)shortVideoMediaAreaVC_playerIsPreparedToPlay:(PLVShortVideoMediaAreaVC *)mediaAreaVC {
+    if (mediaAreaVC == self.currentFeedItemView) {
+        [mediaAreaVC play];
+    } else {
+        [mediaAreaVC pause];
+    }
+}
+
+// 需要push/present新页面时触发，由页面容器类push/present新页面
+- (BOOL)shortVideoMediaAreaVC:(PLVShortVideoMediaAreaVC *)mediaAreaVC pushController:(UIViewController *)vctrl {
     if (self.navigationController) {
         self.navigationController.navigationBarHidden = NO;
         [self.navigationController pushViewController:vctrl animated:YES];
         return YES;
     } else {
-//        PLVBaseNavigationController *nav = [[PLVBaseNavigationController alloc] initWithRootViewController:vctrl];
-//        nav.navigationBarHidden = NO;
-//        nav.modalPresentationStyle = UIModalPresentationFullScreen;
-//        [self presentViewController:nav animated:YES completion:nil];
         return NO;
-    }
-}
-
-- (void)sceneViewPictureInPictureDidStart:(PLVShortVideoFeedView *)feedView{
-    [PLVMediaPlayerPictureInPictureManager sharedInstance].restoreDelegate = [PLVPictureInPictureRestoreManager sharedInstance];
-    [PLVPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
-    [PLVPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
-
-    // 退出当前界面
-    if (self.navigationController) {
-        [self.navigationController popViewControllerAnimated:YES];
-    } else {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-}
-
-- (void)sceneViewPictureInPictureDidEnd:(PLVShortVideoFeedView *)feedView{
-    [[PLVPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
-}
-
-#pragma mark -- 横竖屏处理
-- (void)setupModule{
-    // 通用的 配置
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(interfaceOrientationDidChange:)
-                                                 name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-}
-
-- (void)interfaceOrientationDidChange:(NSNotification *)notification {
-    [self.view layoutIfNeeded];
-    
-    BOOL fullScreen = [UIScreen mainScreen].bounds.size.width > [UIScreen mainScreen].bounds.size.height;
-    if (fullScreen){
-        self.feedView.collectionView.scrollEnabled = NO;
-        [self.feedView.collectionView reloadData];
-        
-        // 横屏、定位到具体cell
-        [self.feedView.collectionView setContentOffset:CGPointMake(0, CGRectGetHeight(self.feedView.frame)*_curIndex)];
-    }
-    else{
-        self.feedView.collectionView.scrollEnabled = YES;
-        [self.feedView.collectionView reloadData];
-        
-        // 竖屏、定位到具体cell
-        [self.feedView.collectionView setContentOffset:CGPointMake(0, CGRectGetHeight(self.feedView.frame)*_curIndex)];
     }
 }
 
