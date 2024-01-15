@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isHideProtraitBackButton; // 是否显示返回按钮（如果是APP的首页，可以不显示）
 
+@property (nonatomic, assign) NSInteger actionAfterPlayFinish; // 视频播放完毕后的处理方式  0：显示播放结束UI  1：重新播放（缺省）  2：播放下一个
+
 @end
 
 NS_ASSUME_NONNULL_END

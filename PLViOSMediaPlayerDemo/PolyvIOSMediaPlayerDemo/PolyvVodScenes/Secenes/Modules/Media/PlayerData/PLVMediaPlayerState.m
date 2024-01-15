@@ -23,10 +23,16 @@
 }
 
 - (BOOL)isSupportWindowMode{
-    BOOL support = YES;
+    BOOL support = NO;
+    // iOS 15 以上系统，支持小窗
+    if (@available(iOS 15.0, *)){
+        support = YES;
+    }
+    // 视频播放模式才支持小窗
     if (_curPlayMode == 2){
         support = NO;
     }
+  
     return support;
 }
 

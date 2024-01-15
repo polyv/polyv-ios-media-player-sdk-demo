@@ -76,11 +76,15 @@ PLVFeedItemCustomViewDelegate // 遵循该协议才能嵌
 /// 视图消失
 - (void)endActive;
 
-// 切换音频、视频播放模式
+/// 切换音频、视频播放模式
 - (void)setPlayMode:(PLVVodPlaybackMode)playbackMode;
 
-// 隐藏返回按钮
+/// 隐藏返回按钮
 - (void)hideProtraitBackButton;
+
+/// 横竖屏切换，手动适配UI
+- (void)adaptUIForLandscape;
+
 
 @end
 
@@ -88,6 +92,9 @@ PLVFeedItemCustomViewDelegate // 遵循该协议才能嵌
 
 /// 返回事件
 - (void)shortVideoMediaAreaVC_BackEvent:(PLVShortVideoMediaAreaVC *)playerVC;
+
+/// 播放完毕
+- (void)shortVideoMediaAreaVC_PlayFinishEvent:(PLVShortVideoMediaAreaVC *)mediaAreaVC;
 
 /// 切换为激活状态
 - (void)shortVideoMediaAreaVC_BecomeActive:(PLVShortVideoMediaAreaVC *)mediaAreaVC;

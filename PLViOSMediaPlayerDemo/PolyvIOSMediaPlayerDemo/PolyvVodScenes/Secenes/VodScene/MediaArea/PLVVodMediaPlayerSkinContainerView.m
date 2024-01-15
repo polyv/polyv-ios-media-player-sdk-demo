@@ -17,6 +17,7 @@
 #import "PLVMediaPlayerSkinPlaybackRateView.h"
 #import "PLVMediaPlayerSkinLoopPlayView.h"
 #import "PLVMediaPlayerSkinFastForwardView.h"
+#import "PLVMediaPlayerSkinDefinitionTipsView.h"
 #import "PLVOrientationUtil.h"
 
 /// UI View Hierarchy
@@ -33,6 +34,7 @@ PLVMediaPlayerSkinLockScreenViewDelegate,
 PLVMediaPlayerSkinMoreViewDelegate,
 PLVMediaPlayerSkinDefinitionViewDelegate,
 PLVMediaPlayerSkinPlaybackRateViewDelegate,
+PLVMediaPlayerSkinDefinitionTipsViewDelegate,
 PLVMediaPlayerSkinLoopPlayViewDelegate
 >
 
@@ -43,6 +45,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 @property (nonatomic, strong) PLVMediaPlayerSkinPlaybackRateView *playbackRateView;
 @property (nonatomic, strong) PLVMediaPlayerSkinLoopPlayView *loopPlayView;
 @property (nonatomic, strong) PLVMediaPlayerSkinFastForwardView *fastForwardView;
+@property (nonatomic, strong) PLVMediaPlayerSkinDefinitionTipsView *definitionTipsView;
 
 @end
 
@@ -66,6 +69,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 - (void)setupUI {
     [self addSubview:self.portraitHalfSkinView];
     [self addSubview:self.landscapeFullSkinView];
+    [self addSubview:self.definitionTipsView];
 }
 
 - (void)updateUI {
@@ -111,6 +115,10 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
             self.fastForwardView.frame = self.bounds;
         }
     }
+    
+    self.definitionTipsView.frame = self.bounds;
+    [self.landscapeFullSkinView layoutIfNeeded]; // 避免第一次横屏时 横屏皮肤未刷新布局获取错误提示点位
+    [self.definitionTipsView updateUIWithTargetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:isLandscape];
 }
 
 #pragma mark 【Getter & Setter】
@@ -187,6 +195,14 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     return _fastForwardView;
 }
 
+- (PLVMediaPlayerSkinDefinitionTipsView *)definitionTipsView {
+    if (!_definitionTipsView) {
+        _definitionTipsView = [[PLVMediaPlayerSkinDefinitionTipsView alloc] init];
+        _definitionTipsView.delegate = self;
+    }
+    return _definitionTipsView;
+}
+
 #pragma mark 【Public Method】
 - (void)syncSkinWithMode:(PLVMediaPlayerState *)mediaPlayerState{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -194,7 +210,19 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         // 横屏皮肤
         self.landscapeFullSkinView.qualityButton.hidden = mediaPlayerState.qualityCount > 1? NO:YES ;
         self.landscapeFullSkinView.titleLabel.text = mediaPlayerState.videoTitle;
+        [self.landscapeFullSkinView.progressPreviewView updateWithDurationTime:mediaPlayerState.duration 
+                                                           progressImageString:mediaPlayerState.progressImageString
+                                                                         ratio:mediaPlayerState.ratio];
+        [self.landscapeFullSkinView refreshProgressViewFrame];
+        
         self.portraitHalfSkinView.titleLabel.text = mediaPlayerState.videoTitle;
+        [self.portraitHalfSkinView.progressPreviewView updateWithDurationTime:mediaPlayerState.duration
+                                                          progressImageString:mediaPlayerState.progressImageString
+                                                                        ratio:mediaPlayerState.ratio];
+        [self.portraitHalfSkinView refreshProgressViewFrame];
+        
+        // 弱网清晰度切换提示
+        [self.definitionTipsView hide];
     });
 }
 
@@ -220,6 +248,29 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     
     [self layoutIfNeeded];
 }
+
+- (void)showDefinitionTipsView {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.definitionTipsView showSwitchQualityWithModel:self.mediaPlayerState targetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:[PLVOrientationUtil isLandscape]];
+        [self layoutIfNeeded];
+    });
+}
+
+#pragma mark 【Private Method】
+
+- (CGPoint)calculateDefinitionTipsViewPosition {
+    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    
+    CGPoint targetPoint;
+    if (isLandscape) {
+        targetPoint = CGPointMake(CGRectGetMidX(self.landscapeFullSkinView.qualityButton.frame), CGRectGetMinY(self.landscapeFullSkinView.qualityButton.frame));
+    } else {
+        targetPoint = CGPointMake(CGRectGetMidX(self.portraitHalfSkinView.moreButton.frame) - 8, CGRectGetMaxY(self.portraitHalfSkinView.moreButton.frame));
+    }
+    
+    return targetPoint;
+}
+
 
 #pragma mark 【PLVMediaPlayerBaseSkinViewDelegate 基础皮肤的回调方法】
 /// 回退 按钮事件 回调方法
@@ -400,6 +451,14 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 - (void)mediaPlayerLoopPlayView_LoopPlay:(PLVMediaPlayerSkinLoopPlayView *)loopPlayView{
     if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_Play:willPlay:)]){
         [self.containerDelegate mediaPlayerSkinContainerView_Play:self willPlay:YES];
+    }
+}
+
+#pragma mark 【PLVMediaPlayerSkinDefinitionTipsView Delegate - 弱网切换 回调方法】
+/// 弱网切换回调 清晰度方法
+- (void)mediaPlayerSkinDefinitionTipsView_SwitchQuality:(NSInteger)qualityLevel {
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchQualtiy:qualityLevel:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_SwitchQualtiy:self qualityLevel:qualityLevel];
     }
 }
 

@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 更新UI
 - (void)updateUI;
 
+/// 显示弱网切换清晰度提示
+- (void)showDefinitionTipsView;
+
 @end
 
 @protocol PLVShortVideoMediaPlayerSkinContainerDelegate <NSObject>

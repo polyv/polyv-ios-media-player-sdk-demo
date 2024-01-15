@@ -38,6 +38,14 @@ PLVShortVideoMediaAreaVCDelegate
 @implementation PLVDemoVideoFeedViewController
 
 #pragma mark - [ Life Cycle ]
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _actionAfterPlayFinish = 1; // 0：显示播放结束UI  1：重新播放（缺省）  2：播放下一个
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -54,11 +62,19 @@ PLVShortVideoMediaAreaVCDelegate
     [super viewWillAppear:animated];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self.navigationController setNavigationBarHidden:YES];
+    
+    if (self.isHideProtraitBackButton){
+        [self enterFeedVC];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self.navigationController setNavigationBarHidden:NO];
+    
+    if (self.isHideProtraitBackButton){
+        [self leaveFeedVC];
+    }
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle{
@@ -88,7 +104,13 @@ PLVShortVideoMediaAreaVCDelegate
     
     BOOL isLandscape = [PLVOrientationUtil isLandscape];
     if (isLandscape){ // 横向-全屏
-        // 不响应
+        if (@available(iOS 14.0, *)){
+            // 不响应, 系统函数调用，子控件自动更细布局
+        }
+        else{
+            // 系统函数不自动调用，手动更新，feed流当前活动视图横屏适配
+            [self.currentFeedItemView adaptUIForLandscape];
+        }
     } else { // 竖向-全屏
         CGRect rect = CGRectMake(0, safeInset.top, self.view.bounds.size.width, self.view.bounds.size.height - safeInset.top -safeInset.bottom);
         if (CGRectEqualToRect(rect, self.feedView.frame)) {
@@ -96,6 +118,18 @@ PLVShortVideoMediaAreaVCDelegate
         } else {
             self.feedView.frame = rect;
         }
+    }
+}
+
+- (void)leaveFeedVC{
+    if (self.currentFeedItemView){
+        [self.currentFeedItemView pause];
+    }
+}
+
+- (void)enterFeedVC{
+    if (self.currentFeedItemView){
+        [self.currentFeedItemView play];
     }
 }
 
@@ -250,6 +284,28 @@ PLVShortVideoMediaAreaVCDelegate
 - (void)shortVideoMediaAreaVC_BackEvent:(PLVShortVideoMediaAreaVC *)mediaAreaVC {
     [self.feedView clear];
     [self exitCurrentController];
+}
+
+/// 播放完毕
+- (void)shortVideoMediaAreaVC_PlayFinishEvent:(PLVShortVideoMediaAreaVC *)mediaAreaVC { // 0：显示播放结束UI  1：重新播放（缺省）  2：播放下一个
+    if ([PLVMediaPlayerPictureInPictureManager sharedInstance].pictureInPictureActive) {
+        // 显示播放结束UI
+        return;
+    }
+    
+    if (self.actionAfterPlayFinish == 0) { // 0：显示播放结束UI
+        // 暂无 播放结束UI
+    } else if (self.actionAfterPlayFinish == 1) { // 1：重新播放（ß缺省）
+        [mediaAreaVC play];
+    } else if (self.actionAfterPlayFinish == 2) { // 2：播放下一个
+        NSInteger index = mediaAreaVC.feedData.index;
+        NSInteger nextIndex = index + 1;
+        if (nextIndex < self.dataManager.feedDataArray.count) {
+            NSIndexPath *nextIndexPath = [NSIndexPath indexPathForItem:nextIndex inSection:0];;
+            [self.feedView.collectionView scrollToItemAtIndexPath:nextIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:YES];
+
+        }
+     }
 }
 
 /// 切换为激活状态

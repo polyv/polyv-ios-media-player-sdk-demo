@@ -34,6 +34,14 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 @implementation PLVDemoVodMediaViewController
 
 #pragma mark 【Life Cycle】
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _actionAfterPlayFinish = 0; // 0：显示播放结束UI（缺省）  1：重新播放  2：播放下一个
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -185,6 +193,23 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)vodMediaAreaVC_BackEvent:(PLVVodMediaAreaVC *)playerVC{
     [self back];
 }
+
+/// 播放结束事件
+- (void)vodMediaAreaVC_PlayFinishEvent:(PLVVodMediaAreaVC *)playerVC { // 0：显示播放结束UI（缺省）  1：重新播放  2：播放下一个
+    if ([PLVMediaPlayerPictureInPictureManager sharedInstance].pictureInPictureActive) {
+        [self.vodMediaAreaVC showPlayFinishUI];
+        return;
+    }
+    
+    if (self.actionAfterPlayFinish == 0) { // 0：显示播放结束UI（缺省）
+        [self.vodMediaAreaVC showPlayFinishUI];
+    } else if (self.actionAfterPlayFinish == 1) { // 1：重新播放
+        [self.vodMediaAreaVC replay];
+    } else if (self.actionAfterPlayFinish == 2) { // 2：播放下一个
+       // 客户自定义
+    }
+}
+
 
 /// 画中画 切换状态
 - (void)vodMediaAreaVC_PictureInPictureChangeState:(PLVVodMediaAreaVC *)playerVC state:(PLVPictureInPictureState)state{

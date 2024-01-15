@@ -1,0 +1,50 @@
+PODS:
+  - MJRefresh (3.5.0)
+  - PLVAliHttpDNS (1.10.0):
+    - PLVAliHttpDNS/AlicloudHttpDNS (= 1.10.0)
+    - PLVAliHttpDNS/AlicloudUtils (= 1.10.0)
+    - PLVAliHttpDNS/UTDID (= 1.10.0)
+  - PLVAliHttpDNS/AlicloudHttpDNS (1.10.0)
+  - PLVAliHttpDNS/AlicloudUtils (1.10.0)
+  - PLVAliHttpDNS/UTDID (1.10.0)
+  - PLVIJKPlayer (0.13.4)
+  - PLVTimer (0.0.4)
+  - PolyvMediaPlayerSDK (2.1.0):
+    - PolyvMediaPlayerSDK/Core (= 2.1.0)
+    - PolyvMediaPlayerSDK/Player (= 2.1.0)
+    - PolyvMediaPlayerSDK/ThirdPart (= 2.1.0)
+  - PolyvMediaPlayerSDK/Core (2.1.0):
+    - PLVTimer (~> 0.0.2)
+  - PolyvMediaPlayerSDK/Player (2.1.0):
+    - PLVIJKPlayer (~> 0.13.4)
+  - PolyvMediaPlayerSDK/ThirdPart (2.1.0):
+    - PLVAliHttpDNS (~> 1.10.0)
+  - SDWebImage (4.4.0):
+    - SDWebImage/Core (= 4.4.0)
+  - SDWebImage/Core (4.4.0)
+
+DEPENDENCIES:
+  - MJRefresh (~> 3.5.0)
+  - PolyvMediaPlayerSDK (~> 2.1.0)
+  - SDWebImage (= 4.4.0)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - MJRefresh
+    - PLVAliHttpDNS
+    - PLVIJKPlayer
+    - PLVTimer
+    - PolyvMediaPlayerSDK
+    - SDWebImage
+
+SPEC CHECKSUMS:
+  MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
+  PLVAliHttpDNS: e968fff888b8e96e51828d76d571a9430367475f
+  PLVIJKPlayer: e9dd51f8bb6172bee912854e1fc069fa5914c081
+  PLVTimer: 80d2d24d32bb2e9588d089fc25974ff778259ae1
+  PolyvMediaPlayerSDK: c31c3a596202278d00835f2ab31ddc2a49c6aadc
+  SDWebImage: b534502786e43dde36dfcaee89356fe6df30e203
+
+PODFILE CHECKSUM: be64c851d8098c8e8efed534ec6a6fa92254a182
+
+COCOAPODS: 1.11.3

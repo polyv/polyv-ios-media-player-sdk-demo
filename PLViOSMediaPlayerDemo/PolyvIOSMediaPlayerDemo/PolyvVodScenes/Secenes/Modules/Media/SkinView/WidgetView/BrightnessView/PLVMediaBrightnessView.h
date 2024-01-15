@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 /// 调节屏幕亮度的效果View（类似系统音量调节效果）
-@interface PLVLCMediaBrightnessView : UIView
+@interface PLVMediaBrightnessView : UIView
 
 /// 单例方法
 + (instancetype)sharedBrightnessView;

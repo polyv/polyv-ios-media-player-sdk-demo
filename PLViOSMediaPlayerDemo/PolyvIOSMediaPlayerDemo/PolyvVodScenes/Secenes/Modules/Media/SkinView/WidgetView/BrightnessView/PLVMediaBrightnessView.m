@@ -6,12 +6,12 @@
 //  Copyright © 2018年 PLV. All rights reserved.
 //
 
-#import "PLVLCMediaBrightnessView.h"
+#import "PLVMediaBrightnessView.h"
 
 #define BrightnessViewWidth     155.0
 #define BrightnessViewHeight    155.0
 
-@interface PLVLCMediaBrightnessView ()
+@interface PLVMediaBrightnessView ()
 
 @property (nonatomic, strong) UILabel *title;
 @property (nonatomic, strong) UIImageView *backImgView;
@@ -21,14 +21,14 @@
 
 @end
 
-@implementation PLVLCMediaBrightnessView
+@implementation PLVMediaBrightnessView
 
 #pragma mark - singleton
 + (instancetype)sharedBrightnessView {
-    static PLVLCMediaBrightnessView *instance;
+    static PLVMediaBrightnessView *instance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[PLVLCMediaBrightnessView alloc] init];
+        instance = [[PLVMediaBrightnessView alloc] init];
     });
     return instance;
 }

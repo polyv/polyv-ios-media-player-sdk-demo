@@ -24,9 +24,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat ratio;             // 视频宽高比
 @property (nonatomic, copy) NSString *videoTitle;        // 视频标题
 
-@property (nonatomic, assign) BOOL isPlaying;
+@property (nonatomic, assign) NSTimeInterval duration;  // 视频时长
+@property (nonatomic, copy) NSString *progressImageString;    // 视频预览 雪碧图
 
-@property (nonatomic, assign) BOOL isLocking;
+@property (nonatomic, assign) BOOL isPlaying;  // 当前是否正在播放中
+
+@property (nonatomic, assign) BOOL isLocking;  // 当前是否锁屏中
 
 @end
 

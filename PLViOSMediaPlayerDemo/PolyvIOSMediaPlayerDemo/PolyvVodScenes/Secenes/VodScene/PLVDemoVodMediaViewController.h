@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *vid;
 
+@property (nonatomic, assign) NSInteger actionAfterPlayFinish; // 视频播放完毕后的处理方式  0：显示播放结束UI（缺省）  1：重新播放  2：播放下一个
+
 @end
 
 NS_ASSUME_NONNULL_END

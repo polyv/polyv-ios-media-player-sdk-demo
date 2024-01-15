@@ -66,71 +66,82 @@
     }
     leftSafePadding += 0;
 
-        [self controlsSwitchShowStatusWithAnimation:YES];
-        BOOL isPad = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
-        
-        // 顶部UI
-        CGFloat topShadowLayerHeight = 90.0;
-        self.topShadowLayer.frame = CGRectMake(0, 0, viewWidth, topShadowLayerHeight);
-        
-        CGSize backButtonSize = CGSizeMake(40.0, 20.0f);
-        CGFloat topPadding = isPad ? 30.0 : 16.0;
+    [self controlsSwitchShowStatusWithAnimation:YES];
+    BOOL isPad = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad;
+    
+    // 顶部UI
+    CGFloat topShadowLayerHeight = 90.0;
+    self.topShadowLayer.frame = CGRectMake(0, 0, viewWidth, topShadowLayerHeight);
+    
+    CGSize backButtonSize = CGSizeMake(40.0, 20.0f);
+    CGFloat topPadding = isPad ? 30.0 : 16.0;
 
-        if (![PLVVodFdUtil isiPhoneXSeries]) {
-            leftSafePadding = 6;
-            rightSafePadding = 6;
-        }
-        if (isPad) {
-            leftSafePadding = 20;
-            rightSafePadding = 20;
-        }
+    if (![PLVVodFdUtil isiPhoneXSeries]) {
+        leftSafePadding = 6;
+        rightSafePadding = 6;
+    }
+    if (isPad) {
+        leftSafePadding = 20;
+        rightSafePadding = 20;
+    }
         
-        self.backButton.frame = CGRectMake(leftSafePadding, topPadding - 10, backButtonSize.width, 40);
-        
-        CGSize titleLabelFitSize = [self.titleLabel sizeThatFits:CGSizeMake(200, 22)];
-        self.titleLabel.frame = CGRectMake(CGRectGetMaxX(self.backButton.frame), topPadding, titleLabelFitSize.width, backButtonSize.height);
-        
-        self.moreButton.frame = CGRectMake(viewWidth - rightSafePadding - backButtonSize.width, topPadding, backButtonSize.width, backButtonSize.height);
-                
-        [self refreshTitleLabelFrameInSmallScreen];
-        [self refreshPlayTimesLabelFrame];
-        [self refreshProgressViewFrame];
+    self.backButton.frame = CGRectMake(leftSafePadding, topPadding - 10, backButtonSize.width, 40);
+    
+    CGSize titleLabelFitSize = [self.titleLabel sizeThatFits:CGSizeMake(200, 22)];
+    self.titleLabel.frame = CGRectMake(CGRectGetMaxX(self.backButton.frame), topPadding, titleLabelFitSize.width, backButtonSize.height);
+    
+    self.moreButton.frame = CGRectMake(viewWidth - rightSafePadding - backButtonSize.width, topPadding, backButtonSize.width, backButtonSize.height);
+            
+    [self refreshTitleLabelFrameInSmallScreen];
+//    [self refreshPlayTimesLabelFrame];
 
-        // 底部UI
-        CGFloat bottomShadowLayerHeight = 90.0;
-        self.bottomShadowLayer.frame = CGRectMake(0, viewHeight - bottomShadowLayerHeight, viewWidth, bottomShadowLayerHeight);
+    // 底部UI
+    CGFloat bottomShadowLayerHeight = 90.0;
+    self.bottomShadowLayer.frame = CGRectMake(0, viewHeight - bottomShadowLayerHeight, viewWidth, bottomShadowLayerHeight);
 
-        // 播放按钮
-        CGFloat bottomPadding = 28.0;
-        self.playButton.frame = CGRectMake(leftSafePadding, viewHeight - bottomPadding - backButtonSize.height, backButtonSize.width, backButtonSize.height);
-        
-        // 时间
-        CGFloat timeLabelWidth = [self getLabelTextWidth:self.currentTimeLabel];
-        CGPoint point = CGPointMake(CGRectGetMaxX(self.playButton.frame), CGRectGetMinY(self.playButton.frame));
-        self.currentTimeLabel.frame = CGRectMake(point.x, point.y, timeLabelWidth, 20);
-        self.diagonalsLabel.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), 5, 20);
-        timeLabelWidth = [self getLabelTextWidth:self.durationLabel];
-        self.durationLabel.frame = CGRectMake(CGRectGetMaxX(self.diagonalsLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), timeLabelWidth, 20);
-        
-        // 进度条
-        CGFloat progressHigh = 20;
-        CGRect progressRect = CGRectMake(leftSafePadding + 10, CGRectGetMinY(self.playButton.frame) - 12 -progressHigh, viewWidth - leftSafePadding - leftSafePadding, progressHigh);
-        self.progressSlider.frame = progressRect;
-        
-        // 清晰度
-        point = CGPointMake(CGRectGetMaxX(self.moreButton.frame) - 48, CGRectGetMinY(self.playButton.frame));
-        self.qualityButton.frame = CGRectMake(point.x, point.y, 48, 20);
-        
-        // 倍速
-        point = CGPointMake(CGRectGetMinX(self.qualityButton.frame) - 20 -48, point.y);
-        self.playRateButton.frame = CGRectMake(point.x, point.y, 48, 20);
-        
-        // 锁屏按钮
-        self.lockScreenButton.frame = CGRectMake(90, self.bounds.size.height/2 - 40/2, 40, 40);
+    // 播放按钮
+    CGFloat bottomPadding = 28.0;
+    self.playButton.frame = CGRectMake(leftSafePadding, viewHeight - bottomPadding - backButtonSize.height, backButtonSize.width, backButtonSize.height);
+    
+    // 播放进度 时间
+    CGFloat timeLabelWidth = [self getLabelTextWidth:self.currentTimeLabel];
+    CGPoint point = CGPointMake(CGRectGetMaxX(self.playButton.frame), CGRectGetMinY(self.playButton.frame));
+    self.currentTimeLabel.frame = CGRectMake(point.x, point.y, timeLabelWidth, 20);
+    self.diagonalsLabel.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), 5, 20);
+    timeLabelWidth = [self getLabelTextWidth:self.durationLabel];
+    self.durationLabel.frame = CGRectMake(CGRectGetMaxX(self.diagonalsLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), timeLabelWidth, 20);
+    
+    // 进度条
+    CGFloat progressHigh = 20;
+    CGRect progressRect = CGRectMake(leftSafePadding + 10, CGRectGetMinY(self.playButton.frame) - 12 -progressHigh, viewWidth - leftSafePadding - leftSafePadding, progressHigh);
+    self.progressSlider.frame = progressRect;
+    
+    // 清晰度
+    point = CGPointMake(CGRectGetMaxX(self.moreButton.frame) - 48, CGRectGetMinY(self.playButton.frame));
+    self.qualityButton.frame = CGRectMake(point.x, point.y, 48, 20);
+    
+    // 倍速
+    point = CGPointMake(CGRectGetMinX(self.qualityButton.frame) - 20 -48, point.y);
+    self.playRateButton.frame = CGRectMake(point.x, point.y, 48, 20);
+    
+    // 锁屏按钮
+    self.lockScreenButton.frame = CGRectMake(90, self.bounds.size.height/2 - 40/2, 40, 40);
+    
+    [self refreshProgressViewFrame];
    
-        // 自动隐藏皮肤
-        [self autoHideSkinView];
+    // 自动隐藏皮肤
+    [self autoHideSkinView];
 
+}
+
+- (void)refreshPlayTimesLabelFrame{
+    // 播放进度 时间
+    CGFloat timeLabelWidth = [self getLabelTextWidth:self.currentTimeLabel];
+    CGPoint point = CGPointMake(CGRectGetMaxX(self.playButton.frame), CGRectGetMinY(self.playButton.frame));
+    self.currentTimeLabel.frame = CGRectMake(point.x, point.y, timeLabelWidth, 20);
+    self.diagonalsLabel.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), 5, 20);
+    timeLabelWidth = [self getLabelTextWidth:self.durationLabel];
+    self.durationLabel.frame = CGRectMake(CGRectGetMaxX(self.diagonalsLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), timeLabelWidth, 20);
 }
 
 #pragma mark - [ Public Methods ]
@@ -208,7 +219,11 @@
 
 #pragma mark - [ Father Public Methods ]
 - (void)refreshProgressViewFrame {
-    self.progressView.frame = CGRectMake(self.frame.size.width / 2 - 73.5, self.frame.size.height / 2 -16, 147, 32);
+    // 预览视图
+    self.progressPreviewView.frame = CGRectMake(self.frame.size.width / 2 - self.progressPreviewView.bounds.size.width / 2,
+                                                self.progressSlider.frame.origin.y - self.progressPreviewView.bounds.size.height - 6,
+                                                self.progressPreviewView.bounds.size.width,
+                                                self.progressPreviewView.bounds.size.height);
 }
 
 - (void)showFloatViewShowButtonTipsLabelAnimation:(BOOL)showTips{
@@ -229,7 +244,7 @@
         weakSelf.topShadowLayer.opacity = alpha;
         weakSelf.bottomShadowLayer.opacity = alpha;
         for (UIView * subview in weakSelf.subviews) {
-            if ([subview isKindOfClass:PLVLCMediaProgressView.class]) {
+            if ([subview isKindOfClass:PLVMediaProgressPreviewView.class]) {
                 continue;
             }
             subview.alpha = alpha;

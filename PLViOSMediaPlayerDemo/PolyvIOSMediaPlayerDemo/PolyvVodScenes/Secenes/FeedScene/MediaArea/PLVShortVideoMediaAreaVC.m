@@ -16,6 +16,7 @@
 #import "PLVVodErrorUtil.h"
 #import "PLVOrientationUtil.h"
 #import "UIImage+Tint.h"
+#import "PLVMarqueeView.h"
 
 
 /// UI View Hierarchy
@@ -36,6 +37,8 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 /// UI 部分
 @property (nonatomic, strong) PLVMediaPlayerSkinOutMoreView *skinOutMoreView;
 @property (nonatomic, strong) UIImageView *displayCoverView; // 视频封面图
+@property (nonatomic, strong) PLVMarqueeView *marqueeView; // 跑马灯
+
 
 // 布局 部分 - 用于 横竖屏切换
 @property (nonatomic, strong) UIView *displayView; // 裸播放器对应的渲染View
@@ -53,6 +56,11 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 @synthesize reuseIdentifier;
 
 #pragma mark 【Life Cycle】
+- (void)dealloc{
+    [self.player clearPlayer];
+    [self.marqueeView stop];
+}
+
 -(instancetype)init{
     if (self = [super init]){
         [self setupUI];
@@ -83,6 +91,9 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     [self addSubview:self.mediaSkinContainer];
     [self addSubview:self.skinOutMoreView];
     [self addSubview:self.displayCoverView];
+    
+    // 设置新版跑马灯（2.0）
+    [self initMarqueeView];
 }
 
 - (void)updateUI{
@@ -106,7 +117,20 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         self.frame = self.originFrame;
         
         if (self.mediaPlayerState.ratio != 0) {
-            self.displayView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width/self.mediaPlayerState.ratio);
+            if (self.player.playbackMode == PLVVodPlaybackModeAudio){
+                CGFloat display_height = self.bounds.size.width*9/16;
+                self.displayView.frame = CGRectMake(0, 0, self.bounds.size.width, display_height);
+            }
+            else{
+                CGFloat display_height = self.bounds.size.width/self.mediaPlayerState.ratio;
+                if (display_height <= self.bounds.size.height){
+                    self.displayView.frame = CGRectMake(0, 0, self.bounds.size.width, display_height);
+                }
+                else{
+                    // 以高为基准，计算宽度
+                    self.displayView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
+                }
+            }
             self.displayView.center = self.center;
         }
         
@@ -119,6 +143,15 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     self.mediaSkinContainer.center = self.center;
 }
 
+- (void)initMarqueeView{
+    self.marqueeView = [[PLVMarqueeView alloc] init];
+    PLVMarqueeModel *marqueeModel = [[PLVMarqueeModel alloc] init];
+    self.marqueeView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    self.marqueeView.frame = self.displayView.bounds;
+    [self.marqueeView setPLVMarqueeModel:marqueeModel];
+    [self.displayView addSubview:self.marqueeView];
+}
+
 #pragma mark 【Back 页面返回处理】
 
 #pragma mark 【Getter & Setter】
@@ -129,6 +162,8 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         _player.coreDelegate = self;
         _player.autoPlay = NO;
         _player.rememberLastPosition = YES;
+        _player.enablePIPInBackground = YES;
+        _player.seekType = PLVVodPlaySeekTypePrecise;
     }
     return _player;
 }
@@ -167,8 +202,21 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (UIView *)displayView{
     if (!_displayView){
         _displayView = [[UIView alloc] init];
+        _displayView.backgroundColor = [UIColor blackColor];
     }
     return _displayView;
+}
+
+// 跑马灯播放控制
+- (void)marqueeControlWithState:(PLVPlaybackState )playState{
+    //新版跑马灯的启动暂停控制
+    if (playState == PLVPlaybackStatePlaying) {
+        [self.marqueeView start];
+    }else if (playState == PLVPlaybackStatePaused) {
+        [self.marqueeView pause];
+    }else if (playState == PLVPlaybackStateStopped) {
+        [self.marqueeView stop];
+    }
 }
 
 #pragma mark 【Public Method】
@@ -232,11 +280,15 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)setPlayMode:(PLVVodPlaybackMode)playbackMode {
     if (playbackMode == PLVVodPlaybackModeAudio) {
         [self.player setPlaybackMode:PLVVodPlaybackModeAudio];
+        [self.displayView setHidden:YES];
+        
         self.mediaPlayerState.curPlayMode = 2;
         self.isSwitchingPlaySource = YES;
         [self.mediaSkinContainer showAudioModeUI];
     } else {
         [self.player setPlaybackMode:PLVVodPlaybackModeVideo];
+        [self.displayView setHidden:NO];
+
         self.mediaPlayerState.curPlayMode = 1;
         self.isSwitchingPlaySource = YES;
         [self.mediaSkinContainer showVideoModeUI];
@@ -245,6 +297,17 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 - (void)hideProtraitBackButton {
     self.mediaSkinContainer.portraitFullSkinView.backButton.hidden = YES;
+}
+
+- (void)adaptUIForLandscape{
+    if (!self.originSuperView) {
+        self.originSuperView = self.superview;
+        self.originFrame = self.originSuperView.bounds;
+    }
+    
+    if (self.originSuperView) {
+        [self updateUI];
+    }
 }
 
 #pragma mark 【Syn Method  同步 player、mediaState、mediaSkinContainer 之间的数据】
@@ -258,10 +321,14 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         self.mediaPlayerState.ratio = videoModel.ratio;
         self.mediaPlayerState.videoTitle = videoModel.title;
         
+        self.mediaPlayerState.progressImageString = videoModel.progressImage;
+        self.mediaPlayerState.duration = videoModel.duration;
+        
+        __weak typeof(self) weakSelf = self;
         [self.displayCoverView sd_setImageWithURL:[NSURL URLWithString:videoModel.snapshot] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (image && [image isKindOfClass:[UIImage class]]){
                 UIImage *blurimage = [UIImage boxblurImageWithBlur:0.2 image:image];
-                self.displayCoverView.image = blurimage;
+                weakSelf.displayCoverView.image = blurimage;
             }
         }];
         // 同步播放器皮肤
@@ -342,12 +409,17 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     self.mediaPlayerState.isPlaying = isPlaying;
     [self.mediaSkinContainer.landscapeFullSkinView setPlayButtonWithPlaying:isPlaying];
     [self.mediaSkinContainer.portraitFullSkinView setPlayButtonWithPlaying:isPlaying];
+    
+    // 跑马灯控制
+    [self marqueeControlWithState:playbackState];
 }
 
 /// 播放器 播放结束
 - (void)plvPlayerCore:(PLVPlayerCore *)player playerPlaybackDidFinish:(PLVPlayerFinishReason)finishReson{
     if (PLVPlayerFinishReasonPlaybackEnded == finishReson){
-        [self.player play];
+        if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(shortVideoMediaAreaVC_PlayFinishEvent:)]){
+            [self.mediaAreaVcDelegate shortVideoMediaAreaVC_PlayFinishEvent:self];
+        }
     }
 }
 
@@ -407,6 +479,14 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     }else {
         NSString *message = [NSString stringWithFormat:@"%@", error.localizedFailureReason];
         [PLVToast showMessage:message];
+    }
+}
+
+- (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer poorNetworkState:(BOOL)poorState {
+    if (poorState) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mediaSkinContainer showDefinitionTipsView];
+        });
     }
 }
 

@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 显示循环播放UI
 - (void)showLoopPlayUI;
 
+/// 显示弱网切换清晰度提示
+- (void)showDefinitionTipsView;
+
 @end
 
 @protocol PLVVodMediaPlayerSkinContainerViewDelegate <NSObject>

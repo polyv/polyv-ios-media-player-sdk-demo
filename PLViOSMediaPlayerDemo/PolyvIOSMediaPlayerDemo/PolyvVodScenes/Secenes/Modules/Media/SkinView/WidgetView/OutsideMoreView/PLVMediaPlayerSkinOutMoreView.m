@@ -79,7 +79,11 @@
 
 - (void)updateUI{
     self.bgView.frame = self.bounds;
-    self.contentView.frame = CGRectMake(0, self.bounds.size.height - 240, self.bounds.size.width, 240);
+    NSInteger content_height = 240;
+    if (self.audioModeBtn.hidden && self.picInPicBtn.hidden){
+        content_height = 160;
+    }
+    self.contentView.frame = CGRectMake(0, self.bounds.size.height - content_height, self.bounds.size.width, content_height);
     
     CGFloat topInset = 48.0;
     CGFloat leftInset = 24;
@@ -98,8 +102,11 @@
     origin = CGPointMake(offset_x, origin.y);
     self.picInPicBtn.frame = CGRectMake(origin.x, origin.y, 60, 60);
     
-    
-    origin = CGPointMake(leftInset + 4, CGRectGetMaxY(self.audioModeBtn.frame) + 28);
+    CGFloat start_y = CGRectGetMaxY(self.audioModeBtn.frame);
+    if (self.audioModeBtn.hidden && self.picInPicBtn.hidden){
+        start_y = CGRectGetMinY(self.audioModeBtn.frame);
+    }
+    origin = CGPointMake(leftInset + 4, start_y + 28);
     self.qualityLbl.frame = CGRectMake(origin.x, origin.y, 60, 20);
     origin = CGPointMake(CGRectGetMaxX(self.qualityLbl.frame) + 20, origin.y);
     self.lowQualityBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
@@ -108,7 +115,11 @@
     origin = CGPointMake(CGRectGetMaxX(self.midQualityBtn.frame) + 20, origin.y);
     self.highQualtiyBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
     
-    origin = CGPointMake(leftInset + 4, CGRectGetMaxY(self.qualityLbl.frame) + 12);
+    start_y = CGRectGetMaxY(self.qualityLbl.frame);
+    if (self.qualityLbl.hidden){
+        start_y = CGRectGetMinY(self.qualityLbl.frame);
+    }
+    origin = CGPointMake(leftInset + 4, start_y + 12);
     self.playRateLbl.frame = CGRectMake(origin.x, origin.y, 60, 20);
     origin = CGPointMake(CGRectGetMaxX(self.playRateLbl.frame) + 20, origin.y);
     self.playRate1Btn.frame = CGRectMake(origin.x, origin.y, 50, 20);

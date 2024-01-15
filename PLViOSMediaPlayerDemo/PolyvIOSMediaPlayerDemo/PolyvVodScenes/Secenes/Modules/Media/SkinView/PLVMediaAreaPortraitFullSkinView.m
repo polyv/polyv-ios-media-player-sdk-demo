@@ -65,73 +65,98 @@
     }
     toppadding += 4; /// 顶部距离增加间隙值
 
-        [self controlsSwitchShowStatusWithAnimation:YES];
+    [self controlsSwitchShowStatusWithAnimation:YES];
 
-        // 基础数据
-        CGFloat leftPadding = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? 10.0 : 2.0;
-        CGFloat bottomPadding = 20.0;
-        CGFloat commonHeight = 20.0;
+    // 基础数据
+    CGFloat leftPadding = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? 10.0 : 2.0;
+    CGFloat bottomPadding = 20.0;
+    CGFloat commonHeight = 20.0;
+    
+    // 顶部UI
+    CGFloat topShadowLayerHeight = 83.0;
+    self.topShadowLayer.frame = CGRectMake(0, 0, viewWidth, topShadowLayerHeight);
+    
+    CGSize backButtonSize = CGSizeMake(40.0, 40.0);
+    self.backButton.frame = CGRectMake(leftPadding, toppadding, backButtonSize.width, backButtonSize.height);
+    self.backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 20, 0);
+            
+    CGFloat titleLabelWidthScale = 200.0 / 375.0;
+    CGFloat titleLabelWidth = viewWidth * titleLabelWidthScale;
+    CGFloat titleLableX = self.backButton.hidden ? 15 : CGRectGetMaxX(self.backButton.frame);
+    self.titleLabel.frame = CGRectMake(titleLableX, CGRectGetMinY(self.backButton.frame), titleLabelWidth, commonHeight);
+    
+    [self refreshProgressViewFrame];
+    
+    CGFloat rightPadding = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? 10.0 : 2.0;
+    self.moreButton.frame = CGRectMake(viewWidth - rightPadding - backButtonSize.width, toppadding, backButtonSize.width, backButtonSize.height);
+  
+    // 底部UI
+    CGFloat bottomShadowLayerHeight = 70.0;
+    self.bottomShadowLayer.frame = CGRectMake(0, viewHeight - bottomShadowLayerHeight, viewWidth, bottomShadowLayerHeight);
+    
+    // 播放进度 时间
+    CGFloat timeLabelWidth = [self getLabelTextWidth:self.currentTimeLabel];
+    self.currentTimeLabel.frame = CGRectMake(leftPadding + 12, viewHeight - bottomPadding - commonHeight, timeLabelWidth, commonHeight);
+    
+    self.diagonalsLabel.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), 5, commonHeight);
+    
+    timeLabelWidth = [self getLabelTextWidth:self.durationLabel];
+    self.durationLabel.frame = CGRectMake(CGRectGetMaxX(self.diagonalsLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), timeLabelWidth, commonHeight);
+    
+    // 进度条
+    CGFloat progressSliderLeftRightPadding = 15;
+    CGFloat progressSliderWidth = viewWidth - progressSliderLeftRightPadding - progressSliderLeftRightPadding;
+    CGFloat progressHigh = 30;
+    self.progressSlider.frame = CGRectMake(progressSliderLeftRightPadding , CGRectGetMinY(self.currentTimeLabel.frame) -progressHigh, progressSliderWidth, progressHigh);
+
+    // 中间播放按钮
+    self.playButton.center = self.center;
+    self.playButton.bounds = CGRectMake(0, 0, 80, 80);
+    
+    // 全屏按钮
+    self.fullScreenButton.frame = CGRectMake((viewWidth - 82)/2, CGRectGetMaxY(self.playButton.frame) + 90, 82, 28);
         
-        // 顶部UI
-        CGFloat topShadowLayerHeight = 83.0;
-        self.topShadowLayer.frame = CGRectMake(0, 0, viewWidth, topShadowLayerHeight);
-        
-        CGSize backButtonSize = CGSizeMake(40.0, 40.0);
-        self.backButton.frame = CGRectMake(leftPadding, toppadding, backButtonSize.width, backButtonSize.height);
-        self.backButton.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 20, 0);
-                
-        CGFloat titleLabelWidthScale = 200.0 / 375.0;
-        CGFloat titleLabelWidth = viewWidth * titleLabelWidthScale;
-        CGFloat titleLableX = self.backButton.hidden ? 15 : CGRectGetMaxX(self.backButton.frame);
-        self.titleLabel.frame = CGRectMake(titleLableX, CGRectGetMinY(self.backButton.frame), titleLabelWidth, commonHeight);
-        
-        [self refreshPlayTimesLabelFrame];
-        [self refreshProgressViewFrame];
-        
-        CGFloat rightPadding = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? 10.0 : 2.0;
-        self.moreButton.frame = CGRectMake(viewWidth - rightPadding - backButtonSize.width, toppadding, backButtonSize.width, backButtonSize.height);
-      
-        // 底部UI
-        CGFloat bottomShadowLayerHeight = 70.0;
-        self.bottomShadowLayer.frame = CGRectMake(0, viewHeight - bottomShadowLayerHeight, viewWidth, bottomShadowLayerHeight);
-        
-        CGFloat timeLabelWidth = [self getLabelTextWidth:self.currentTimeLabel];
-        self.currentTimeLabel.frame = CGRectMake(leftPadding + 12, viewHeight - bottomPadding - commonHeight, timeLabelWidth, commonHeight);
-        
-        self.diagonalsLabel.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), 5, commonHeight);
-        
-        timeLabelWidth = [self getLabelTextWidth:self.durationLabel];
-        self.durationLabel.frame = CGRectMake(CGRectGetMaxX(self.diagonalsLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), timeLabelWidth, commonHeight);
-        
-        CGFloat progressSliderLeftRightPadding = 15;
-        CGFloat progressSliderWidth = viewWidth - progressSliderLeftRightPadding - progressSliderLeftRightPadding;
-        CGFloat progressHigh = 30;
-        self.progressSlider.frame = CGRectMake(progressSliderLeftRightPadding , CGRectGetMinY(self.currentTimeLabel.frame) -progressHigh, progressSliderWidth, progressHigh);
-   
-        // 中间播放按钮
-        self.playButton.center = self.center;
-        self.playButton.bounds = CGRectMake(0, 0, 80, 80);
-        
-        // 全屏按钮
-        self.fullScreenButton.frame = CGRectMake((viewWidth - 82)/2, CGRectGetMaxY(self.playButton.frame) + 90, 82, 28);
-        
-        // 自动隐藏皮肤
-//        [self autoHideSkinView];
-        
-        // 隐藏背景
-        self.topShadowLayer.hidden = YES;
-        self.bottomShadowLayer.hidden = YES;
+    [self refreshProgressViewFrame];
+    
+    // 自动隐藏皮肤
+//    [self autoHideSkinView];
+    
+    // 隐藏背景
+    self.topShadowLayer.hidden = YES;
+    self.bottomShadowLayer.hidden = YES;
 
 }
 
 - (void)refreshProgressViewFrame {
+    // 预览视图
+    self.progressPreviewView.frame = CGRectMake(self.frame.size.width / 2 - self.progressPreviewView.bounds.size.width / 2,
+                                                self.progressSlider.frame.origin.y - self.progressPreviewView.bounds.size.height - 6,
+                                                self.progressPreviewView.bounds.size.width,
+                                                self.progressPreviewView.bounds.size.height);
+}
+
+- (void)refreshPlayTimesLabelFrame{
+    CGFloat viewHeight = CGRectGetHeight(self.bounds);
+    
     CGFloat toppadding;
     if (@available(iOS 11.0, *)) {
         toppadding = self.safeAreaInsets.top;
     } else {
         toppadding = 20;
     }
-    self.progressView.frame = CGRectMake(self.frame.size.width / 2 - 73.5, self.frame.size.height / 2 - 16, 147, 32);
+    toppadding += 4; /// 顶部距离增加间隙值
+
+    // 基础数据
+    CGFloat leftPadding = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? 10.0 : 2.0;
+    CGFloat bottomPadding = 20.0;
+    CGFloat commonHeight = 20.0;
+    CGFloat timeLabelWidth = [self getLabelTextWidth:self.currentTimeLabel];
+    self.currentTimeLabel.frame = CGRectMake(leftPadding + 12, viewHeight - bottomPadding - commonHeight, timeLabelWidth, commonHeight);
+    
+    self.diagonalsLabel.frame = CGRectMake(CGRectGetMaxX(self.currentTimeLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), 5, commonHeight);
+    
+    timeLabelWidth = [self getLabelTextWidth:self.durationLabel];
+    self.durationLabel.frame = CGRectMake(CGRectGetMaxX(self.diagonalsLabel.frame), CGRectGetMinY(self.currentTimeLabel.frame), timeLabelWidth, commonHeight);
 }
 
 - (void)setPlayButtonWithPlaying:(BOOL)playing{
@@ -140,7 +165,6 @@
         self.playButton.selected = YES;
     }
     else{
-//        self.playButton.hidden = NO;
         self.playButton.selected = NO;
     }
 }

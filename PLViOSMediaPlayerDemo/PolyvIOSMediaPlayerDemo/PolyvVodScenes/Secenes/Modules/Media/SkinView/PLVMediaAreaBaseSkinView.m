@@ -7,7 +7,7 @@
 
 #import "PLVMediaAreaBaseSkinView.h"
 #import <MediaPlayer/MPVolumeView.h>
-#import "PLVLCMediaBrightnessView.h"
+#import "PLVMediaBrightnessView.h"
 
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
@@ -126,7 +126,7 @@ UIGestureRecognizerDelegate
     [controlsSuperview addSubview:self.diagonalsLabel];
     [controlsSuperview addSubview:self.durationLabel];
     [controlsSuperview addSubview:self.progressSlider];
-    [controlsSuperview addSubview:self.progressView];
+    [controlsSuperview addSubview:self.progressPreviewView];
     
     [controlsSuperview bringSubviewToFront:self.backButton];
 }
@@ -163,7 +163,7 @@ UIGestureRecognizerDelegate
     if (self.playButton.selected) {
         [self.playButton setImage:[UIImage imageNamed:@"plv_skin_control_icon_pause"] forState:UIControlStateSelected | UIControlStateHighlighted];
     }else{
-        [self.playButton setImage:[UIImage imageNamed:@"plv_skin_control_icon__play"] forState:UIControlStateHighlighted];
+        [self.playButton setImage:[UIImage imageNamed:@"plv_skin_control_icon_play"] forState:UIControlStateHighlighted];
     }
 }
 
@@ -171,40 +171,36 @@ UIGestureRecognizerDelegate
     NSLog(@"PLVLCBasePlayerSkinView[%@] - showFloatViewShowButtonTipsLabelAnimation failed, the method was not overridden by subclass",NSStringFromClass(self.class));
 }
 
-- (void)setProgressWithCachedProgress:(CGFloat)cachedProgress playedProgress:(CGFloat)playedProgress durationTime:(NSTimeInterval)durationTime currentTimeString:(NSString *)currentTimeString durationString:(NSString *)durationString{
+- (void)setProgressWithCachedProgress:(CGFloat)cachedProgress
+                       playedProgress:(CGFloat)playedProgress
+                         durationTime:(NSTimeInterval)durationTime
+                    currentTimeString:(NSString *)currentTimeString
+                       durationString:(NSString *)durationString{
     [self.progressSlider setProgressWithCachedProgress:cachedProgress playedProgress:playedProgress];
     self.progressSlider.userInteractionEnabled = (durationTime > 0 ? YES : NO);
+    
+    BOOL needUpdate = NO;
     if (self.currentTimeLabel.text.length !=  currentTimeString.length) {
 //        [self setNeedsLayout];
+        needUpdate = YES;
     }
-    
     self.currentTimeLabel.text = [PLVVodFdUtil checkStringUseable:currentTimeString] ? currentTimeString : @"00:00";
     self.currentPlaybackTime = [PLVVodFdUtil secondsToTimeInterval:self.currentTimeLabel.text];
-    if (! [self.durationLabel.text isEqualToString:durationString]) {
+    if (![self.durationLabel.text isEqualToString:durationString]) {
         self.durationLabel.text = [PLVVodFdUtil checkStringUseable:durationString] ? durationString : @"00:00";
+        needUpdate = YES;
 //        [self setNeedsLayout];
     }
     self.duration = [PLVVodFdUtil secondsToTimeInterval:self.durationLabel.text];
+    
+    // 更新布局
+    if (needUpdate) {
+        [self refreshPlayTimesLabelFrame];
+    }
 }
 
 - (void)setProgressLabelWithCurrentTime:(NSTimeInterval)currentTime durationTime:(NSTimeInterval)durationTime {
-    NSMutableAttributedString *progressString = [[NSMutableAttributedString alloc] init];
-    NSString *currentTimeString = [PLVVodFdUtil secondsToString2:currentTime];
-    NSString *durationTimeString = [NSString stringWithFormat:@"/%@",[PLVVodFdUtil secondsToString2:durationTime]];
-    
-    NSMutableDictionary *currentTimeAttr = [NSMutableDictionary dictionary];
-    currentTimeAttr[NSFontAttributeName] = [UIFont fontWithName:@"PingFang SC" size:14];
-    currentTimeAttr[NSForegroundColorAttributeName] = PLV_UIColorFromRGB(@"6DA7FF");;
-    
-    NSMutableDictionary *durationTimeAttr = [NSMutableDictionary dictionary];
-    durationTimeAttr[NSFontAttributeName] = [UIFont fontWithName:@"PingFang SC" size:14];
-    durationTimeAttr[NSForegroundColorAttributeName] = PLV_UIColorFromRGB(@"FFFFFF");
-    
-    [progressString appendAttributedString:[[NSAttributedString alloc] initWithString:currentTimeString attributes:currentTimeAttr]];
-    [progressString appendAttributedString:[[NSAttributedString alloc] initWithString:durationTimeString attributes:durationTimeAttr]];
-    
-    self.progressView.attributedText = progressString;
-    [self refreshProgressViewFrame];
+    [self.progressPreviewView updateProgressTime:currentTime];
 }
 
 - (void)refreshPlayTimesLabelFrame{
@@ -254,7 +250,7 @@ UIGestureRecognizerDelegate
         weakSelf.topShadowLayer.opacity = alpha;
         weakSelf.bottomShadowLayer.opacity = alpha;
         for (UIView * subview in weakSelf.subviews) {
-            if ([subview isKindOfClass:PLVLCMediaProgressView.class]) {
+            if ([subview isKindOfClass:PLVMediaProgressPreviewView.class]) {
                 continue;
             }
             subview.alpha = alpha;
@@ -387,13 +383,12 @@ UIGestureRecognizerDelegate
     return _progressSlider;
 }
 
-- (PLVLCMediaProgressView *)progressView {
-    if (!_progressView ) {
-        _progressView = [[PLVLCMediaProgressView alloc] init];
-        _progressView.attributedText = [[NSMutableAttributedString alloc]initWithString:@"00:00:00/00:00:00"];
-        _progressView.alpha = 0;
+- (PLVMediaProgressPreviewView *)progressPreviewView {
+    if (!_progressPreviewView ) {
+        _progressPreviewView = [[PLVMediaProgressPreviewView alloc] init];
+        _progressPreviewView.hidden = YES;
     }
-    return _progressView;
+    return _progressPreviewView;
 }
 
 - (void)setIsSkinShowing:(BOOL)skinShow{
@@ -425,7 +420,7 @@ UIGestureRecognizerDelegate
                 self.panType = PLVBasePlayerSkinViewTypeAdjustVolume;
             } else {//在屏幕左边，上下滑动调整亮度
                 self.panType = PLVBasePlayerSkinViewTypeAdjustBrightness;
-                [PLVLCMediaBrightnessView sharedBrightnessView];
+                [PLVMediaBrightnessView sharedBrightnessView];
             }
         } else {
             self.panType = PLVBasePlayerSKinViewTyoeAdjusttProgress;
@@ -502,7 +497,7 @@ UIGestureRecognizerDelegate
 }
 
 - (void)showProgressView:(BOOL)show {
-    self.progressView.alpha = (show ? 1 : 0);
+    self.progressPreviewView.hidden = show ? NO : YES;
 }
 
 - (void)controlsSwitchHideStatus {
@@ -515,7 +510,12 @@ UIGestureRecognizerDelegate
 #pragma mark 【Action】
 - (void)tapGestureAction:(UITapGestureRecognizer *)tapGR {
     if (tapGR.numberOfTapsRequired == 2 && tapGR.numberOfTouchesRequired == 1) {
+        if (self.skinViewType == PLVMediaAreaBaseSkinViewType_Portrait_Full){
+            // 短视频-竖屏，不响应双击事件
+            return;
+        }
         BOOL wannaPlay = !self.playButton.selected;
+
         if (self.baseDelegate && [self.baseDelegate respondsToSelector:@selector(plvMediaAreaBaseSkinViewPlayButtonClicked:wannaPlay:)]) {
             [self.baseDelegate plvMediaAreaBaseSkinViewPlayButtonClicked:self wannaPlay:wannaPlay];
         }
@@ -526,6 +526,7 @@ UIGestureRecognizerDelegate
         if (self.skinViewType == PLVMediaAreaBaseSkinViewType_Portrait_Full){
             // 短视频皮肤 1)隐藏、显示播放按钮 2)模拟播放事件
             [self playButtonAction:self.playButton];
+
         } else {
             [self controlsSwitchShowStatusWithAnimation:!self.isSkinShowing];
         }
@@ -590,14 +591,18 @@ UIGestureRecognizerDelegate
 
 #pragma mark 【Delegate】
 - (void)plvProgressSlider:(PLVProgressSlider *)progressSlider sliderDragEnd:(CGFloat)currentSliderProgress{
-    if([self.baseDelegate respondsToSelector:@selector(plvMediaAreaBaseSkinView:sliderDragEnd:)]){
+    self.progressPreviewView.hidden = YES;
+    
+    if ([self.baseDelegate respondsToSelector:@selector(plvMediaAreaBaseSkinView:sliderDragEnd:)]){
         [self.baseDelegate plvMediaAreaBaseSkinView:self sliderDragEnd:currentSliderProgress];
     }
 }
 
 /// 进度连续变化
 - (void)plvProgressSlider:(PLVProgressSlider *)progressSlider sliderDragingProgressChange:(CGFloat)currentSliderProgress{
-    
+    NSTimeInterval progressTime = self.duration * currentSliderProgress;
+    [self.progressPreviewView updateProgressTime:progressTime];
+    self.progressPreviewView.hidden = NO;
 }
 
 #pragma mark 【UIGestureRecognizerDelegate】

@@ -186,6 +186,15 @@ UICollectionViewDelegateFlowLayout
 
 #pragma mark - [ Delegate ]
 
+#pragma mark UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    PLVFeedItemView *feedCell = (PLVFeedItemView *)[collectionView dequeueReusableCellWithReuseIdentifier:kPLVFeedViewCellIdentifier forIndexPath:indexPath];
+    if (self.activeFeedItemView && ((feedCell.customContentView && self.activeFeedItemView != feedCell.customContentView) || (!feedCell.customContentView && indexPath.row != 0))) {
+        [self.activeFeedItemView setActive:NO];
+    }
+}
+
 #pragma mark UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {

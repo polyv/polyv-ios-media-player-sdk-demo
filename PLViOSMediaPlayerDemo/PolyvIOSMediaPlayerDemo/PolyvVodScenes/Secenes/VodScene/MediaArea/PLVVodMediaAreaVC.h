@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 // vid 播放
 - (void)playWithVid:(NSString *)vid;
 
+// 播放
+- (void)replay;
+
 // 播放速度
 - (void)setPlayRate:(CGFloat)rate;
 
@@ -44,16 +47,25 @@ NS_ASSUME_NONNULL_BEGIN
 // 切换音频、视频播放模式
 - (void)setPlaykMode:(PLVVodPlaybackMode )playbackMode;
 
+// 显示播放完毕视图
+- (void)showPlayFinishUI;
+
 @end
 
 @protocol PLVVodMediaAreaVCDelegate <NSObject>
 
 /// 更多菜单
 - (void)vodMediaAreaVC_ShowMoreView:(PLVVodMediaAreaVC *)playerVC;
+
 /// 返回事件
 - (void)vodMediaAreaVC_BackEvent:(PLVVodMediaAreaVC *)playerVC;
+
+/// 播放结束事件
+- (void)vodMediaAreaVC_PlayFinishEvent:(PLVVodMediaAreaVC *)playerVC;
+
 /// 画中画状态回调
 - (void)vodMediaAreaVC_PictureInPictureChangeState:(PLVVodMediaAreaVC *)playerVC state:(PLVPictureInPictureState )state;
+
 /// 画中画开启失败
 - (void)vodMediaAreaVC_StartPictureInPictureFailed:(PLVVodMediaAreaVC *)playerVC error:(NSError *)error;
 
