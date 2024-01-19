@@ -9,15 +9,15 @@ PODS:
   - PLVAliHttpDNS/UTDID (1.10.0)
   - PLVIJKPlayer (0.13.4)
   - PLVTimer (0.0.4)
-  - PolyvMediaPlayerSDK (2.1.0):
-    - PolyvMediaPlayerSDK/Core (= 2.1.0)
-    - PolyvMediaPlayerSDK/Player (= 2.1.0)
-    - PolyvMediaPlayerSDK/ThirdPart (= 2.1.0)
-  - PolyvMediaPlayerSDK/Core (2.1.0):
+  - PolyvMediaPlayerSDK (2.1.1):
+    - PolyvMediaPlayerSDK/Core (= 2.1.1)
+    - PolyvMediaPlayerSDK/Player (= 2.1.1)
+    - PolyvMediaPlayerSDK/ThirdPart (= 2.1.1)
+  - PolyvMediaPlayerSDK/Core (2.1.1):
     - PLVTimer (~> 0.0.2)
-  - PolyvMediaPlayerSDK/Player (2.1.0):
+  - PolyvMediaPlayerSDK/Player (2.1.1):
     - PLVIJKPlayer (~> 0.13.4)
-  - PolyvMediaPlayerSDK/ThirdPart (2.1.0):
+  - PolyvMediaPlayerSDK/ThirdPart (2.1.1):
     - PLVAliHttpDNS (~> 1.10.0)
   - SDWebImage (4.4.0):
     - SDWebImage/Core (= 4.4.0)
@@ -25,7 +25,7 @@ PODS:
 
 DEPENDENCIES:
   - MJRefresh (~> 3.5.0)
-  - PolyvMediaPlayerSDK (~> 2.1.0)
+  - PolyvMediaPlayerSDK (~> 2.1.1)
   - SDWebImage (= 4.4.0)
 
 SPEC REPOS:
@@ -42,9 +42,9 @@ SPEC CHECKSUMS:
   PLVAliHttpDNS: e968fff888b8e96e51828d76d571a9430367475f
   PLVIJKPlayer: e9dd51f8bb6172bee912854e1fc069fa5914c081
   PLVTimer: 80d2d24d32bb2e9588d089fc25974ff778259ae1
-  PolyvMediaPlayerSDK: c31c3a596202278d00835f2ab31ddc2a49c6aadc
+  PolyvMediaPlayerSDK: d1d618b63b9c28ff8ceb2dc0f543c66096fcfff2
   SDWebImage: b534502786e43dde36dfcaee89356fe6df30e203
 
-PODFILE CHECKSUM: be64c851d8098c8e8efed534ec6a6fa92254a182
+PODFILE CHECKSUM: d0e2e4ef1ac3eccb5c50b849debf57773e5c62bf
 
 COCOAPODS: 1.11.3

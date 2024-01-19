@@ -404,7 +404,9 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 /// 播放器 ‘播放状态’ 发生改变
 - (void)plvPlayerCore:(PLVPlayerCore *)player playerPlaybackStateDidChange:(PLVPlaybackState)playbackState{
     NSLog(@"%@", NSStringFromSelector(_cmd));
-    BOOL isPlaying = (playbackState == PLVPlaybackStatePlaying);
+    BOOL isPlaying = (playbackState == PLVPlaybackStatePlaying ||
+                      playbackState == PLVPlaybackStateSeekingForward ||
+                      playbackState == PLVPlaybackStateSeekingBackward);
     // 同步播放器皮肤
     self.mediaPlayerState.isPlaying = isPlaying;
     [self.mediaSkinContainer.landscapeFullSkinView setPlayButtonWithPlaying:isPlaying];

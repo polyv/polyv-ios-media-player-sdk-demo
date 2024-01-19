@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showMediaPlayerLoopPlayView;
 
+- (void)hiddenView;
+
 @end
 
 @protocol PLVMediaPlayerSkinLoopPlayViewDelegate <NSObject>

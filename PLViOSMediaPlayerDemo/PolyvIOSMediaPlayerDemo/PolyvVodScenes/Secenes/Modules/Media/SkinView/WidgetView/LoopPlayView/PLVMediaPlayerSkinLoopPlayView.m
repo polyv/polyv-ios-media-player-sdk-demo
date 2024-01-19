@@ -95,11 +95,6 @@
     [self hiddenView];
 }
 
-- (void)hiddenView{
-    [self removeFromSuperview];
-    self.hidden = YES;
-}
-
 - (void)layoutButtonWithEdgeInsetsStyle:(NSInteger)style
                         imageTitleSpace:(CGFloat)space
                                  button:(UIButton *)button{
@@ -158,6 +153,11 @@
 #pragma mark 【Public】
 - (void)showMediaPlayerLoopPlayView{
     self.hidden = NO;
+}
+
+- (void)hiddenView{
+    [self removeFromSuperview];
+    self.hidden = YES;
 }
 
 @end

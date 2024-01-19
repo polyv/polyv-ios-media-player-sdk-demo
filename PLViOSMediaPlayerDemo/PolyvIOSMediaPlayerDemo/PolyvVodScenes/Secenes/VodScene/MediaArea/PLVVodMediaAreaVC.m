@@ -58,7 +58,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     
     // 根据业务需要进行配置
     // 广告、片头
-    self.player.enableAd = YES;
+//    self.player.enableAd = YES;
     self.player.enableTeaser = YES;
     
     // seek 类型 精准seek
@@ -314,11 +314,17 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 /// 播放器 ‘播放状态’ 发生改变
 - (void)plvPlayerCore:(PLVPlayerCore *)player playerPlaybackStateDidChange:(PLVPlaybackState)playbackState{
     NSLog(@"%@", NSStringFromSelector(_cmd));
-    BOOL isPlaying = (playbackState == PLVPlaybackStatePlaying);
+    BOOL isPlaying = (playbackState == PLVPlaybackStatePlaying ||
+                      playbackState == PLVPlaybackStateSeekingForward ||
+                      playbackState == PLVPlaybackStateSeekingBackward);
     // 同步播放器皮肤
     self.mediaPlayerState.isPlaying = isPlaying;
     [self.mediaSkinContainer.landscapeFullSkinView setPlayButtonWithPlaying:isPlaying];
     [self.mediaSkinContainer.portraitHalfSkinView setPlayButtonWithPlaying:isPlaying];
+    
+    if (isPlaying) {
+        [self.mediaSkinContainer hideLoopPlayUI];
+    }
     
     // 跑马灯控制
     [self marqueeControlWithState:playbackState];
