@@ -126,4 +126,9 @@
                                                 self.progressPreviewView.bounds.size.height);
 }
 
+#pragma mark [PUBLIC METHOD]
+- (void)hiddenMediaPlayerPortraitHalSkinView:(BOOL)isHidden {
+    [self controlsSwitchShowStatusWithAnimation:!isHidden];
+}
+
 @end

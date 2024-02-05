@@ -6,6 +6,7 @@
 //
 
 #import "PLVPictureInPictureRestoreManager.h"
+#import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
 @interface PLVPictureInPictureRestoreManager ()
 @property (nonatomic, strong) UINavigationController *holdingNavigation;
@@ -17,8 +18,14 @@
 
 - (instancetype)init {
     if (self = [super init]) {
+        [self addObserver];
     }
     return self;
+}
+
+- (void)addObserver{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 #pragma mark - [ Public Method ]
@@ -80,6 +87,20 @@
     }
     [self cleanRestoreManager];
     completionHandler(YES);
+}
+
+- (void)applicationWillEnterForeground{
+    UIViewController *currentViewController = [PLVVodFdUtil getCurrentViewController];
+    if (self.holdingViewController && currentViewController == self.holdingViewController) {
+        // 回到前台，如果当前是开启画中画的页面，需要关闭画中画，以播放器模式播放
+        // 延迟0.3秒 否则stopPictureInPicture 不生效
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ([PLVMediaPlayerPictureInPictureManager sharedInstance].pictureInPictureActive) {
+                // 暂停 画中画
+                [[PLVMediaPlayerPictureInPictureManager sharedInstance] stopPictureInPicture];
+            }
+        });
+    }
 }
 
 @end

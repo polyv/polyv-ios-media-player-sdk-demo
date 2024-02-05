@@ -160,11 +160,16 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         [PLVPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
         [PLVPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
     
-        // 退出当前界面
-        if (self.navigationController){
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            [self dismissViewControllerAnimated:YES completion:nil];
+        if ([PLVMediaPlayerPictureInPictureManager sharedInstance].isBackgroudStartMode){
+            // 停留在当前界面，客户也可以自定义交互
+        }
+        else{
+            // 退出当前界面
+            if (self.navigationController){
+                [self.navigationController popViewControllerAnimated:YES];
+            } else {
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
         }
     } else if (state == PLVPictureInPictureStateDidEnd) { // 关闭 画中画
         // 画中画已经关闭
@@ -235,7 +240,12 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 }
 
 - (void)mediaPlayerSkinOutMoreView_StartPictureInPicture{
-    [self.vodMediaAreaVC.player startPictureInPicture];
+    if ([PLVMediaPlayerPictureInPictureManager sharedInstance].pictureInPictureActive){
+        [self.vodMediaAreaVC.player stopPictureInPicture];
+    }
+    else{
+        [self.vodMediaAreaVC.player startPictureInPicture];
+    }
 }
 
 @end

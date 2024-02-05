@@ -18,6 +18,7 @@
 #import "PLVMediaPlayerSkinLoopPlayView.h"
 #import "PLVMediaPlayerSkinFastForwardView.h"
 #import "PLVMediaPlayerSkinDefinitionTipsView.h"
+#import "PLVMediaPlayerSkinLoadingView.h"
 #import "PLVOrientationUtil.h"
 
 /// UI View Hierarchy
@@ -46,6 +47,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 @property (nonatomic, strong) PLVMediaPlayerSkinLoopPlayView *loopPlayView;
 @property (nonatomic, strong) PLVMediaPlayerSkinFastForwardView *fastForwardView;
 @property (nonatomic, strong) PLVMediaPlayerSkinDefinitionTipsView *definitionTipsView;
+@property (nonatomic, strong) PLVMediaPlayerSkinLoadingView *loadingView;
 
 @end
 
@@ -203,6 +205,13 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     return _definitionTipsView;
 }
 
+- (PLVMediaPlayerSkinLoadingView *)loadingView{
+    if (!_loadingView){
+        _loadingView = [[PLVMediaPlayerSkinLoadingView alloc] init];
+    }
+    return _loadingView;
+}
+
 #pragma mark 【Public Method】
 - (void)syncSkinWithMode:(PLVMediaPlayerState *)mediaPlayerState{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -258,6 +267,23 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         [self.definitionTipsView showSwitchQualityWithModel:self.mediaPlayerState targetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:[PLVOrientationUtil isLandscape]];
         [self layoutIfNeeded];
     });
+}
+
+- (void)showLoadingSpeed:(NSString *)speed loading:(BOOL)loading{
+    if (loading){
+        [self addSubview:self.loadingView];
+        [self bringSubviewToFront:self.loadingView];
+        self.loadingView.frame = self.bounds;
+
+        [self.loadingView.loadSpeadLable setText:speed];
+    }
+    else{
+        [self.loadingView removeFromSuperview];
+    }
+}
+
+- (void)updateLoadingSpeed:(NSString *)speed{
+    [self.loadingView.loadSpeadLable setText:speed];
 }
 
 #pragma mark 【Private Method】

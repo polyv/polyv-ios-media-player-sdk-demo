@@ -43,6 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 显示弱网切换清晰度提示
 - (void)showDefinitionTipsView;
 
+/// 视频加载速率显示
+///  @param speed 加载速度
+///  @param loading 正在加载
+- (void)showLoadingSpeed:(NSString *)speed loading:(BOOL)loading;
+
+/// 更新视频加载速率
+/// @param speed 加载速度
+- (void)updateLoadingSpeed:(NSString *)speed;
+
 @end
 
 @protocol PLVVodMediaPlayerSkinContainerViewDelegate <NSObject>

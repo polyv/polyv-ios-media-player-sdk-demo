@@ -9,6 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger) {
+    PLVMediaPlayerQualityStateDefault = 0, // 默认,隐藏提示控件
+    PLVMediaPlayerQualityStatePrepare, // 弱网提示，可以进行清晰度切换
+    PLVMediaPlayerQualityStateChanging, // 清晰度切换中
+    PLVMediaPlayerQualityStateComplete  // 清晰度切换完成
+}PLVMediaPlayerQualityState;
+
 @interface PLVMediaPlayerState : NSObject
 
 @property (nonatomic, assign) BOOL isSupportAudioMode;  // 音频模式
@@ -17,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger curWindowMode;  // 当前窗口模式 1:普通模式 2：小窗模式
 @property (nonatomic, assign) NSInteger curQualityLevel; // 当前清晰度
 @property (nonatomic, assign) NSInteger qualityCount;    // 清晰度数量
+@property (nonatomic, assign) PLVMediaPlayerQualityState qualityState; // 清晰度切换状态
 @property (nonatomic, assign) CGFloat curPlayRate;       // 当前倍速
 @property (nonatomic, assign) CGFloat origPlayRate;       // 记录上一次播放速度
 

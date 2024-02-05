@@ -29,6 +29,7 @@ UICollectionViewDelegateFlowLayout
 @property (nonatomic, assign) BOOL isRefreshing;
 @property (nonatomic, assign) BOOL isLoadingMore;
 @property (nonatomic, assign) BOOL noMoreData;
+@property (nonatomic, assign) NSInteger changeToRow;
 
 @end
 
@@ -189,8 +190,12 @@ UICollectionViewDelegateFlowLayout
 #pragma mark UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    PLVFeedItemView *feedCell = (PLVFeedItemView *)[collectionView dequeueReusableCellWithReuseIdentifier:kPLVFeedViewCellIdentifier forIndexPath:indexPath];
-    if (self.activeFeedItemView && ((feedCell.customContentView && self.activeFeedItemView != feedCell.customContentView) || (!feedCell.customContentView && indexPath.row != 0))) {
+    self.changeToRow = indexPath.row;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    // 如果并未切入新的视频，则不停止
+    if (self.activeFeedItemView && self.changeToRow != indexPath.row) {
         [self.activeFeedItemView setActive:NO];
     }
 }

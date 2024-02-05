@@ -78,84 +78,152 @@
     CGFloat bubbleHeight = 52;
     CGFloat bubbleOriginX = self.targetPoint.x + 22 - bubbleWidth;
     CGFloat bubbleOriginY = 0;
-    
-    
-    if (!above) {
-        bubbleOriginY = self.targetPoint.y;
-        self.bubbleView.frame = CGRectMake(bubbleOriginX, bubbleOriginY, bubbleWidth, bubbleHeight);
-        self.tipTextView.frame = CGRectMake(xPadding, 8 + textYPadding, self.tipWidth, 20);
-        
-    } else {
-        bubbleOriginY = self.targetPoint.y - bubbleHeight;
-        self.bubbleView.frame = CGRectMake(bubbleOriginX, bubbleOriginY, bubbleWidth, bubbleHeight);
+
+    UIBezierPath *maskPath = nil;
+    if (self.mediaState.qualityState == PLVMediaPlayerQualityStateChanging ||
+        self.mediaState.qualityState == PLVMediaPlayerQualityStateComplete){
+        // 居中显示
+        bubbleHeight = 36;
+        bubbleWidth = self.tipWidth + 2* xPadding;
+        bubbleOriginX = (self.bounds.size.width - bubbleWidth)/2;
+        bubbleOriginY = 28;
+        self.bubbleView.frame = CGRectMake(bubbleOriginX, bubbleHeight, bubbleWidth, bubbleHeight);
+        textYPadding = 8;
         self.tipTextView.frame = CGRectMake(xPadding, textYPadding, self.tipWidth, 20);
+        maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bubbleView.bounds cornerRadius:bubbleHeight/2];
+        [maskPath closePath];
+        
+        self.closeButton.hidden = YES;
+    }
+    else{
+        // 清晰度控件位置显示
+        //    CGFloat midX = bubbleWidth - 18;
+        //    CGFloat maxY = CGRectGetHeight(self.bubbleView.frame);
+        if (!above) {
+            bubbleOriginY = self.targetPoint.y;
+            self.bubbleView.frame = CGRectMake(bubbleOriginX, bubbleOriginY, bubbleWidth, bubbleHeight);
+            self.tipTextView.frame = CGRectMake(xPadding, 8 + textYPadding, self.tipWidth, 20);
+        } else {
+            bubbleOriginY = self.targetPoint.y - bubbleHeight;
+            self.bubbleView.frame = CGRectMake(bubbleOriginX, bubbleOriginY, bubbleWidth, bubbleHeight);
+            self.tipTextView.frame = CGRectMake(xPadding, textYPadding, self.tipWidth, 20);
+        }
+        maskPath = above ? [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, CGRectGetWidth(self.bubbleView.frame), CGRectGetHeight(self.bubbleView.frame) - 8) cornerRadius:8] : [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 8, CGRectGetWidth(self.bubbleView.frame), CGRectGetHeight(self.bubbleView.frame) - 8) cornerRadius:8];
+        [maskPath closePath];
+        // triangle
+        /*
+        if (above) {
+            [maskPath moveToPoint:CGPointMake(midX,maxY)];
+            [maskPath addLineToPoint:CGPointMake(midX - 8, maxY - 8)];
+            [maskPath addLineToPoint:CGPointMake(midX + 8, maxY - 8)];
+            [maskPath closePath];
+        } else {
+            [maskPath moveToPoint:CGPointMake(midX,0)];
+            [maskPath addLineToPoint:CGPointMake(midX-8, 8)];
+            [maskPath addLineToPoint:CGPointMake(midX+8, 8)];
+            [maskPath closePath];
+        }
+        */
+        
+        self.closeButton.hidden = NO;
+        self.closeButton.frame = CGRectMake(CGRectGetMaxX(self.tipTextView.frame) + 10, CGRectGetMidY(self.tipTextView.frame) - 8, 16, 16);
     }
     
     if (_shapeLayer.superlayer) {
         [_shapeLayer removeFromSuperlayer];
         _shapeLayer = nil;
     }
-    CGFloat midX = bubbleWidth - 18;
-    CGFloat maxY = CGRectGetHeight(self.bubbleView.frame);
-    
-    UIBezierPath *maskPath = above ? [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, CGRectGetWidth(self.bubbleView.frame), CGRectGetHeight(self.bubbleView.frame) - 8) cornerRadius:8] : [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 8, CGRectGetWidth(self.bubbleView.frame), CGRectGetHeight(self.bubbleView.frame) - 8) cornerRadius:8]  ;
-    // triangle
-    /*
-    if (above) {
-        [maskPath moveToPoint:CGPointMake(midX,maxY)];
-        [maskPath addLineToPoint:CGPointMake(midX - 8, maxY - 8)];
-        [maskPath addLineToPoint:CGPointMake(midX + 8, maxY - 8)];
-        [maskPath closePath];
-    } else {
-        [maskPath moveToPoint:CGPointMake(midX,0)];
-        [maskPath addLineToPoint:CGPointMake(midX-8, 8)];
-        [maskPath addLineToPoint:CGPointMake(midX+8, 8)];
-        [maskPath closePath];
-    }
-     */
-    [maskPath closePath];
-    
     CAShapeLayer *shapeLayer = [[CAShapeLayer alloc] init];
     shapeLayer.frame = self.bounds;
     shapeLayer.fillColor = UIColor.blackColor.CGColor;
     shapeLayer.path = maskPath.CGPath;
     _shapeLayer = shapeLayer;
     [self.bubbleView.layer insertSublayer:_shapeLayer atIndex:0];
-    
-    
-    self.closeButton.frame = CGRectMake(CGRectGetMaxX(self.tipTextView.frame) + 10, CGRectGetMidY(self.tipTextView.frame) - 8, 16, 16);
 }
 
 - (void)showSwitchQualityWithModel:(PLVMediaPlayerState *)mediaState targetPoint:(CGPoint)targetPoint abovePoint:(BOOL)above {
-    BOOL showChangeString = mediaState.qualityCount > 1 && (mediaState.curQualityLevel - 1) > 0;
-    
-    self.switchQuality = showChangeString ? (mediaState.curQualityLevel - 1) : mediaState.curQualityLevel;
-    
-    NSString *qualityString = @"";
-    if (showChangeString) {
-        if (self.switchQuality == PLVVodQualityStandard) {
-            qualityString = @"切换到流畅";
-        }else if (self.switchQuality == PLVVodQualityHigh) {
-            qualityString = @"切换到高清";
-        }else if (self.switchQuality == PLVVodQualityUltra) {
-            qualityString = @"切换到超清";
+    self.mediaState = mediaState;
+    if (PLVMediaPlayerQualityStatePrepare == mediaState.qualityState){
+        // 是否可以切换提示
+        BOOL showChangeString = mediaState.qualityCount > 1 && (mediaState.curQualityLevel - 1) > 0;
+        self.switchQuality = showChangeString ? (mediaState.curQualityLevel - 1) : mediaState.curQualityLevel;
+        
+        NSString *qualityString = @"";
+        if (showChangeString) {
+            if (self.switchQuality == PLVVodQualityStandard) {
+                qualityString = @"切换到流畅";
+            }else if (self.switchQuality == PLVVodQualityHigh) {
+                qualityString = @"切换到高清";
+            }else if (self.switchQuality == PLVVodQualityUltra) {
+                qualityString = @"切换到超清";
+            }
         }
+        
+        NSString *tipContentString;
+        if (self.customPoorNetworkTips  && self.customPoorNetworkTips.length > 0 && [self.customPoorNetworkTips isKindOfClass:NSString.class] ) {
+            tipContentString = [NSString stringWithFormat:@"%@%@", self.customPoorNetworkTips, qualityString];
+        } else {
+            tipContentString = showChangeString ?[NSString stringWithFormat:@"您的网络环境较差，可尝试%@", qualityString] : @"当前网络信号弱，请耐心等待或更换网络";
+        }
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:tipContentString attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:15.0],
+                                                         NSForegroundColorAttributeName:[UIColor whiteColor]}];
+        if (qualityString && qualityString.length > 0 && [qualityString isKindOfClass:NSString.class]) {
+            [attributedString addAttribute:NSLinkAttributeName value:@"switchQuality://" range:[tipContentString rangeOfString:qualityString]];
+        }
+        
+        [self showTipsWithString:attributedString point:targetPoint abovePoint:above];
     }
-    
-    NSString *tipContentString;
-    if (self.customPoorNetworkTips  && self.customPoorNetworkTips.length > 0 && [self.customPoorNetworkTips isKindOfClass:NSString.class] ) {
-        tipContentString = [NSString stringWithFormat:@"%@%@", self.customPoorNetworkTips, qualityString];
-    } else {
-        tipContentString = showChangeString ?[NSString stringWithFormat:@"您的网络环境较差，可尝试%@", qualityString] : @"当前网络信号弱，请耐心等待或更换网络";
+    else if (PLVMediaPlayerQualityStateChanging == mediaState.qualityState){
+        // 切换中提示
+        self.switchQuality = mediaState.curQualityLevel;
+        NSString *qualityString = @"";
+        if (self.switchQuality == PLVVodQualityStandard) {
+            qualityString = @"流畅";
+        }else if (self.switchQuality == PLVVodQualityHigh) {
+            qualityString = @"高清";
+        }else if (self.switchQuality == PLVVodQualityUltra) {
+            qualityString = @"超清";
+        }
+        NSString *tipContentString = [NSString stringWithFormat:@"正在为您切换到%@清晰度 请耐心等待~", qualityString];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:tipContentString attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:15.0],
+                                                         NSForegroundColorAttributeName:[UIColor whiteColor]}];
+        if (qualityString && qualityString.length > 0 && [qualityString isKindOfClass:NSString.class]) {
+            [attributedString addAttribute:NSLinkAttributeName value:@"tipsQuality://" range:[tipContentString rangeOfString:qualityString]];
+        }
+        
+        [self showTipsWithString:attributedString point:targetPoint abovePoint:above];
     }
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:tipContentString attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:15.0],
-                                                     NSForegroundColorAttributeName:[UIColor whiteColor]}];
-    if (qualityString && qualityString.length > 0 && [qualityString isKindOfClass:NSString.class]) {
-        [attributedString addAttribute:NSLinkAttributeName value:@"switchQuality://" range:[tipContentString rangeOfString:qualityString]];
+    else if (PLVMediaPlayerQualityStateComplete == mediaState.qualityState){
+        // 切换完成提示
+        self.switchQuality = mediaState.curQualityLevel;
+        NSString *qualityString = @"";
+        if (self.switchQuality == PLVVodQualityStandard) {
+            qualityString = @"流畅";
+        }else if (self.switchQuality == PLVVodQualityHigh) {
+            qualityString = @"高清";
+        }else if (self.switchQuality == PLVVodQualityUltra) {
+            qualityString = @"超清";
+        }
+        NSString *tipContentString = [NSString stringWithFormat:@"您已成功切换到%@清晰度", qualityString];
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:tipContentString
+                                                                                             attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:15.0],NSForegroundColorAttributeName:[UIColor whiteColor]}];
+        if (qualityString && qualityString.length > 0 && [qualityString isKindOfClass:NSString.class]) {
+            [attributedString addAttribute:NSLinkAttributeName value:@"tipsQuality://" range:[tipContentString rangeOfString:qualityString]];
+        }
+        [self showTipsWithString:attributedString point:targetPoint abovePoint:above];
+        // 2秒后自动隐藏
+        [NSObject cancelPreviousPerformRequestsWithTarget:self];
+        [self performSelector:@selector(hide) withObject:self afterDelay:2];
     }
+    else if (PLVMediaPlayerQualityStateDefault == mediaState.qualityState){
+        // 隐藏
+        [self hide];
+    }
+}
+
+- (void)showTipsWithString:(NSAttributedString *)attributedString point:(CGPoint)targetPoint abovePoint:(BOOL)above{
     self.tipTextView.attributedText = attributedString;
     self.tipWidth = [attributedString boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 20) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin context:nil].size.width;
-    
     [self updateUIWithTargetPoint:targetPoint abovePoint:above];
     
     self.isShowing = YES;

@@ -40,6 +40,7 @@
 
 - (void)setupUI{
     self.clipsToBounds = YES;
+    self.backgroundColor = [UIColor colorWithRed:32/255.0 green:38/255.0 blue:57.0/255.0 alpha:1.0];
 
     [self addSubview:self.backgroudImgView];
     [self addSubview:self.audioCoverBackImg];
@@ -78,7 +79,7 @@
         
         origin.x = CGRectGetMaxX(self.audioCoverBackImg.frame) + 64;
         origin.y = CGRectGetMaxY(self.audioCoverBackImg.frame) - 25;
-        self.switchButton.frame = CGRectMake(origin.x, origin.y, 100, 20);
+        self.switchButton.frame = CGRectMake(origin.x, origin.y, 100, 25);
     } else { // 竖向
         CGFloat leftPad = 44;
         CGFloat topPad = 62;
@@ -98,7 +99,7 @@
         
         origin.x = CGRectGetMaxX(self.audioCoverBackImg.frame) + 64;
         origin.y = CGRectGetMaxY(self.audioCoverBackImg.frame) - 25;
-        self.switchButton.frame = CGRectMake(origin.x, origin.y, 100, 20);
+        self.switchButton.frame = CGRectMake(origin.x, origin.y, 100, 25);
     }
 }
 
@@ -192,7 +193,8 @@
 - (UIButton *)switchButton{
     if (!_switchButton){
         _switchButton = [[UIButton alloc] init];
-        [_switchButton setTitle:@"切回视频" forState:UIControlStateNormal];
+        [_switchButton setTitle:@" 切回视频" forState:UIControlStateNormal];
+        [_switchButton setImage:[UIImage imageNamed:@"plv_skin_control_icon_switch_mode"] forState:UIControlStateNormal];
         [_switchButton addTarget:self action:@selector(switchButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         _switchButton.titleLabel.font = [UIFont systemFontOfSize:10];
         _switchButton.backgroundColor = [UIColor colorWithRed:25/255.0 green:29/255.0 blue:42/255.0 alpha:1.0];

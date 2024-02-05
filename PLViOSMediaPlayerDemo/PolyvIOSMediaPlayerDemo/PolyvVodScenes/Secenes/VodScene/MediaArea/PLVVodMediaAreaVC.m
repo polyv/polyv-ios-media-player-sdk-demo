@@ -9,6 +9,7 @@
 #import "PLVOrientationUtil.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVMarqueeView.h"
+#import <PLVTimer.h>
 
 /// UI View Hierarchy
 ///
@@ -23,6 +24,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 >
 
 @property (nonatomic, strong) PLVMarqueeView *marqueeView; /// 跑马灯
+@property (nonatomic, strong) PLVTimer *playbackTimer;     /// 播放过程定时器，用于UI相关实时更新
 
 @end
 
@@ -32,6 +34,9 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 - (void)dealloc{
     [self.player clearPlayer];
     [self.marqueeView stop];
+    [self.playbackTimer cancel];
+    self.playbackTimer = nil;
+    NSLog(@"PLVVodMediaAreaVC %@", NSStringFromSelector(_cmd));
 }
 
 - (void)viewDidLoad {
@@ -66,6 +71,9 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     
     // 设置新版跑马灯（2.0）
     [self initMarqueeView];
+    
+    // 设置刷新定时器
+    [self setupPlaybackTimer];
 }
 
 - (void)initMarqueeView{
@@ -79,6 +87,22 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 
 - (void)updateUI {
     [self updateUIForOrientation];
+}
+
+- (void)setupPlaybackTimer{
+    __weak typeof(self) weakSelf = self;
+    self.playbackTimer = [PLVTimer repeatWithInterval:0.5 repeatBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 网络加载速度更新
+            [weakSelf updateLoadSpeed];
+        });
+    }];
+}
+
+- (void)updateLoadSpeed{
+    if (self.player.playerLoadState == PLVPlayerLoadStateStalled){
+        [self.mediaSkinContainer updateLoadingSpeed:self.player.tcpSpeed];
+    }
 }
 
 #pragma mark 【Getter & Setter】
@@ -196,6 +220,13 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     self.mediaPlayerState.curQualityLevel = qualityLevel;
     // 视频区域 对应 播放器 的皮肤
     [self.mediaSkinContainer.landscapeFullSkinView updateQualityLevel:qualityLevel];
+    // 半屏皮肤需要隐藏
+    [self.mediaSkinContainer.portraitHalfSkinView hiddenMediaPlayerPortraitHalSkinView:YES];
+    // 显示清晰度切换状态
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStateChanging;
+        [self.mediaSkinContainer showDefinitionTipsView];
+    });
 }
 
 #pragma mark 【Orientation 横竖屏设置】
@@ -292,23 +323,33 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 /// 进度面板 手势事件 处理
 - (void)mediaPlayerSkinContainerview_ProgressViewPan:(PLVVodMediaPlayerSkinContainerView *)skinContainer scrubTime:(NSTimeInterval)scrubTime{
     [self.player seekToTime:scrubTime];
+    [self.player play];
 }
 
 /// 进度条 拖动事件 处理
 - (void)mediaPlayerSkinContainerView_SliderDragEnd:(PLVVodMediaPlayerSkinContainerView *)skinContainer sliderValue:(CGFloat)sliderValue{
     NSTimeInterval currentTime = self.player.duration * sliderValue;
     [self.player seekToTime:currentTime];
+    [self.player play];
 }
 
 #pragma mark 【PLVPlayerCore Delegate 播放器核心（播放状态时间）的回调方法】
 /// 播放器 ’加载状态‘ 发生改变
 -(void)plvPlayerCore:(PLVPlayerCore *)player playerLoadStateDidChange:(PLVPlayerLoadState)loadState{
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    // 加载速度显示
+    if (loadState == PLVPlayerLoadStateStalled){
+        [self.mediaSkinContainer showLoadingSpeed:self.player.tcpSpeed loading:YES];
+    }
+    else{
+        [self.mediaSkinContainer showLoadingSpeed:self.player.tcpSpeed loading:NO];
+    }
 }
 
 /// 播放器 已准备好播放
 - (void)plvPlayerCore:(PLVPlayerCore *)player playerIsPreparedToPlay:(BOOL)prepared{
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    [self synPlayRate:self.mediaPlayerState.curPlayRate];
 }
 
 /// 播放器 ‘播放状态’ 发生改变
@@ -328,6 +369,14 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     
     // 跑马灯控制
     [self marqueeControlWithState:playbackState];
+    
+    // 清晰度切换状态刷新
+    if (self.mediaPlayerState.qualityState == PLVMediaPlayerQualityStateChanging){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStateComplete;
+            [self.mediaSkinContainer showDefinitionTipsView];
+        });
+    }
 }
 
 /// 播放器 播放结束
@@ -336,6 +385,14 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(vodMediaAreaVC_PlayFinishEvent:)]){
             [self.mediaAreaVcDelegate vodMediaAreaVC_PlayFinishEvent:self];
         }
+    }
+    
+    // 清理播放器UI 浮动控件
+    if (self.mediaPlayerState.qualityState != PLVMediaPlayerQualityStateDefault){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStateDefault;
+            [self.mediaSkinContainer showDefinitionTipsView];
+        });
     }
 }
 
@@ -384,6 +441,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 /// 当前网络状态不佳 回调状态
 - (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer poorNetworkState:(BOOL)poorState {
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStatePrepare;
         [self.mediaSkinContainer showDefinitionTipsView];
     });
 }

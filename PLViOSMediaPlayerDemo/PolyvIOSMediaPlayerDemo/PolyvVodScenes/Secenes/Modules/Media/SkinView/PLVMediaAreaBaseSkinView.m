@@ -376,7 +376,8 @@ UIGestureRecognizerDelegate
         _progressSlider = [[PLVProgressSlider alloc] init];
         _progressSlider.delegate = self;
         _progressSlider.userInteractionEnabled = YES;
-        _progressSlider.slider.minimumTrackTintColor = PLV_UIColorFromRGB(@"6DA7FF");
+        _progressSlider.slider.minimumTrackTintColor = PLV_UIColorFromRGBA(@"#FFFFFF",0.6);
+
         [_progressSlider.slider setThumbImage:[UIImage imageNamed:@"plv_skin_control_slider_thumbnail_default"] forState:UIControlStateNormal];
         [_progressSlider.slider setThumbImage:[UIImage imageNamed:@"plv_skin_control_slider_thumbnail_highlight"] forState:UIControlStateHighlighted];
     }

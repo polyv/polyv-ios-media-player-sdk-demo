@@ -353,6 +353,11 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
     // 刷新皮肤
     [self.mediaSkinContainer.landscapeFullSkinView updateQualityLevel:qualityLevel];
+    // 显示清晰度切换状态
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStateChanging;
+        [self.mediaSkinContainer showDefinitionTipsView];
+    });
 }
 
 #pragma mark 【Orientation 横竖屏设置】
@@ -393,6 +398,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     NSLog(@"%@", NSStringFromSelector(_cmd));
     if (self.isSwitchingPlaySource){
         [player play];
+        [self synPlayRate:self.mediaPlayerState.curPlayRate];
         self.isSwitchingPlaySource = NO;
     }
     
@@ -414,6 +420,14 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     
     // 跑马灯控制
     [self marqueeControlWithState:playbackState];
+    
+    // 清晰度切换状态刷新
+    if (self.mediaPlayerState.qualityState == PLVMediaPlayerQualityStateChanging){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStateComplete;
+            [self.mediaSkinContainer showDefinitionTipsView];
+        });
+    }
 }
 
 /// 播放器 播放结束
@@ -422,6 +436,13 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(shortVideoMediaAreaVC_PlayFinishEvent:)]){
             [self.mediaAreaVcDelegate shortVideoMediaAreaVC_PlayFinishEvent:self];
         }
+    }
+    // 清理播放器UI 浮动控件
+    if (self.mediaPlayerState.qualityState != PLVMediaPlayerQualityStateDefault){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStateDefault;
+            [self.mediaSkinContainer showDefinitionTipsView];
+        });
     }
 }
 
@@ -487,11 +508,11 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer poorNetworkState:(BOOL)poorState {
     if (poorState) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStatePrepare;
             [self.mediaSkinContainer showDefinitionTipsView];
         });
     }
 }
-
 
 #pragma mark 【PLVShortVideoMediaPlayerSkinContainer Delegate 皮肤容器的回调方法】
 /// 竖向-全屏皮肤时，显示外部 moreview 视图
@@ -565,6 +586,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 /// 进度面板 手势事件 处理
 - (void)mediaPlayerSkinContainer_ProgressViewPan:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer scrubTime:(NSTimeInterval)scrubTime{
     [self.player seekToTime:scrubTime];
+    [self.player play];
 }
 
 /// 进度条 拖动事件 处理
@@ -572,6 +594,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     NSTimeInterval currentTime = self.player.duration * sliderValue;
     // 拖动进度条后，同步当前进度时间
     [self.player seekToTime:currentTime];
+    [self.player play];
 }
 
 - (void)removeDisplayCoverView{

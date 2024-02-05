@@ -236,7 +236,9 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
 
 - (void)showDefinitionTipsView {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.definitionTipsView showSwitchQualityWithModel:self.mediaPlayerState targetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:[PLVOrientationUtil isLandscape]];
+        [self.definitionTipsView showSwitchQualityWithModel:self.mediaPlayerState
+                                                targetPoint:[self calculateDefinitionTipsViewPosition]
+                                                 abovePoint:[PLVOrientationUtil isLandscape]];
         [self layoutIfNeeded];
     });
 }

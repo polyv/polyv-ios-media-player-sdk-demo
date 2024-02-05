@@ -17,6 +17,7 @@
         _curQualityLevel = 1; // 流畅
         _curPlayRate = 1.0; // 倍速
         _origPlayRate = _curPlayRate; // 原始倍速
+        _qualityState = PLVMediaPlayerQualityStateDefault;
     }
     
     return self;
