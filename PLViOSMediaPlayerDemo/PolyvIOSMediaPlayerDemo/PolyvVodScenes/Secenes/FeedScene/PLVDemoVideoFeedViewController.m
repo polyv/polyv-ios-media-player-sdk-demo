@@ -331,8 +331,13 @@ PLVShortVideoMediaAreaVCDelegate
         [PLVPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
         [PLVPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
 
-        // 退出当前界面
-        [self exitCurrentController];
+        if ([PLVMediaPlayerPictureInPictureManager sharedInstance].isBackgroudStartMode){
+            // 停留在当前界面，客户也可以自定义交互
+        }
+        else{
+            // 退出当前界面
+            [self exitCurrentController];
+        }
     } else if (state == PLVPictureInPictureStateDidEnd){
         [[PLVPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
     }
