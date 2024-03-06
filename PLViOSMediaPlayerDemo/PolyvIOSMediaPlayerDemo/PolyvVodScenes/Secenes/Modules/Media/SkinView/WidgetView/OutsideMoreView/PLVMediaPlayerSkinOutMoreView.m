@@ -306,14 +306,15 @@
 
 - (void)audioModeButtonClick:(UIButton *)audioButton{
     [self hideMoreView];
-    if (audioButton.selected)
-        return;
-    
-    _mediaPlayerState.curPlayMode = 2;
-
     audioButton.selected = !audioButton.selected;
-    if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_SwitchToAudioMode)]){
-        [self.skinOutMoreViewDelegate mediaPlayerSkinOutMoreView_SwitchToAudioMode];
+    if (self.mediaPlayerState.curPlayMode == PLVMediaPlayerPlayModeAudio){
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeVideo;
+    }
+    else if (PLVMediaPlayerPlayModeVideo == self.mediaPlayerState.curPlayMode){
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeAudio;
+    }
+    if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_SwitchPlayMode:)]){
+        [self.skinOutMoreViewDelegate mediaPlayerSkinOutMoreView_SwitchPlayMode:self];
     }
 }
 
@@ -322,7 +323,7 @@
 //    if (picInPicButton.selected)
 //        return;
     
-    _mediaPlayerState.curWindowMode = 2;
+    _mediaPlayerState.curWindowMode = PLVMediaPlayerWindowModePIP;
 
     picInPicButton.selected = !picInPicButton.selected;
     if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_StartPictureInPicture)]){
@@ -425,10 +426,10 @@
     }
     
     self.audioModeBtn.hidden = !mediaPlayerState.isSupportAudioMode;
-    self.audioModeBtn.selected = mediaPlayerState.curPlayMode == 2 ? YES:NO;
+    self.audioModeBtn.selected = mediaPlayerState.curPlayMode == PLVMediaPlayerPlayModeAudio ? YES:NO;
     
     self.picInPicBtn.hidden = !mediaPlayerState.isSupportWindowMode;
-    self.picInPicBtn.selected = mediaPlayerState.curWindowMode == 2 ? YES:NO;
+    self.picInPicBtn.selected = mediaPlayerState.curWindowMode == PLVMediaPlayerWindowModePIP ? YES:NO;
 }
 
 #pragma mark public

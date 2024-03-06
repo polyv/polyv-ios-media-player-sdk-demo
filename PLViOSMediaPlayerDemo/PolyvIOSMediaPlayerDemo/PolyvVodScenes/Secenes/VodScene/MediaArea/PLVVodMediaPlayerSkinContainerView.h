@@ -52,6 +52,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param speed 加载速度
 - (void)updateLoadingSpeed:(NSString *)speed;
 
+/// 提示续播进度
+/// @param curTime 当前播放时间
+- (void)showPlayProgressToastView:(NSInteger)curTime;
+
+/// 显示、隐藏画中画占位图
+/// @param status  YES,显示 NO 隐藏
+- (void)showPicInPicPlaceholderViewWithStatus:(BOOL)status;
+
 @end
 
 @protocol PLVVodMediaPlayerSkinContainerViewDelegate <NSObject>
@@ -60,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)mediaPlayerSkinContainerView_ShowMoreView:(PLVVodMediaPlayerSkinContainerView *)skinContainer;
 
 /// 切回视频模式
-- (void)mediaPlayerSkinContainerView_SwitchVideoMode:(PLVVodMediaPlayerSkinContainerView *)skinContainer;
+- (void)mediaPlayerSkinContainerView_SwitchToVideoMode:(PLVVodMediaPlayerSkinContainerView *)skinContainer;
 
 /// 切换到音频模式
 - (void)mediaPlayerSkinContainerView_SwitchToAudioMode:(PLVVodMediaPlayerSkinContainerView *)skinContainer;

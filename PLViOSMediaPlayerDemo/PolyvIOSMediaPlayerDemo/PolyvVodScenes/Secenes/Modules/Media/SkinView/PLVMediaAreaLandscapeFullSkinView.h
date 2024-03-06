@@ -6,6 +6,7 @@
 //
 
 #import "PLVMediaAreaBaseSkinView.h"
+#import "PLVMediaPlayerState.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 更新倍速
 - (void)updatePlayRate:(CGFloat)playRate;
+
+/// 音频、视频模式切换更新
+- (void)updateWithMediaPlayerState:(PLVMediaPlayerState *)playerState;
 
 @end
 

@@ -10,6 +10,7 @@
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVMarqueeView.h"
 #import <PLVTimer.h>
+#import "PLVMediaPlayerConst.h"
 
 /// UI View Hierarchy
 ///
@@ -165,11 +166,14 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 
 - (void)setPlaykMode:(PLVVodPlaybackMode)playbackMode{
     [self.player setPlaybackMode:playbackMode];
-    if (playbackMode == PLVVodPlaybackModeAudio) { // 音频模式
-        self.mediaPlayerState.curPlayMode = 2;
+    self.mediaPlayerState.isChangingPlaySource = YES;
+    if (playbackMode == PLVVodPlaybackModeAudio) {
+        // 音频模式
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeAudio;
         [self.mediaSkinContainer showAudioModeUI];
-    } else { // 视频模式
-        self.mediaPlayerState.curPlayMode = 1;
+    } else {
+        // 视频模式
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeVideo;
         [self.mediaSkinContainer showVideoModeUI];
     }
 }
@@ -227,6 +231,8 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStateChanging;
         [self.mediaSkinContainer showDefinitionTipsView];
     });
+    // 正在切换播放源
+    self.mediaPlayerState.isChangingPlaySource = YES;
 }
 
 #pragma mark 【Orientation 横竖屏设置】
@@ -287,7 +293,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 切换到视频模式 按钮事件 处理
-- (void)mediaPlayerSkinContainerView_SwitchVideoMode:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
+- (void)mediaPlayerSkinContainerView_SwitchToVideoMode:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
     [self setPlaykMode:PLVVodPlaybackModeVideo];
 }
 
@@ -349,7 +355,17 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 /// 播放器 已准备好播放
 - (void)plvPlayerCore:(PLVPlayerCore *)player playerIsPreparedToPlay:(BOOL)prepared{
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    // 同步播放速率
     [self synPlayRate:self.mediaPlayerState.curPlayRate];
+    
+    // 提示续播进度
+    if (player.currentPlaybackTime > PLVMediaPlayerShowProgressTime && !self.mediaPlayerState.isChangingPlaySource){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mediaSkinContainer showPlayProgressToastView:player.currentPlaybackTime];
+        });
+    }
+    // 播放源未切换或切换完成
+    self.mediaPlayerState.isChangingPlaySource = NO;
 }
 
 /// 播放器 ‘播放状态’ 发生改变
@@ -396,6 +412,11 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     }
 }
 
+/// 播放器首帧渲染
+- (void)plvPlayerCore:(PLVPlayerCore *)player firstFrameRendered:(BOOL)rendered{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+}
+
 #pragma mark 【PLVVodMediaPlayerDelegate 播放器的回调方法】
 /// 播放器 定时返回当前播放进度
 - (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer
@@ -419,11 +440,18 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(vodMediaAreaVC_PictureInPictureChangeState:state:)]){
         [self.mediaAreaVcDelegate vodMediaAreaVC_PictureInPictureChangeState:self state:pipState];
     }
-    
     // 画中画结束
-    if (pipState == PLVPictureInPictureStateDidEnd || pipState == PLVPictureInPictureStateWillEnd){
+    if (pipState == PLVPictureInPictureStateDidEnd ||
+        pipState == PLVPictureInPictureStateWillEnd ||
+        pipState == PLVPictureInPictureStateError){
         // 恢复皮肤状态
-        self.mediaPlayerState.curWindowMode = 1;
+        self.mediaPlayerState.curWindowMode = PLVMediaPlayerWindowModeDefault;
+        if (pipState != PLVPictureInPictureStateWillEnd){
+            [self.mediaSkinContainer showPicInPicPlaceholderViewWithStatus:NO];
+        }
+    }
+    else if (pipState == PLVPictureInPictureStateWillStart){
+        [self.mediaSkinContainer showPicInPicPlaceholderViewWithStatus:YES];
     }
 }
 
@@ -435,7 +463,8 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     }
     
     // 恢复皮肤状态
-    self.mediaPlayerState.curWindowMode = 1;
+    self.mediaPlayerState.curWindowMode = PLVMediaPlayerWindowModeDefault;
+    [self.mediaSkinContainer showPicInPicPlaceholderViewWithStatus:NO];
 }
 
 /// 当前网络状态不佳 回调状态

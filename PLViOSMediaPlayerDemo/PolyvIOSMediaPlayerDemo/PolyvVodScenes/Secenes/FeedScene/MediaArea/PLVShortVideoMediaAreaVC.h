@@ -61,12 +61,6 @@ PLVFeedItemCustomViewDelegate // 遵循该协议才能嵌
 // 播放速度
 - (void)setPlayRate:(CGFloat)rate;
 
-// 切换清晰度
-- (void)setPlayQuality:(NSInteger )qualityLevel;
-
-// 切换音频、视频播放模式
-- (void)setPlaybackMode:(PLVVodPlaybackMode )playbackMode;
-
 /// 显示视频模式UI
 - (void)showVideoModeUI;
 
@@ -75,9 +69,6 @@ PLVFeedItemCustomViewDelegate // 遵循该协议才能嵌
 
 /// 视图消失
 - (void)endActive;
-
-/// 切换音频、视频播放模式
-- (void)setPlayMode:(PLVVodPlaybackMode)playbackMode;
 
 /// 隐藏返回按钮
 - (void)hideProtraitBackButton;

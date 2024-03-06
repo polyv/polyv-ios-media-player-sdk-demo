@@ -136,27 +136,6 @@
     return button;
 }
 
-#pragma mark 【Action]
-- (void)closeButtonClick:(UIButton *)closeButton{
-    [self hideMoreView];
-}
-
-- (void)audioModeButtonClick:(UIButton *)audioButton{
-    [self hideMoreView];
-    audioButton.selected = !audioButton.selected;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinMoreView_SwitchToAudioMode:)]){
-        [self.delegate mediaPlayerSkinMoreView_SwitchToAudioMode:self];
-    }
-}
-
-- (void)picInPicButtonClick:(UIButton *)picInPicButton{
-    [self hideMoreView];
-    picInPicButton.selected = !picInPicButton.selected;
-    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinMoreView_StartPictureInPicture:)]){
-        [self.delegate mediaPlayerSkinMoreView_StartPictureInPicture:self];
-    }
-}
-
 - (void)tapGestureAction:(UITapGestureRecognizer *)tap{
     // 处理解锁按钮的显示/隐藏
     [self hideMoreView];
@@ -224,14 +203,41 @@
 #pragma mark 【Public】
 - (void)showMoreViewWithModel:(PLVMediaPlayerState *)mediaPlayerState{
     self.hidden = NO;
+    self.mediaPlayerState = mediaPlayerState;
 
     self.audioModeBtn.hidden = !mediaPlayerState.isSupportAudioMode;
-    self.audioModeBtn.selected = mediaPlayerState.curPlayMode == 2 ? YES:NO;
+    self.audioModeBtn.selected = mediaPlayerState.curPlayMode == PLVMediaPlayerPlayModeAudio ? YES:NO;
     
     self.picInPicBtn.hidden = !mediaPlayerState.isSupportWindowMode;
-    self.picInPicBtn.selected = mediaPlayerState.curWindowMode == 2 ? YES:NO;
+    self.picInPicBtn.selected = mediaPlayerState.curWindowMode == PLVMediaPlayerWindowModePIP ? YES:NO;
     
     [self updateUI];
 }
 
+#pragma mark 【Action]
+- (void)closeButtonClick:(UIButton *)closeButton{
+    [self hideMoreView];
+}
+
+- (void)audioModeButtonClick:(UIButton *)audioButton{
+    [self hideMoreView];
+    audioButton.selected = !audioButton.selected;
+    if (self.mediaPlayerState.curPlayMode == PLVMediaPlayerPlayModeAudio){
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeVideo;
+    }
+    else if (PLVMediaPlayerPlayModeVideo == self.mediaPlayerState.curPlayMode){
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeAudio;
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinMoreView_SwitchPlayMode:)]){
+        [self.delegate mediaPlayerSkinMoreView_SwitchPlayMode:self];
+    }
+}
+
+- (void)picInPicButtonClick:(UIButton *)picInPicButton{
+    [self hideMoreView];
+    picInPicButton.selected = !picInPicButton.selected;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinMoreView_StartPictureInPicture:)]){
+        [self.delegate mediaPlayerSkinMoreView_StartPictureInPicture:self];
+    }
+}
 @end

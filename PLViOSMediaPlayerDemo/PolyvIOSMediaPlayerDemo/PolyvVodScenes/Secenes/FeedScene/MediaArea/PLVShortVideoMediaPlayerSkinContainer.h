@@ -40,6 +40,14 @@ NS_ASSUME_NONNULL_BEGIN
 /// 显示弱网切换清晰度提示
 - (void)showDefinitionTipsView;
 
+/// 提示续播进度
+/// @param curTime 当前播放时间
+- (void)showPlayProgressToastView:(NSInteger)curTime;
+
+/// 显示、隐藏画中画占位图
+/// @param status  YES,显示 NO 隐藏
+- (void)showPicInPicPlaceholderViewWithStatus:(BOOL)status;
+
 @end
 
 @protocol PLVShortVideoMediaPlayerSkinContainerDelegate <NSObject>
@@ -48,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)mediaPlayerSkinContainer_ShowMoreView:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer;
 
 /// 切回视频模式
-- (void)mediaPlayerSkinContainer_SwitchVideoMode:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer;
+- (void)mediaPlayerSkinContainer_SwitchToVideoMode:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer;
 
 /// 切换到音频模式
 - (void)mediaPlayerSkinContainer_SwitchToAudioMode:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer;

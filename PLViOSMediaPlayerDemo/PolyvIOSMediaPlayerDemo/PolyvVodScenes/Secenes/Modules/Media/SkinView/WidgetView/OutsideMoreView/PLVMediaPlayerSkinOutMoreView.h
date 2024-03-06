@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)mediaPlayerSkinOutMoreView_SwitchPlayRate:(CGFloat )rate;
 - (void)mediaPlayerSkinOutMoreView_SwitchQualityLevel:(NSInteger )qualityLevel;
-- (void)mediaPlayerSkinOutMoreView_SwitchToAudioMode;
+- (void)mediaPlayerSkinOutMoreView_SwitchPlayMode:(PLVMediaPlayerSkinOutMoreView *)outMoreView;
 - (void)mediaPlayerSkinOutMoreView_StartPictureInPicture;
 
 @end

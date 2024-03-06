@@ -235,8 +235,13 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     [self.vodMediaAreaVC setPlayQuality:qualityLevel];
 }
 
-- (void)mediaPlayerSkinOutMoreView_SwitchToAudioMode{
-    [self.vodMediaAreaVC setPlaykMode:PLVVodPlaybackModeAudio];
+- (void)mediaPlayerSkinOutMoreView_SwitchPlayMode:(PLVMediaPlayerSkinOutMoreView *)outMoreView{
+    if (PLVMediaPlayerPlayModeAudio == outMoreView.mediaPlayerState.curPlayMode){
+        [self.vodMediaAreaVC setPlaykMode:PLVVodPlaybackModeAudio];
+    }
+    else if (PLVMediaPlayerPlayModeVideo == outMoreView.mediaPlayerState.curPlayMode){
+        [self.vodMediaAreaVC setPlaykMode:PLVVodPlaybackModeVideo];
+    }
 }
 
 - (void)mediaPlayerSkinOutMoreView_StartPictureInPicture{

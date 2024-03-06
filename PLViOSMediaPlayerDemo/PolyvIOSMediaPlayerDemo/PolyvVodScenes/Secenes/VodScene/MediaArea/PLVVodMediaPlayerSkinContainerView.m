@@ -19,6 +19,8 @@
 #import "PLVMediaPlayerSkinFastForwardView.h"
 #import "PLVMediaPlayerSkinDefinitionTipsView.h"
 #import "PLVMediaPlayerSkinLoadingView.h"
+#import "PLVMediaPlayerSkinToastView.h"
+#import "PLVMediaPlayerSkinPicInPicPlaceholderView.h"
 #import "PLVOrientationUtil.h"
 
 /// UI View Hierarchy
@@ -48,6 +50,8 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 @property (nonatomic, strong) PLVMediaPlayerSkinFastForwardView *fastForwardView;
 @property (nonatomic, strong) PLVMediaPlayerSkinDefinitionTipsView *definitionTipsView;
 @property (nonatomic, strong) PLVMediaPlayerSkinLoadingView *loadingView;
+@property (nonatomic, strong) PLVMediaPlayerSkinToastView *progressToastView;
+@property (nonatomic, strong) PLVMediaPlayerSkinPicInPicPlaceholderView *picInPicHolderView;
 
 @end
 
@@ -109,6 +113,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         self.portraitHalfSkinView.hidden = NO;
         self.portraitHalfSkinView.frame = self.bounds;
         self.audioModeView.frame = self.bounds;
+
         
         if (!self.loopPlayView.hidden){
             self.loopPlayView.frame = self.bounds;
@@ -121,6 +126,13 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     self.definitionTipsView.frame = self.bounds;
     [self.landscapeFullSkinView layoutIfNeeded]; // 避免第一次横屏时 横屏皮肤未刷新布局获取错误提示点位
     [self.definitionTipsView updateUIWithTargetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:isLandscape];
+    if (!self.progressToastView.hidden && self.progressToastView.superview){
+        self.progressToastView.frame = self.bounds;
+        [self.progressToastView updateWithTargetPoint:[self calculateProgressToastViewPosition]];
+    }
+    if (!self.picInPicHolderView.hidden && self.picInPicHolderView.superview){
+        self.picInPicHolderView.frame = self.bounds;
+    }
 }
 
 #pragma mark 【Getter & Setter】
@@ -212,6 +224,20 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     return _loadingView;
 }
 
+- (PLVMediaPlayerSkinToastView *)progressToastView{
+    if (!_progressToastView){
+        _progressToastView = [[PLVMediaPlayerSkinToastView alloc] init];
+    }
+    return _progressToastView;
+}
+
+- (PLVMediaPlayerSkinPicInPicPlaceholderView *)picInPicHolderView{
+    if (!_picInPicHolderView){
+        _picInPicHolderView = [[PLVMediaPlayerSkinPicInPicPlaceholderView alloc] init];
+    }
+    return _picInPicHolderView;
+}
+
 #pragma mark 【Public Method】
 - (void)syncSkinWithMode:(PLVMediaPlayerState *)mediaPlayerState{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -243,11 +269,17 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     // 配置封面图
     [self.audioModeView setMediaPlayerState:self.mediaPlayerState];
     [self.audioModeView startRotate];
+    
+    // 音频模式下，全屏皮肤隐藏清晰度
+    [self.landscapeFullSkinView updateWithMediaPlayerState:self.mediaPlayerState];
 }
 
 - (void)showVideoModeUI{
     [self.audioModeView removeFromSuperview];
     [self.audioModeView stopRotate];
+    
+    // 视频模式下，全屏皮肤显示清晰度按钮
+    [self.landscapeFullSkinView updateWithMediaPlayerState:self.mediaPlayerState];
 }
 
 - (void)showLoopPlayUI{
@@ -286,6 +318,38 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     [self.loadingView.loadSpeadLable setText:speed];
 }
 
+- (void)showPlayProgressToastView:(NSInteger)curTime{
+    if (!self.progressToastView.isShowned){
+        self.progressToastView.isShowned = YES;
+        [self addSubview:self.progressToastView];
+        self.progressToastView.frame = self.bounds;
+        if ([PLVOrientationUtil isLandscape]){
+            [self insertSubview:self.progressToastView belowSubview:self.landscapeFullSkinView];
+        }
+        else{
+            [self insertSubview:self.progressToastView belowSubview:self.portraitHalfSkinView];
+        }
+        
+        // targetPoint 进度条起点坐标
+        [self.progressToastView showCurrentPlayTimeTips:curTime
+                                            targetPoint:[self calculateProgressToastViewPosition]
+                                                uiStyle:PLVMediaPlayerSkinToastViewUIStyleLongVideo];
+    }
+}
+
+/// 显示、隐藏画中画占位图
+- (void)showPicInPicPlaceholderViewWithStatus:(BOOL)status{
+    if (status){
+        [self addSubview:self.picInPicHolderView];
+        self.picInPicHolderView.hidden = NO;
+        self.picInPicHolderView.frame = self.bounds;
+    }
+    else{
+        self.picInPicHolderView.hidden = YES;
+        [self.picInPicHolderView removeFromSuperview];
+    }
+}
+
 #pragma mark 【Private Method】
 
 - (CGPoint)calculateDefinitionTipsViewPosition {
@@ -296,6 +360,19 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         targetPoint = CGPointMake(CGRectGetMidX(self.landscapeFullSkinView.qualityButton.frame), CGRectGetMinY(self.landscapeFullSkinView.qualityButton.frame));
     } else {
         targetPoint = CGPointMake(CGRectGetMidX(self.portraitHalfSkinView.moreButton.frame) - 8, CGRectGetMaxY(self.portraitHalfSkinView.moreButton.frame));
+    }
+    
+    return targetPoint;
+}
+
+- (CGPoint)calculateProgressToastViewPosition{
+    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    
+    CGPoint targetPoint;
+    if (isLandscape) {
+        targetPoint = CGPointMake(CGRectGetMinX(self.landscapeFullSkinView.progressSlider.frame), CGRectGetMinY(self.landscapeFullSkinView.progressSlider.frame));
+    } else {
+        targetPoint = CGPointMake(CGRectGetMinX(self.portraitHalfSkinView.progressSlider.frame), CGRectGetMinY(self.portraitHalfSkinView.progressSlider.frame));
     }
     
     return targetPoint;
@@ -397,8 +474,8 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 
 #pragma mark 【PLVMediaPlayerSkinAudioModeView Delegate - 音频模式视图的回调方法】
 - (void)mediaPlayerSkinAudioModeView_switchVideoMode:(PLVMediaPlayerSkinAudioModeView *)audioModeView{
-    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchVideoMode:)]){
-        [self.containerDelegate mediaPlayerSkinContainerView_SwitchVideoMode:self];
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchToVideoMode:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_SwitchToVideoMode:self];
     }
 }
 
@@ -433,9 +510,16 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 
 #pragma mark 【PLVMediaPlayerSkinMoreView Delegate - 外部更多弹层 回调方法】
 /// 音频模式 按钮事件 回调方法
-- (void)mediaPlayerSkinMoreView_SwitchToAudioMode:(PLVMediaPlayerSkinMoreView *)moreView{
-    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchToAudioMode:)]){
-        [self.containerDelegate mediaPlayerSkinContainerView_SwitchToAudioMode:self];
+- (void)mediaPlayerSkinMoreView_SwitchPlayMode:(PLVMediaPlayerSkinMoreView *)moreView{
+    if (PLVMediaPlayerPlayModeAudio == moreView.mediaPlayerState.curPlayMode){
+        if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchToAudioMode:)]){
+            [self.containerDelegate mediaPlayerSkinContainerView_SwitchToAudioMode:self];
+        }
+    }
+    else if (PLVMediaPlayerPlayModeVideo == moreView.mediaPlayerState.curPlayMode){
+        if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchToVideoMode:)]){
+            [self.containerDelegate mediaPlayerSkinContainerView_SwitchToVideoMode:self];
+        }
     }
 }
 

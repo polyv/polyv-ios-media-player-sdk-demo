@@ -17,6 +17,7 @@
 #import "PLVOrientationUtil.h"
 #import "UIImage+Tint.h"
 #import "PLVMarqueeView.h"
+#import "PLVMediaPlayerConst.h"
 
 
 /// UI View Hierarchy
@@ -46,7 +47,6 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 @property (nonatomic, assign) UIView *originSuperView; // 视频区域原始父视图
 
 /// 状态控制 部分
-@property (nonatomic, assign ) BOOL isSwitchingPlaySource; // 是否正在切换播放源
 @property (nonatomic, assign) BOOL isShowInUIWindow;
 
 @end
@@ -249,16 +249,6 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     [self.player switchSpeedRate:rate];
 }
 
-- (void)setPlayQuality:(NSInteger)qualityLevel{
-    [self.player setPlayQuality:(PLVVodQuality)qualityLevel];
-    self.isSwitchingPlaySource = YES;
-}
-
-- (void)setPlaybackMode:(PLVVodPlaybackMode)playbackMode{
-    [self.player setPlaybackMode:playbackMode];
-    self.isSwitchingPlaySource = YES;
-}
-
 - (void)showVideoModeUI{
     [self.mediaSkinContainer showVideoModeUI];
 }
@@ -272,25 +262,26 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)endActive{
     [self.player pause];
     self.mediaSkinContainer.portraitFullSkinView.playButton.selected = NO;
-    
+    self.mediaSkinContainer.portraitFullSkinView.playButton.hidden = YES;
+
     // 关闭菜单
     [self.skinOutMoreView hideMoreView];
 }
 
 - (void)setPlayMode:(PLVVodPlaybackMode)playbackMode {
+    // 播放源切换
+    self.mediaPlayerState.isChangingPlaySource = YES;
     if (playbackMode == PLVVodPlaybackModeAudio) {
         [self.player setPlaybackMode:PLVVodPlaybackModeAudio];
         [self.displayView setHidden:YES];
-        
-        self.mediaPlayerState.curPlayMode = 2;
-        self.isSwitchingPlaySource = YES;
+
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeAudio;
         [self.mediaSkinContainer showAudioModeUI];
     } else {
         [self.player setPlaybackMode:PLVVodPlaybackModeVideo];
         [self.displayView setHidden:NO];
 
-        self.mediaPlayerState.curPlayMode = 1;
-        self.isSwitchingPlaySource = YES;
+        self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeVideo;
         [self.mediaSkinContainer showVideoModeUI];
     }
 }
@@ -348,7 +339,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 - (void)synPlayQuality:(NSInteger)qualityLevel {
     [self.player setPlayQuality:(PLVVodQuality)qualityLevel];
-    self.isSwitchingPlaySource = YES;
+    self.mediaPlayerState.isChangingPlaySource = YES;
     self.mediaPlayerState.curQualityLevel = qualityLevel;
 
     // 刷新皮肤
@@ -396,15 +387,28 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 /// 播放器 已准备好播放
 - (void)plvPlayerCore:(PLVPlayerCore *)player playerIsPreparedToPlay:(BOOL)prepared{
     NSLog(@"%@", NSStringFromSelector(_cmd));
-    if (self.isSwitchingPlaySource){
+    // 同步播放速率
+    [self synPlayRate:self.mediaPlayerState.curPlayRate];
+
+    // 短视频场景，切换播放源后需要自动播放
+    if (self.mediaPlayerState.isChangingPlaySource){
         [player play];
-        [self synPlayRate:self.mediaPlayerState.curPlayRate];
-        self.isSwitchingPlaySource = NO;
     }
     
+    // 提示续播进度
+    if (player.currentPlaybackTime > PLVMediaPlayerShowProgressTime && !self.mediaPlayerState.isChangingPlaySource){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.mediaSkinContainer showPlayProgressToastView:player.currentPlaybackTime];
+        });
+    }
+    
+    // 代理回调
     if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(shortVideoMediaAreaVC_playerIsPreparedToPlay:)]){
         [self.mediaAreaVcDelegate shortVideoMediaAreaVC_playerIsPreparedToPlay:self];
     }
+    
+    // 未切换或切换成功
+    self.mediaPlayerState.isChangingPlaySource = NO;
 }
 
 /// 播放器 ‘播放状态’ 发生改变
@@ -428,6 +432,8 @@ PLVMediaPlayerSkinOutMoreViewDelegate
             [self.mediaSkinContainer showDefinitionTipsView];
         });
     }
+    
+    //
 }
 
 /// 播放器 播放结束
@@ -448,6 +454,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 - (void)plvPlayerCore:(PLVPlayerCore *)player firstFrameRendered:(BOOL)rendered{
     dispatch_async(dispatch_get_main_queue(), ^{
+        // 封面图移除
         [self.displayCoverView removeFromSuperview];
     });
 }
@@ -475,12 +482,20 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(shortVideoMediaAreaVC_PictureInPictureChangeState:state:)]){
         [self.mediaAreaVcDelegate shortVideoMediaAreaVC_PictureInPictureChangeState:self state:pipState];
     }
-    
+   
     // 画中画结束
-    if (pipState == PLVPictureInPictureStateDidEnd || pipState == PLVPictureInPictureStateWillEnd){
+    if (pipState == PLVPictureInPictureStateDidEnd ||
+        pipState == PLVPictureInPictureStateWillEnd ||
+        pipState == PLVPictureInPictureStateError){
         // 恢复皮肤状态
-        self.mediaPlayerState.curWindowMode = 1;
+        self.mediaPlayerState.curWindowMode = PLVMediaPlayerWindowModeDefault;
         [self.mediaSkinContainer syncSkinWithMode:self.mediaPlayerState];
+        if (pipState != PLVPictureInPictureStateWillEnd){
+            [self.mediaSkinContainer showPicInPicPlaceholderViewWithStatus:NO];
+        }
+    }
+    else if (pipState == PLVPictureInPictureStateWillStart){
+        [self.mediaSkinContainer showPicInPicPlaceholderViewWithStatus:YES];
     }
 }
 
@@ -492,7 +507,8 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     }
     
     // 恢复皮肤状态
-    self.mediaPlayerState.curWindowMode = 1;
+    self.mediaPlayerState.curWindowMode = PLVMediaPlayerWindowModeDefault;
+    [self.mediaSkinContainer showPicInPicPlaceholderViewWithStatus:NO];
     [self.mediaSkinContainer syncSkinWithMode:self.mediaPlayerState];
 
     // 抛出错误提示
@@ -540,7 +556,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 }
 
 /// 切换到视频模式 按钮事件 处理
-- (void)mediaPlayerSkinContainer_SwitchVideoMode:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer{
+- (void)mediaPlayerSkinContainer_SwitchToVideoMode:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer{
     [self setPlayMode:PLVVodPlaybackModeVideo];
 }
 
@@ -621,8 +637,13 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     [self synPlayQuality:qualityLevel];
 }
 
-- (void)mediaPlayerSkinOutMoreView_SwitchToAudioMode{
-    [self setPlayMode:PLVVodPlaybackModeAudio];
+- (void)mediaPlayerSkinOutMoreView_SwitchPlayMode:(PLVMediaPlayerSkinOutMoreView *)outMoreView{
+    if (PLVMediaPlayerPlayModeAudio == outMoreView.mediaPlayerState.curPlayMode){
+        [self setPlayMode:PLVVodPlaybackModeAudio];
+    }
+    else if (PLVMediaPlayerPlayModeVideo == outMoreView.mediaPlayerState.curPlayMode){
+        [self setPlayMode:PLVVodPlaybackModeVideo];
+    }
 }
 
 - (void)mediaPlayerSkinOutMoreView_StartPictureInPicture{

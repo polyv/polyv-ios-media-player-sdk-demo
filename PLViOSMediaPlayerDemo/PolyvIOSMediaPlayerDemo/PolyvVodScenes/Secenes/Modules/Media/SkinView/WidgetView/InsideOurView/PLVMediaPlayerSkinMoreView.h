@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PLVMediaPlayerSkinMoreView : UIView
 
 @property (nonatomic, strong) id<PLVMediaPlayerSkinMoreViewDelegate> delegate;
+@property (nonatomic, strong) PLVMediaPlayerState *mediaPlayerState;
 
 -(void)showMoreViewWithModel:(PLVMediaPlayerState *)mediaPlayerState;
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol PLVMediaPlayerSkinMoreViewDelegate <NSObject>
 
-- (void)mediaPlayerSkinMoreView_SwitchToAudioMode:(PLVMediaPlayerSkinMoreView *)moreView;
+- (void)mediaPlayerSkinMoreView_SwitchPlayMode:(PLVMediaPlayerSkinMoreView *)moreView;
 - (void)mediaPlayerSkinMoreView_StartPictureInPicture:(PLVMediaPlayerSkinMoreView *)moreView;
 
 @end

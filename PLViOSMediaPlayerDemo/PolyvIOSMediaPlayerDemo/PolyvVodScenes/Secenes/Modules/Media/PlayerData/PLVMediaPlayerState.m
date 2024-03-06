@@ -12,12 +12,13 @@
 - (instancetype)init{
     if (self = [super init]){
         _isSupportAudioMode = NO;
-        _curPlayMode = 1;   // 视频模式
-        _curWindowMode = 1; // 普通模式
+        _curPlayMode = PLVMediaPlayerPlayModeVideo;   // 视频模式
+        _curWindowMode = PLVMediaPlayerWindowModeDefault; // 普通模式
         _curQualityLevel = 1; // 流畅
         _curPlayRate = 1.0; // 倍速
         _origPlayRate = _curPlayRate; // 原始倍速
         _qualityState = PLVMediaPlayerQualityStateDefault;
+        _isChangingPlaySource = NO;
     }
     
     return self;
@@ -30,7 +31,7 @@
         support = YES;
     }
     // 视频播放模式才支持小窗
-    if (_curPlayMode == 2){
+    if (_curPlayMode == PLVMediaPlayerPlayModeAudio){
         support = NO;
     }
   

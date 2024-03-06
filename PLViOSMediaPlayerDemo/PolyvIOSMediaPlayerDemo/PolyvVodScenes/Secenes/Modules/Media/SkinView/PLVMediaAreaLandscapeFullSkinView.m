@@ -123,7 +123,7 @@
     // 倍速
     point = CGPointMake(CGRectGetMinX(self.qualityButton.frame) - 20 -48, point.y);
     self.playRateButton.frame = CGRectMake(point.x, point.y, 48, 20);
-    
+        
     // 锁屏按钮
     self.lockScreenButton.frame = CGRectMake(90, self.bounds.size.height/2 - 40/2, 40, 40);
     
@@ -193,6 +193,30 @@
     }
     
     [self.playRateButton setTitle:title forState:UIControlStateNormal];
+}
+
+- (void)updateWithMediaPlayerState:(PLVMediaPlayerState *)playerState{
+    CGPoint point = CGPointMake(CGRectGetMaxX(self.moreButton.frame) - 48, CGRectGetMinY(self.playButton.frame));
+
+    // 视频模式
+    if (PLVMediaPlayerPlayModeVideo == playerState.curPlayMode){
+        // 清晰度
+        self.qualityButton.frame = CGRectMake(point.x, point.y, 48, 20);
+        self.qualityButton.hidden = NO;
+        
+        // 倍速
+        point = CGPointMake(CGRectGetMinX(self.qualityButton.frame) - 20 -48, point.y);
+        self.playRateButton.frame = CGRectMake(point.x, point.y, 48, 20);
+    }
+    else if (PLVMediaPlayerPlayModeAudio == playerState.curPlayMode){
+        // 音频模式
+        // 清晰度
+        self.qualityButton.hidden = YES;
+        
+        // 倍速
+        point = CGPointMake(point.x - 20, point.y);
+        self.playRateButton.frame = CGRectMake(point.x, point.y, 48, 20);
+    }
 }
 
 #pragma mark - [ Private Methods ]

@@ -216,12 +216,13 @@
 }
 
 #pragma mark 【Button Action】
+/// 只会从音频模式-》视频模式
 - (void)switchButtonClick:(UIButton *)button{
+    _mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeVideo;
+
     if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinAudioModeView_switchVideoMode:)]){
         [self.delegate mediaPlayerSkinAudioModeView_switchVideoMode:self];
     }
-    
-    _mediaPlayerState.curPlayMode = 1;
 }
 
 
