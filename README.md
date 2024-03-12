@@ -6,8 +6,9 @@ polyv-ios-media-player-sdk-demo
 - [polyv-ios-media-player-sdk-demo](#)
 	- [1 简介](#)
 	- [2 文档]()
-		 - [2.1 接口文档]()
-		 - [2.2 Changelog]()
+		 - [2.1 集成文档]()
+		 - [2.2 接口文档]()
+         - [2.3 版本更新记录]()  
 
 ### 1 简介
 此项目是保利威 iOS 播放器 SDK Demo。
@@ -35,5 +36,8 @@ polyv-ios-media-player-sdk-demo
 
 #### 2.2 接口文档
 [v2.1.3 接口文档](https://repo.polyv.net/ios/documents/mediaplayersdk/2.1.3-240306/index.html)
+
+#### 2.3 版本更新记录
+[全版本更新记录](./CHANGELOG.md)
 
 
