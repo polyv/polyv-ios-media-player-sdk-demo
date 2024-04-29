@@ -34,6 +34,11 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 @implementation PLVDemoVodMediaViewController
 
 #pragma mark 【Life Cycle】
+- (void)dealloc{
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    [PLVMediaPlayerPictureInPictureManager sharedInstance].canStartPictureInPictureAutomaticallyFromInline = NO;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {

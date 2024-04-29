@@ -83,6 +83,7 @@ PLVShortVideoMediaAreaVCDelegate
 
 - (void)dealloc {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    [PLVMediaPlayerPictureInPictureManager sharedInstance].canStartPictureInPictureAutomaticallyFromInline = NO;
 }
 
 #pragma mark 【UI setup & update】
