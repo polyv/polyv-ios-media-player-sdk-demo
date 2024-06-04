@@ -1,14 +1,14 @@
 //
-//  UIImage+Tint.m
+//  UIImage+PLVVodMediaTint.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/9/12.
 //
 
-#import "UIImage+Tint.h"
+#import "UIImage+PLVVodMediaTint.h"
 #import <Accelerate/Accelerate.h>
 
-@implementation UIImage (Tint)
+@implementation UIImage (PLVVodMediaTint)
 
 - (UIImage *)imageWithCustomTintColor:(UIColor *)tintColor
 {

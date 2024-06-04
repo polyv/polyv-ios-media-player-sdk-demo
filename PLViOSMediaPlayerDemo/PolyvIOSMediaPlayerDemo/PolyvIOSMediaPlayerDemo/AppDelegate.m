@@ -43,12 +43,12 @@
 - (void)initMediaPlayerSDK {
     // 配置APP账号
     // 公共账号
-    PLVVodSettings *settings = [PLVVodSettings settingsWithUserid:@"e97dbe3e64"
+    PLVVodMediaSettings *settings = [PLVVodMediaSettings settingsWithUserid:@"e97dbe3e64"
                                                         readtoken:@""
                                                        writetoken:@""
                                                         secretkey:@"zMV29c519P"];
     
-    settings.logLevel = PLVVodLogLevelAll;
+    settings.logLevel = PLVVodMediaLogLevelAll;
     settings.viewerInfos.viewerId = @"用户";
     settings.viewerInfos.viewerName = @"User Name";
     settings.viewerInfos.viewerAvatar = @"User Avatar Link";

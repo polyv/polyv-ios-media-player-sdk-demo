@@ -16,7 +16,7 @@
 #import "PLVMediaPlayerSkinPlaybackRateView.h"
 #import "PLVMediaPlayerSkinFastForwardView.h"
 #import "PLVMediaPlayerSkinDefinitionTipsView.h"
-#import "PLVOrientationUtil.h"
+#import "PLVVodMediaOrientationUtil.h"
 #import "PLVMediaPlayerSkinToastView.h"
 #import "PLVMediaPlayerSkinPicInPicPlaceholderView.h"
 /// UI View Hierarchy
@@ -72,7 +72,7 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
 }
 
 - (void)updateUI{
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     
     if (isLandscape) { // 横向-全屏
         self.portraitFullSkinView.hidden = YES;
@@ -271,7 +271,7 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.definitionTipsView showSwitchQualityWithModel:self.mediaPlayerState
                                                 targetPoint:[self calculateDefinitionTipsViewPosition]
-                                                 abovePoint:[PLVOrientationUtil isLandscape]];
+                                                 abovePoint:[PLVVodMediaOrientationUtil isLandscape]];
         [self layoutIfNeeded];
     });
 }
@@ -282,7 +282,7 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
 
         [self addSubview:self.progressToastView];
         self.progressToastView.frame = self.bounds;
-        if ([PLVOrientationUtil isLandscape]){
+        if ([PLVVodMediaOrientationUtil isLandscape]){
             [self insertSubview:self.progressToastView belowSubview:self.landscapeFullSkinView];
         }
         else{
@@ -312,7 +312,7 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
 #pragma mark 【Private Method】
 
 - (CGPoint)calculateDefinitionTipsViewPosition {
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     
     CGPoint targetPoint;
     if (isLandscape) {
@@ -325,7 +325,7 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
 }
 
 - (CGPoint)calculateProgressToastViewPosition{
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     
     CGPoint targetPoint;
     if (isLandscape) {
@@ -444,7 +444,7 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
     
     [self.landscapeFullSkinView hiddenMediaPlayerFullSkinView:YES];
     
-    [PLVOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
+    [PLVVodMediaOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
 }
 
 /// 清晰度 切换事件 回调方法
@@ -507,7 +507,7 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate
     self.mediaPlayerState.isLocking = NO;
     [self.lockScreenView removeFromSuperview];
     
-    [PLVOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
+    [PLVVodMediaOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
 }
 
 #pragma mark 【PLVMediaPlayerSkinDefinitionTipsView Delegate - 弱网切换 回调方法】

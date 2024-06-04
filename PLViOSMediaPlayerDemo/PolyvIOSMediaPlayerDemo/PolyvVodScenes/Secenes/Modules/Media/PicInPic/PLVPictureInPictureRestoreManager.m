@@ -76,7 +76,7 @@
         }
     }
     else {
-        UIViewController *currentViewController = [PLVVodFdUtil getCurrentViewController];
+        UIViewController *currentViewController = [PLVVodMediaFdUtil getCurrentViewController];
         if (currentViewController != self.holdingViewController) {
             if (self.restoreWithPresent) {
                 [currentViewController presentViewController:self.holdingViewController animated:YES completion:nil];
@@ -90,7 +90,7 @@
 }
 
 - (void)applicationWillEnterForeground{
-    UIViewController *currentViewController = [PLVVodFdUtil getCurrentViewController];
+    UIViewController *currentViewController = [PLVVodMediaFdUtil getCurrentViewController];
     if (self.holdingViewController && currentViewController == self.holdingViewController) {
         // 回到前台，如果当前是开启画中画的页面，需要关闭画中画，以播放器模式播放
         // 延迟0.3秒 否则stopPictureInPicture 不生效

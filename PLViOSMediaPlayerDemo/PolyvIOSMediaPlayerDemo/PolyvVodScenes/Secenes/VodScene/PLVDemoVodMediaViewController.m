@@ -10,10 +10,10 @@
 #import "PLVMediaPlayerSkinOutMoreView.h"
 #import "PLVPictureInPictureRestoreManager.h"
 #import "AppDelegate.h"
-#import "PLVToast.h"
+#import "PLVVodMediaToast.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
-#import "PLVVodErrorUtil.h"
-#import "PLVOrientationUtil.h"
+#import "PLVVodMediaErrorUtil.h"
+#import "PLVVodMediaOrientationUtil.h"
 
 /// UI View Hierarchy
 ///
@@ -141,7 +141,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 /// 更新 播放器皮肤 —— 触发 竖向-半屏皮肤 和 横向-全屏皮肤 的切换
 - (void)updateUIForOrientation{
-    BOOL isFullScreen = [PLVOrientationUtil isLandscape];
+    BOOL isFullScreen = [PLVVodMediaOrientationUtil isLandscape];
     if (isFullScreen){ // 横向-全屏
         self.vodMediaAreaVC.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     } else { // 竖向-半屏
@@ -184,12 +184,12 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 }
 
 - (void)startPictureInPictureFailed:(NSError *)error {
-    if ([error.domain isEqualToString:PLVVodErrorDomain]) {
-        NSString *message = [NSString stringWithFormat:@"%@", [PLVVodErrorUtil getErrorMsgWithCode:error.code]];
-        [PLVToast showMessage:message];
+    if ([error.domain isEqualToString:PLVVodMediaErrorDomain]) {
+        NSString *message = [NSString stringWithFormat:@"%@", [PLVVodMediaErrorUtil getErrorMsgWithCode:error.code]];
+        [PLVVodMediaToast showMessage:message];
     } else {
         NSString *message = [NSString stringWithFormat:@"%@", error.localizedFailureReason];
-        [PLVToast showMessage:message];
+        [PLVVodMediaToast showMessage:message];
     }
 }
 
@@ -242,10 +242,10 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 - (void)mediaPlayerSkinOutMoreView_SwitchPlayMode:(PLVMediaPlayerSkinOutMoreView *)outMoreView{
     if (PLVMediaPlayerPlayModeAudio == outMoreView.mediaPlayerState.curPlayMode){
-        [self.vodMediaAreaVC setPlaykMode:PLVVodPlaybackModeAudio];
+        [self.vodMediaAreaVC setPlaykMode:PLVVodMediaPlaybackModeAudio];
     }
     else if (PLVMediaPlayerPlayModeVideo == outMoreView.mediaPlayerState.curPlayMode){
-        [self.vodMediaAreaVC setPlaykMode:PLVVodPlaybackModeVideo];
+        [self.vodMediaAreaVC setPlaykMode:PLVVodMediaPlaybackModeVideo];
     }
 }
 

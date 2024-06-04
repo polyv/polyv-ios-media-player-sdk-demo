@@ -18,7 +18,7 @@ typedef NS_ENUM(NSInteger, PLVMediaPlayerBaseSkinViewPanType) {
 };
 
 @interface PLVMediaAreaBaseSkinView ()<
-PLVProgressSliderDelegate,
+PLVVodMediaProgressSliderDelegate,
 UIGestureRecognizerDelegate
 >
 
@@ -148,7 +148,7 @@ UIGestureRecognizerDelegate
 }
 
 - (void)setTitleLabelWithText:(NSString *)titleText{
-    if ([PLVVodFdUtil checkStringUseable:titleText]) {
+    if ([PLVVodMediaFdUtil checkStringUseable:titleText]) {
         if (titleText.length > 12 && [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
             titleText = [NSString stringWithFormat:@"%@...", [titleText substringToIndex:12]];
         }
@@ -184,14 +184,14 @@ UIGestureRecognizerDelegate
 //        [self setNeedsLayout];
         needUpdate = YES;
     }
-    self.currentTimeLabel.text = [PLVVodFdUtil checkStringUseable:currentTimeString] ? currentTimeString : @"00:00";
-    self.currentPlaybackTime = [PLVVodFdUtil secondsToTimeInterval:self.currentTimeLabel.text];
+    self.currentTimeLabel.text = [PLVVodMediaFdUtil checkStringUseable:currentTimeString] ? currentTimeString : @"00:00";
+    self.currentPlaybackTime = [PLVVodMediaFdUtil secondsToTimeInterval:self.currentTimeLabel.text];
     if (![self.durationLabel.text isEqualToString:durationString]) {
-        self.durationLabel.text = [PLVVodFdUtil checkStringUseable:durationString] ? durationString : @"00:00";
+        self.durationLabel.text = [PLVVodMediaFdUtil checkStringUseable:durationString] ? durationString : @"00:00";
         needUpdate = YES;
 //        [self setNeedsLayout];
     }
-    self.duration = [PLVVodFdUtil secondsToTimeInterval:self.durationLabel.text];
+    self.duration = [PLVVodMediaFdUtil secondsToTimeInterval:self.durationLabel.text];
     
     // 更新布局
     if (needUpdate) {
@@ -371,9 +371,9 @@ UIGestureRecognizerDelegate
     return _durationLabel;
 }
 
-- (PLVProgressSlider *)progressSlider{
+- (PLVVodMediaProgressSlider *)progressSlider{
     if (!_progressSlider ) {
-        _progressSlider = [[PLVProgressSlider alloc] init];
+        _progressSlider = [[PLVVodMediaProgressSlider alloc] init];
         _progressSlider.delegate = self;
         _progressSlider.userInteractionEnabled = YES;
         _progressSlider.slider.minimumTrackTintColor = PLV_UIColorFromRGBA(@"#FFFFFF",0.6);
@@ -591,7 +591,7 @@ UIGestureRecognizerDelegate
 }
 
 #pragma mark 【Delegate】
-- (void)plvProgressSlider:(PLVProgressSlider *)progressSlider sliderDragEnd:(CGFloat)currentSliderProgress{
+- (void)PLVVodMediaProgressSlider:(PLVVodMediaProgressSlider *)progressSlider sliderDragEnd:(CGFloat)currentSliderProgress{
     self.progressPreviewView.hidden = YES;
     
     if ([self.baseDelegate respondsToSelector:@selector(plvMediaAreaBaseSkinView:sliderDragEnd:)]){
@@ -600,7 +600,7 @@ UIGestureRecognizerDelegate
 }
 
 /// 进度连续变化
-- (void)plvProgressSlider:(PLVProgressSlider *)progressSlider sliderDragingProgressChange:(CGFloat)currentSliderProgress{
+- (void)PLVVodMediaProgressSlider:(PLVVodMediaProgressSlider *)progressSlider sliderDragingProgressChange:(CGFloat)currentSliderProgress{
     NSTimeInterval progressTime = self.duration * currentSliderProgress;
     [self.progressPreviewView updateProgressTime:progressTime];
     self.progressPreviewView.hidden = NO;

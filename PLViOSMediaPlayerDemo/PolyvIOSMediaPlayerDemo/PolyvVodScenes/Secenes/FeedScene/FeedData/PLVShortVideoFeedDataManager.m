@@ -7,7 +7,7 @@
 
 #import "PLVShortVideoFeedDataManager.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
-#import "PLVVideoNetwork.h"
+#import "PLVVodMediaVideoNetwork.h"
 
 #define PLVDelayLoadTime 0.5
 
@@ -22,10 +22,10 @@
 #pragma mark - [ Public Method ]
 
 - (void)refreshDataWithCompletion:(void (^)(void))completion failure:(void (^)(NSError * _Nonnull))failure {
-    [PLVVideoNetwork requestAccountVideoWithPageCount:10 page:1 completion:^(NSArray<NSDictionary *> * _Nonnull accountVideos) {
+    [PLVVodMediaVideoNetwork requestAccountVideoWithPageCount:10 page:1 completion:^(NSArray<NSDictionary *> * _Nonnull accountVideos) {
         NSArray *feedDataArray = [self feedDataArrayWithData:accountVideos];
-        if (![PLVVodFdUtil checkArrayUseable:feedDataArray]) {
-            NSError *error = [NSError errorWithDomain:@"PLVFeedDataManager" code:3 userInfo:nil];
+        if (![PLVVodMediaFdUtil checkArrayUseable:feedDataArray]) {
+            NSError *error = [NSError errorWithDomain:@"PLVVodMediaFeedDataManager" code:3 userInfo:nil];
             if (failure) {
                 failure (error);
             }
@@ -41,10 +41,10 @@
 
 - (void)loadMoreDataWithCompletion:(void (^)(BOOL))completion failure:(void (^)(NSError * _Nonnull))failure {
     NSUInteger nextPage = self.currentPage + 1;
-    [PLVVideoNetwork requestAccountVideoWithPageCount:10 page:nextPage completion:^(NSArray<NSDictionary *> * _Nonnull accountVideos) {
+    [PLVVodMediaVideoNetwork requestAccountVideoWithPageCount:10 page:nextPage completion:^(NSArray<NSDictionary *> * _Nonnull accountVideos) {
         NSArray *feedDataArray = [self feedDataArrayWithData:accountVideos];
-        if (![PLVVodFdUtil checkArrayUseable:feedDataArray]) {
-            NSError *error = [NSError errorWithDomain:@"PLVFeedDataManager" code:3 userInfo:nil];
+        if (![PLVVodMediaFdUtil checkArrayUseable:feedDataArray]) {
+            NSError *error = [NSError errorWithDomain:@"PLVVodMediaFeedDataManager" code:3 userInfo:nil];
             if (failure) {
                 failure (error);
             }
@@ -62,13 +62,13 @@
     }];
 }
 
-- (NSArray <PLVFeedData *> *)feedDataArray {
+- (NSArray <PLVVodMediaFeedData *> *)feedDataArray {
     return self.currentData;
 }
 
 - (NSArray *)feedDataArrayWithData:(NSArray *)data {
     
-    if (![PLVVodFdUtil checkArrayUseable:data]) {
+    if (![PLVVodMediaFdUtil checkArrayUseable:data]) {
         return nil;
     }
     
@@ -76,8 +76,8 @@
     for (int i = 0; i < [data count]; i++) {
         NSDictionary *dict = data[i];
         NSString *vid = [dict objectForKey:@"vid"];
-        if ([PLVVodFdUtil checkStringUseable:vid]) {
-            PLVFeedData *feedData = [[PLVFeedData alloc] init];
+        if ([PLVVodMediaFdUtil checkStringUseable:vid]) {
+            PLVVodMediaFeedData *feedData = [[PLVVodMediaFeedData alloc] init];
             feedData.vid = vid;
             [feedDataMuArray addObject:feedData];
         }
@@ -85,8 +85,8 @@
     return [feedDataMuArray copy];
 }
 
-- (PLVFeedData *)feedDataInFeedDataArrayAtIndex:(NSUInteger)index {
-    if (![PLVVodFdUtil checkArrayUseable:self.currentData] || index > self.currentData.count || ![self.currentData[index] isKindOfClass:PLVFeedData.class]) {
+- (PLVVodMediaFeedData *)feedDataInFeedDataArrayAtIndex:(NSUInteger)index {
+    if (![PLVVodMediaFdUtil checkArrayUseable:self.currentData] || index > self.currentData.count || ![self.currentData[index] isKindOfClass:PLVVodMediaFeedData.class]) {
         return nil;
     }
     return self.currentData[index];

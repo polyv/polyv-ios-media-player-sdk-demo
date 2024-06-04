@@ -1,5 +1,5 @@
 //
-//  UIImage+Tint.h
+//  UIImage+PLVVodMediaTint.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/9/12.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UIImage (Tint)
+@interface UIImage (PLVVodMediaTint)
 
 - (UIImage *)imageWithCustomTintColor:(UIColor *)tintColor;
 

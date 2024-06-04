@@ -6,8 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PLVFeedViewDefine.h"
-#import "PLVFeedData.h"
+#import "PLVVodMediaFeedViewDefine.h"
+#import "PLVVodMediaFeedData.h"
 #import "PLVShortVideoMediaPlayerSkinContainer.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///    media 前缀属性 代表是 视频区域 的模块，属于Demo层开源的场景代码
 ///    player 前缀属性 代表是 播放器 的模块，属于SDK层闭源的功能代码
 @interface PLVShortVideoMediaAreaVC : UIView <
-PLVFeedItemCustomViewDelegate // 遵循该协议才能嵌
+PLVVodMediaFeedItemCustomViewDelegate // 遵循该协议才能嵌
 >
 
 /// 播放器 - 核心的裸播放器，不包括皮肤层
@@ -39,7 +39,7 @@ PLVFeedItemCustomViewDelegate // 遵循该协议才能嵌
 /// 视频 vid
 @property (nonatomic, copy) NSString *vid;
 
-@property (nonatomic, strong) PLVFeedData *feedData;
+@property (nonatomic, strong) PLVVodMediaFeedData *feedData;
 
 @property (nonatomic, assign) BOOL isActive;
 

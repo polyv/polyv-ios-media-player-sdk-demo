@@ -1,13 +1,13 @@
 //
-//  PLVOrientationUtil.m
+//  PLVVodMediaOrientationUtil.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by lichangjie on 2023/11/29.
 //
 
-#import "PLVOrientationUtil.h"
+#import "PLVVodMediaOrientationUtil.h"
 
-@implementation PLVOrientationUtil
+@implementation PLVVodMediaOrientationUtil
 
 + (Boolean)isLandscape {
     return [UIScreen mainScreen].bounds.size.width > [UIScreen mainScreen].bounds.size.height;
@@ -15,7 +15,7 @@
 
 + (void)changeUIOrientation:(UIDeviceOrientation)orientation {
     if (@available(iOS 16.0, *)) {
-        UIViewController *currentVC = [PLVOrientationUtil getCurrentViewController];
+        UIViewController *currentVC = [PLVVodMediaOrientationUtil getCurrentViewController];
         if (currentVC && [currentVC respondsToSelector:@selector(setNeedsUpdateOfSupportedInterfaceOrientations)]) {
             [currentVC performSelector:@selector(setNeedsUpdateOfSupportedInterfaceOrientations)];
         }
@@ -55,7 +55,7 @@
 
 + (void)setNeedsUpdateOfSupportedInterfaceOrientations {
     if (@available(iOS 16.0, *)) {
-        UIViewController *currentVC = [PLVOrientationUtil getCurrentViewController];
+        UIViewController *currentVC = [PLVVodMediaOrientationUtil getCurrentViewController];
         if (currentVC && [currentVC respondsToSelector:@selector(setNeedsUpdateOfSupportedInterfaceOrientations)]) {
             [currentVC performSelector:@selector(setNeedsUpdateOfSupportedInterfaceOrientations)];
         }

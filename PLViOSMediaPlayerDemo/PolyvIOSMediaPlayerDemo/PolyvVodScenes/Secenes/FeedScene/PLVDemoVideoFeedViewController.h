@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  * 短视频播放 演示页面
- * 短视频数据默认是获取 账号 对应的点播列表数据；如果需要自行定制，请修改 PLVVideoNetwork 类中的 requestAccountVideoWithPageCount 方法的实现
+ * 短视频数据默认是获取 账号 对应的点播列表数据；如果需要自行定制，请修改 PLVVodMediaVideoNetwork 类中的 requestAccountVideoWithPageCount 方法的实现
  */
 @interface PLVDemoVideoFeedViewController : UIViewController
 

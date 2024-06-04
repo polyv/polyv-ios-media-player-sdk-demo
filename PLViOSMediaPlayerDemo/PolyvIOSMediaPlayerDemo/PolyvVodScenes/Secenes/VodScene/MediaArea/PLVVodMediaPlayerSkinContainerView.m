@@ -21,7 +21,7 @@
 #import "PLVMediaPlayerSkinLoadingView.h"
 #import "PLVMediaPlayerSkinToastView.h"
 #import "PLVMediaPlayerSkinPicInPicPlaceholderView.h"
-#import "PLVOrientationUtil.h"
+#import "PLVVodMediaOrientationUtil.h"
 
 /// UI View Hierarchy
 ///
@@ -79,7 +79,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 }
 
 - (void)updateUI {
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     
     if (isLandscape) { // 横向-全屏
         self.portraitHalfSkinView.hidden = YES;
@@ -296,7 +296,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 
 - (void)showDefinitionTipsView {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.definitionTipsView showSwitchQualityWithModel:self.mediaPlayerState targetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:[PLVOrientationUtil isLandscape]];
+        [self.definitionTipsView showSwitchQualityWithModel:self.mediaPlayerState targetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:[PLVVodMediaOrientationUtil isLandscape]];
         [self layoutIfNeeded];
     });
 }
@@ -323,7 +323,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         self.progressToastView.isShowned = YES;
         [self addSubview:self.progressToastView];
         self.progressToastView.frame = self.bounds;
-        if ([PLVOrientationUtil isLandscape]){
+        if ([PLVVodMediaOrientationUtil isLandscape]){
             [self insertSubview:self.progressToastView belowSubview:self.landscapeFullSkinView];
         }
         else{
@@ -353,7 +353,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 #pragma mark 【Private Method】
 
 - (CGPoint)calculateDefinitionTipsViewPosition {
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     
     CGPoint targetPoint;
     if (isLandscape) {
@@ -366,7 +366,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 }
 
 - (CGPoint)calculateProgressToastViewPosition{
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     
     CGPoint targetPoint;
     if (isLandscape) {
@@ -489,7 +489,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     
     [self.landscapeFullSkinView hiddenMediaPlayerFullSkinView:YES];
     
-    [PLVOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
+    [PLVVodMediaOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
 }
 
 /// 清晰度 切换事件 回调方法
@@ -552,7 +552,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     self.mediaPlayerState.isLocking = NO;
     [self.lockScreenView removeFromSuperview];
     
-    [PLVOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
+    [PLVVodMediaOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
 }
 
 #pragma mark 【PLVMediaPlayerSkinLoopPlayView Delegate - 重新播放视图 回调方法】

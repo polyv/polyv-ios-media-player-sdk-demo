@@ -6,7 +6,7 @@
 //
 
 #import "PLVMediaAreaPortraitFullSkinView.h"
-#import "PLVOrientationUtil.h"
+#import "PLVVodMediaOrientationUtil.h"
 
 @implementation PLVMediaAreaPortraitFullSkinView
 

@@ -1,11 +1,11 @@
 //
-//  PLVVideoNetwork.m
+//  PLVVodMediaVideoNetwork.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/11/8.
 //
 
-#import "PLVVideoNetwork.h"
+#import "PLVVodMediaVideoNetwork.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonCryptor.h>
@@ -13,13 +13,13 @@
 #define PLV_HM_POST @"POST"
 #define PLV_HM_GET @"GET"
 
-NSString *PLVVodNetworkingErrorDomain = @"net.polyv.mediaplayer.error.networking";
+NSString *PLVVodMediaNetworkingErrorDomain = @"net.polyv.mediaplayer.error.networking";
 
-@implementation PLVVideoNetwork
+@implementation PLVVodMediaVideoNetwork
 
 /// 请求账户下的视频列表
 + (void)requestAccountVideoWithPageCount:(NSInteger)pageCount page:(NSInteger)page completion:(void (^)(NSArray<NSDictionary *> *accountVideos))completion; {
-    PLVVodSettings *settings = [PLVVodSettings sharedSettings];
+    PLVVodMediaSettings *settings = [PLVVodMediaSettings sharedSettings];
     NSString *url = [NSString stringWithFormat:@"https://api.polyv.net/v2/video/%@/list", settings.userid];
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"userid"] = settings.userid;
@@ -69,7 +69,7 @@ NSString *PLVVodNetworkingErrorDomain = @"net.polyv.mediaplayer.error.networking
     request.HTTPMethod = HTTPMethod;
     request.timeoutInterval = 10;
     
-    //NSString *userAgent = [NSString stringWithFormat:@"polyv-ios-sdk_%@", PLVVodSdkVersion];
+    //NSString *userAgent = [NSString stringWithFormat:@"polyv-ios-sdk_%@", PLVVodMediaSdkVersion];
     //[request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
     return request;
 }
@@ -115,7 +115,7 @@ NSString *PLVVodNetworkingErrorDomain = @"net.polyv.mediaplayer.error.networking
         } else if (httpStatusCode != 200) { // 服务器错误
             NSString *errorMessage = [NSString stringWithFormat:@"服务器响应失败，状态码:%zd",httpResponse.statusCode];
             NSDictionary *userInfo = [NSDictionary dictionaryWithObject:errorMessage forKey:NSLocalizedDescriptionKey];
-            NSError *serverError = [NSError errorWithDomain:PLVVodNetworkingErrorDomain code:httpStatusCode userInfo:userInfo];
+            NSError *serverError = [NSError errorWithDomain:PLVVodMediaNetworkingErrorDomain code:httpStatusCode userInfo:userInfo];
             if (completion) completion(nil, serverError);
             NSLog(@"%@，服务器错误: %@", request.URL.absoluteString, serverError);
         } else {
@@ -129,9 +129,9 @@ NSString *PLVVodNetworkingErrorDomain = @"net.polyv.mediaplayer.error.networking
     
     NSString *paramString = [self convertDictionaryToSortedString:params];
 #ifdef PLVSupportSubAccount
-    NSMutableString *plainSign = [NSMutableString stringWithFormat:@"%@%@", paramString, PLVVodSecretKey];
+    NSMutableString *plainSign = [NSMutableString stringWithFormat:@"%@%@", paramString, PLVVodMediaSecretKey];
 #else
-    NSMutableString *plainSign = [NSMutableString stringWithFormat:@"%@%@", paramString, [PLVVodSettings sharedSettings].secretkey];
+    NSMutableString *plainSign = [NSMutableString stringWithFormat:@"%@%@", paramString, [PLVVodMediaSettings sharedSettings].secretkey];
 
 #endif
     resultParams[@"sign"] = [self getSha1WithString:plainSign].uppercaseString;

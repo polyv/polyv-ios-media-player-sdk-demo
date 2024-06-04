@@ -1,21 +1,21 @@
 //
-//  PLVFeedDataManager.m
+//  PLVVodMediaFeedDataManager.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by Dhan on 2023/9/7.
 //
 
-#import "PLVFeedDataManager.h"
+#import "PLVVodMediaFeedDataManager.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
-@interface PLVFeedDataManager ()
+@interface PLVVodMediaFeedDataManager ()
 
 @property (nonatomic, strong) dispatch_semaphore_t dataOperationLock; // 确保数组数据多线程操作安全
 @property (nonatomic, strong) NSMutableArray *muData;
 
 @end
 
-@implementation PLVFeedDataManager
+@implementation PLVVodMediaFeedDataManager
 
 #pragma mark 【Life Cycle】
 
@@ -31,7 +31,7 @@
 #pragma mark 【Public Method】
 
 - (void)refreshWithData:(NSArray *)data {
-    if (![PLVVodFdUtil checkArrayUseable:data]) {
+    if (![PLVVodMediaFdUtil checkArrayUseable:data]) {
         return;
     }
     
@@ -50,7 +50,7 @@
 }
 
 - (void)appendWithData:(NSArray *)data {
-    if (![PLVVodFdUtil checkArrayUseable:data]) {
+    if (![PLVVodMediaFdUtil checkArrayUseable:data]) {
         return;
     }
     NSMutableArray *muArray = [[NSMutableArray alloc] initWithCapacity:[data count]];
@@ -68,7 +68,7 @@
 }
 
 - (id)objectAtIndex:(NSInteger)index {
-    if (![PLVVodFdUtil checkArrayUseable:self.currentData]) {
+    if (![PLVVodMediaFdUtil checkArrayUseable:self.currentData]) {
         return nil;
     }
     

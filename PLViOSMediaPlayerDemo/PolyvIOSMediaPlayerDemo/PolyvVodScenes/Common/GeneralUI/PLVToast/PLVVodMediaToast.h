@@ -1,5 +1,5 @@
 //
-//  PLVToast.h
+//  PLVVodMediaToast.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/10/25.
@@ -10,15 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class PLVToastView;
-@interface PLVToast : NSObject
+@class PLVVodMediaToastView;
+@interface PLVVodMediaToast : NSObject
 
 /** 仅文字，展示在屏幕底部 */
 +(void)showMessage:(NSString *)message;
 
 @end
 
-@interface PLVToastView : UIView
+@interface PLVVodMediaToastView : UIView
 
 -(instancetype)initWithMessage:(NSString *)message;
 

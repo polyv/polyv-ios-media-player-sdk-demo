@@ -1,22 +1,22 @@
 //
-//  PLVToast.m
+//  PLVVodMediaToast.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/10/25.
 //
 
-#import "PLVToast.h"
+#import "PLVVodMediaToast.h"
 
-@class PLVToastView;
-@interface PLVToast ()
+@class PLVVodMediaToastView;
+@interface PLVVodMediaToast ()
 
 @end
 
-@implementation PLVToast
+@implementation PLVVodMediaToast
 
 + (instancetype)sharedInstance {
     static dispatch_once_t onceToken;
-    static PLVToast *toast = nil;
+    static PLVVodMediaToast *toast = nil;
     dispatch_once(&onceToken, ^{
         toast = [[self alloc] init];
     });
@@ -34,20 +34,20 @@
 #pragma mark - Private
 - (void)showMessage:(NSString *)message
 {
-    PLVToastView *toastView = [[PLVToastView alloc]initWithMessage:message];
+    PLVVodMediaToastView *toastView = [[PLVVodMediaToastView alloc]initWithMessage:message];
     [toastView show];
 }
 
 @end
 
-@interface PLVToastView ()
+@interface PLVVodMediaToastView ()
 
 @property (nonatomic, strong) UILabel *lblMessage;
 
 @end
 
 
-@implementation PLVToastView
+@implementation PLVVodMediaToastView
 -(instancetype)initWithMessage:(NSString *)message
 {
     if (self = [super init]) {

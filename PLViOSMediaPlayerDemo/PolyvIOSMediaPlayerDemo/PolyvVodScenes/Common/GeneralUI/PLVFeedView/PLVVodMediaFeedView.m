@@ -1,19 +1,19 @@
 //
-//  PLVFeedView.m
+//  PLVVodMediaFeedView.m
 //  PolyvLiveScenesDemo
 //
 //  Created by MissYasiky on 2023/6/21.
 //  Copyright © 2023 PLV. All rights reserved.
 //
 
-#import "PLVFeedView.h"
-#import "PLVFeedItemView.h"
+#import "PLVVodMediaFeedView.h"
+#import "PLVVodMediaFeedItemView.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import <MJRefresh/MJRefresh.h>
 
-static NSString *kPLVFeedViewCellIdentifier = @"kPLVFeedViewCellIdentifier";
+static NSString *kPLVVodMediaFeedViewCellIdentifier = @"kPLVVodMediaFeedViewCellIdentifier";
 
-@interface PLVFeedView ()<
+@interface PLVVodMediaFeedView ()<
 UICollectionViewDataSource,
 UICollectionViewDelegate,
 UICollectionViewDelegateFlowLayout
@@ -21,9 +21,9 @@ UICollectionViewDelegateFlowLayout
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UICollectionViewFlowLayout *collectionViewLayout;
-@property (nonatomic, strong) UIView <PLVFeedItemCustomViewDelegate> *activeFeedItemView;
-@property (nonatomic, strong) NSMutableDictionary <NSString *, UIView <PLVFeedItemCustomViewDelegate> *> *feedItemCustomViewDict;
-@property (nonatomic, strong) NSMutableArray <UIView <PLVFeedItemCustomViewDelegate> *> *feedItemCustomViewArray;
+@property (nonatomic, strong) UIView <PLVVodMediaFeedItemCustomViewDelegate> *activeFeedItemView;
+@property (nonatomic, strong) NSMutableDictionary <NSString *, UIView <PLVVodMediaFeedItemCustomViewDelegate> *> *feedItemCustomViewDict;
+@property (nonatomic, strong) NSMutableArray <UIView <PLVVodMediaFeedItemCustomViewDelegate> *> *feedItemCustomViewArray;
 @property (nonatomic, assign) NSInteger maxReuseCustomViewCount;
 @property (nonatomic, strong) dispatch_semaphore_t feedItemCustomViewOperationLock;
 @property (nonatomic, assign) BOOL isRefreshing;
@@ -33,7 +33,7 @@ UICollectionViewDelegateFlowLayout
 
 @end
 
-@implementation PLVFeedView
+@implementation PLVVodMediaFeedView
 
 #pragma mark - [ Life Cycle ]
 
@@ -101,7 +101,7 @@ UICollectionViewDelegateFlowLayout
         [mjFooter.loadingView setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
         _collectionView.mj_footer = mjFooter;
         
-        [_collectionView registerClass:[PLVFeedItemView class] forCellWithReuseIdentifier:kPLVFeedViewCellIdentifier];
+        [_collectionView registerClass:[PLVVodMediaFeedItemView class] forCellWithReuseIdentifier:kPLVVodMediaFeedViewCellIdentifier];
         [self addSubview:_collectionView];
         
         _isRefreshing = NO;
@@ -115,9 +115,9 @@ UICollectionViewDelegateFlowLayout
 }
 
 #pragma mark - [ Public Method ]
-- (UIView <PLVFeedItemCustomViewDelegate>*)dequeueReusableFeedItemCustomViewWithIdentifier:(NSString *)identifier {
+- (UIView <PLVVodMediaFeedItemCustomViewDelegate>*)dequeueReusableFeedItemCustomViewWithIdentifier:(NSString *)identifier {
     if (identifier && [identifier isKindOfClass:[NSString class]] && identifier.length > 0) {
-        UIView <PLVFeedItemCustomViewDelegate> *customView = self.feedItemCustomViewDict[identifier];
+        UIView <PLVVodMediaFeedItemCustomViewDelegate> *customView = self.feedItemCustomViewDict[identifier];
         return customView;
     }
     return nil;
@@ -136,7 +136,7 @@ UICollectionViewDelegateFlowLayout
 
 #pragma mark Getter & Setter
 
-- (void)setDataSource:(id<PLVFeedViewDataSource>)dataSource {
+- (void)setDataSource:(id<PLVVodMediaFeedViewDataSource>)dataSource {
     _dataSource = dataSource;
     
     if (dataSource) {
@@ -150,7 +150,7 @@ UICollectionViewDelegateFlowLayout
 
 #pragma mark - [ Private Method ]
 
-- (void)appendCustomView:(UIView <PLVFeedItemCustomViewDelegate> *)customView {
+- (void)appendCustomView:(UIView <PLVVodMediaFeedItemCustomViewDelegate> *)customView {
     if (!customView.reuseIdentifier ||
         customView.reuseIdentifier.length == 0 ||
         self.feedItemCustomViewDict[customView.reuseIdentifier]) {
@@ -160,7 +160,7 @@ UICollectionViewDelegateFlowLayout
     LOCK(self.feedItemCustomViewOperationLock);
     
     if ([self.feedItemCustomViewArray count] >= self.maxReuseCustomViewCount) {
-        UIView <PLVFeedItemCustomViewDelegate> *removeView = self.feedItemCustomViewArray[0];
+        UIView <PLVVodMediaFeedItemCustomViewDelegate> *removeView = self.feedItemCustomViewArray[0];
         if (removeView && [removeView respondsToSelector:@selector(setActive:)]){
             [removeView setActive:NO];
             // 快速滑动，当前不需要选中项
@@ -177,7 +177,7 @@ UICollectionViewDelegateFlowLayout
 
     /*
     NSLog(@"xyj debug - %@", self.feedItemCustomViewArray);
-    for (UIView <PLVFeedItemCustomViewDelegate> *view in self.feedItemCustomViewArray) {
+    for (UIView <PLVVodMediaFeedItemCustomViewDelegate> *view in self.feedItemCustomViewArray) {
         NSLog(@"%@", view.reuseIdentifier);
     }
     */
@@ -221,22 +221,22 @@ UICollectionViewDelegateFlowLayout
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    PLVFeedItemView *cell = (PLVFeedItemView *)[collectionView dequeueReusableCellWithReuseIdentifier:kPLVFeedViewCellIdentifier forIndexPath:indexPath];
+    PLVVodMediaFeedItemView *cell = (PLVVodMediaFeedItemView *)[collectionView dequeueReusableCellWithReuseIdentifier:kPLVVodMediaFeedViewCellIdentifier forIndexPath:indexPath];
     
-    // 获取内容视图，内容视图必须遵循协议PLVFeedItemCustomViewDelegate
-    UIView <PLVFeedItemCustomViewDelegate> *contentView = nil;
+    // 获取内容视图，内容视图必须遵循协议PLVVodMediaFeedItemCustomViewDelegate
+    UIView <PLVVodMediaFeedItemCustomViewDelegate> *contentView = nil;
     if (self.dataSource &&
         [self.dataSource respondsToSelector:@selector(feedView:contentViewForItemAtIndexPath:)]) {
-        UIView <PLVFeedItemCustomViewDelegate>*returnView = (UIView <PLVFeedItemCustomViewDelegate>*)[self.dataSource feedView:self contentViewForItemAtIndexPath:indexPath];
-        if ([returnView conformsToProtocol:@protocol(PLVFeedItemCustomViewDelegate)]) {
+        UIView <PLVVodMediaFeedItemCustomViewDelegate>*returnView = (UIView <PLVVodMediaFeedItemCustomViewDelegate>*)[self.dataSource feedView:self contentViewForItemAtIndexPath:indexPath];
+        if ([returnView conformsToProtocol:@protocol(PLVVodMediaFeedItemCustomViewDelegate)]) {
             contentView = returnView;
             [self appendCustomView:contentView];
         }
         // 预加载下一条内容数据
 //        if (indexPath.row + 1 < indexPath.length) {
 //            NSIndexPath *proIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
-//            UIView <PLVFeedItemCustomViewDelegate>*proloadView = (UIView <PLVFeedItemCustomViewDelegate>*)[self.dataSource feedView:self contentViewForItemAtIndexPath:proIndexPath];
-//            if (proloadView && [proloadView conformsToProtocol:@protocol(PLVFeedItemCustomViewDelegate)]) {
+//            UIView <PLVVodMediaFeedItemCustomViewDelegate>*proloadView = (UIView <PLVVodMediaFeedItemCustomViewDelegate>*)[self.dataSource feedView:self contentViewForItemAtIndexPath:proIndexPath];
+//            if (proloadView && [proloadView conformsToProtocol:@protocol(PLVVodMediaFeedItemCustomViewDelegate)]) {
 //                [self appendCustomView:proloadView];
 //            }
 //        }
@@ -305,14 +305,14 @@ UICollectionViewDelegateFlowLayout
         return;
     }
     
-    PLVFeedItemView *cell = (PLVFeedItemView *)self.collectionView.visibleCells.firstObject;
+    PLVVodMediaFeedItemView *cell = (PLVVodMediaFeedItemView *)self.collectionView.visibleCells.firstObject;
     if (self.activeFeedItemView &&
         ((cell.customContentView && self.activeFeedItemView != cell.customContentView) || !cell.customContentView)) {
         [self.activeFeedItemView setActive:NO];
     }
 
     if (cell.customContentView &&
-        [cell.customContentView conformsToProtocol:@protocol(PLVFeedItemCustomViewDelegate)]) {
+        [cell.customContentView conformsToProtocol:@protocol(PLVVodMediaFeedItemCustomViewDelegate)]) {
         if (self.activeFeedItemView != cell.customContentView){
             [cell.customContentView setActive:YES];
             self.activeFeedItemView = cell.customContentView;
@@ -325,7 +325,7 @@ UICollectionViewDelegateFlowLayout
         return;
     }
     
-    PLVFeedItemView *cell = (PLVFeedItemView *)self.collectionView.visibleCells[0];
+    PLVVodMediaFeedItemView *cell = (PLVVodMediaFeedItemView *)self.collectionView.visibleCells[0];
     if (cell.customContentView && !self.activeFeedItemView) {
         self.activeFeedItemView = cell.customContentView;
     }

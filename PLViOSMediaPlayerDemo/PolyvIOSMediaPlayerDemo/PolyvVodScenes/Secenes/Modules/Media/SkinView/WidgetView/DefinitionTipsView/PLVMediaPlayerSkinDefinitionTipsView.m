@@ -6,7 +6,7 @@
 //
 
 #import "PLVMediaPlayerSkinDefinitionTipsView.h"
-#import "UIImage+Tint.h"
+#import "UIImage+PLVVodMediaTint.h"
 
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
@@ -15,7 +15,7 @@
 /// 是否正在展示
 @property (nonatomic, assign) BOOL isShowing;
 
-@property (nonatomic, assign) PLVVodQuality switchQuality;
+@property (nonatomic, assign) PLVVodMediaQuality switchQuality;
 
 @property (nonatomic, strong) UITextView *tipTextView;
 
@@ -150,11 +150,11 @@
         
         NSString *qualityString = @"";
         if (showChangeString) {
-            if (self.switchQuality == PLVVodQualityStandard) {
+            if (self.switchQuality == PLVVodMediaQualityStandard) {
                 qualityString = @"切换到流畅";
-            }else if (self.switchQuality == PLVVodQualityHigh) {
+            }else if (self.switchQuality == PLVVodMediaQualityHigh) {
                 qualityString = @"切换到高清";
-            }else if (self.switchQuality == PLVVodQualityUltra) {
+            }else if (self.switchQuality == PLVVodMediaQualityUltra) {
                 qualityString = @"切换到超清";
             }
         }
@@ -177,11 +177,11 @@
         // 切换中提示
         self.switchQuality = mediaState.curQualityLevel;
         NSString *qualityString = @"";
-        if (self.switchQuality == PLVVodQualityStandard) {
+        if (self.switchQuality == PLVVodMediaQualityStandard) {
             qualityString = @"流畅";
-        }else if (self.switchQuality == PLVVodQualityHigh) {
+        }else if (self.switchQuality == PLVVodMediaQualityHigh) {
             qualityString = @"高清";
-        }else if (self.switchQuality == PLVVodQualityUltra) {
+        }else if (self.switchQuality == PLVVodMediaQualityUltra) {
             qualityString = @"超清";
         }
         NSString *tipContentString = [NSString stringWithFormat:@"正在为您切换到%@清晰度 请耐心等待~", qualityString];
@@ -197,11 +197,11 @@
         // 切换完成提示
         self.switchQuality = mediaState.curQualityLevel;
         NSString *qualityString = @"";
-        if (self.switchQuality == PLVVodQualityStandard) {
+        if (self.switchQuality == PLVVodMediaQualityStandard) {
             qualityString = @"流畅";
-        }else if (self.switchQuality == PLVVodQualityHigh) {
+        }else if (self.switchQuality == PLVVodMediaQualityHigh) {
             qualityString = @"高清";
-        }else if (self.switchQuality == PLVVodQualityUltra) {
+        }else if (self.switchQuality == PLVVodMediaQualityUltra) {
             qualityString = @"超清";
         }
         NSString *tipContentString = [NSString stringWithFormat:@"您已成功切换到%@清晰度", qualityString];

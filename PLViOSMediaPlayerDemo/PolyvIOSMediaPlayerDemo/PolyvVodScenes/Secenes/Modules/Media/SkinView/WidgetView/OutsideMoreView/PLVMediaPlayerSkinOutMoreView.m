@@ -6,7 +6,7 @@
 //
 
 #import "PLVMediaPlayerSkinOutMoreView.h"
-#import "UIImage+Tint.h"
+#import "UIImage+PLVVodMediaTint.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
 @interface PLVMediaPlayerSkinOutMoreView()
@@ -178,7 +178,7 @@
         [_audioModeBtn addTarget:self action:@selector(audioModeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         
         UIImage *selImg = [UIImage imageNamed:@"plv_skin_menu_audio_mode"];
-        UIImage *defaultImg = [selImg imageWithCustomTintColor:[PLVVodColorUtil colorFromHexString:@"#333333"]];
+        UIImage *defaultImg = [selImg imageWithCustomTintColor:[PLVVodMediaColorUtil colorFromHexString:@"#333333"]];
         [_audioModeBtn setImage:defaultImg forState:UIControlStateNormal];
         [_audioModeBtn setImage:selImg forState:UIControlStateSelected];
         
@@ -194,7 +194,7 @@
         [_picInPicBtn addTarget:self action:@selector(picInPicButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         
         UIImage *defaultImg = [UIImage imageNamed:@"plv_skin_menu_icon_picinpic"];
-        UIImage *selImg = [defaultImg imageWithCustomTintColor:[PLVVodColorUtil colorFromHexString:@"#3F76FC"]];
+        UIImage *selImg = [defaultImg imageWithCustomTintColor:[PLVVodMediaColorUtil colorFromHexString:@"#3F76FC"]];
         [_picInPicBtn setImage:defaultImg forState:UIControlStateNormal];
         [_picInPicBtn setImage:selImg forState:UIControlStateSelected];
         
@@ -209,7 +209,7 @@
         _qualityLbl = [[UILabel alloc] init];
         _qualityLbl.text = @"清晰度:";
         _qualityLbl.font = [UIFont systemFontOfSize:12];
-        _qualityLbl.textColor = [PLVVodColorUtil colorFromHexString:@"#333333"];
+        _qualityLbl.textColor = [PLVVodMediaColorUtil colorFromHexString:@"#333333"];
     }
     
     return _qualityLbl;
@@ -246,7 +246,7 @@
         _playRateLbl = [[UILabel alloc] init];
         _playRateLbl.text = @"倍速:";
         _playRateLbl.font = [UIFont systemFontOfSize:12];
-        _playRateLbl.textColor = [PLVVodColorUtil colorFromHexString:@"#333333"];
+        _playRateLbl.textColor = [PLVVodMediaColorUtil colorFromHexString:@"#333333"];
     }
     
     return _playRateLbl;
@@ -291,8 +291,8 @@
 - (UIButton *)buttonWithTitle:(NSString *)title tag:(NSInteger )tag{
     UIButton *button = [[UIButton alloc] init];
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[PLVVodColorUtil colorFromHexString:@"#333333"] forState:UIControlStateNormal];
-    [button setTitleColor:[PLVVodColorUtil colorFromHexString:@"#3F76FC"] forState:UIControlStateSelected];
+    [button setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#333333"] forState:UIControlStateNormal];
+    [button setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#3F76FC"] forState:UIControlStateSelected];
     button.titleLabel.font = [UIFont systemFontOfSize:12];
     button.tag = tag;
     

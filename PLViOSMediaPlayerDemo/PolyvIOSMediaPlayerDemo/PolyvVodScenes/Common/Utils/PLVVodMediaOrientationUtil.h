@@ -1,5 +1,5 @@
 //
-//  PLVOrientationUtil.h
+//  PLVVodMediaOrientationUtil.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by lichangjie on 2023/11/29.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PLVOrientationUtil : NSObject
+@interface PLVVodMediaOrientationUtil : NSObject
 
 + (Boolean)isLandscape;
 

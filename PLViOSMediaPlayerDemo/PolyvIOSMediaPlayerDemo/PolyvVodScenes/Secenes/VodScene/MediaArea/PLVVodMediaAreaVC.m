@@ -6,9 +6,9 @@
 //
 
 #import "PLVVodMediaAreaVC.h"
-#import "PLVOrientationUtil.h"
+#import "PLVVodMediaOrientationUtil.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
-#import "PLVMarqueeView.h"
+#import "PLVVodMediaMarqueeView.h"
 #import <PLVTimer.h>
 #import "PLVMediaPlayerConst.h"
 
@@ -19,12 +19,12 @@
 ///  ├── (PLVVodMediaPlayerSkinContainerView) skinContainer
 
 @interface PLVVodMediaAreaVC ()<
-PLVPlayerCoreDelegate,
+PLVMediaPlayerCoreDelegate,
 PLVVodMediaPlayerDelegate,
 PLVVodMediaPlayerSkinContainerViewDelegate
 >
 
-@property (nonatomic, strong) PLVMarqueeView *marqueeView; /// 跑马灯
+@property (nonatomic, strong) PLVVodMediaMarqueeView *marqueeView; /// 跑马灯
 @property (nonatomic, strong) PLVTimer *playbackTimer;     /// 播放过程定时器，用于UI相关实时更新
 
 @end
@@ -68,7 +68,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     self.player.enableTeaser = YES;
     
     // seek 类型 精准seek
-    self.player.seekType = PLVVodPlaySeekTypePrecise;
+    self.player.seekType = PLVVodMediaPlaySeekTypePrecise;
     
     // 设置新版跑马灯（2.0）
     [self initMarqueeView];
@@ -78,11 +78,11 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 - (void)initMarqueeView{
-    self.marqueeView = [[PLVMarqueeView alloc] init];
-    PLVMarqueeModel *marqueeModel = [[PLVMarqueeModel alloc] init];
+    self.marqueeView = [[PLVVodMediaMarqueeView alloc] init];
+    PLVVodMediaMarqueeModel *marqueeModel = [[PLVVodMediaMarqueeModel alloc] init];
     self.marqueeView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.marqueeView.frame = self.view.bounds;
-    [self.marqueeView setPLVMarqueeModel:marqueeModel];
+    [self.marqueeView setPLVVodMediaMarqueeModel:marqueeModel];
     [self.view addSubview:self.marqueeView];
 }
 
@@ -150,7 +150,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 
 #pragma mark 【Public Method】
 - (void)playWithVid:(NSString *)vid{
-    [PLVVodVideo requestVideoWithVid:vid completion:^(PLVVodVideo *video, NSError *error) {
+    [PLVVodMediaVideo requestVideoWithVid:vid completion:^(PLVVodMediaVideo *video, NSError *error) {
         [self.player setVideo:video];
         [self syncPlayerStateWithModel:video]; // 同步播放器状态
     }];
@@ -164,10 +164,10 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     [self synPlayQuality:qualityLevel];
 }
 
-- (void)setPlaykMode:(PLVVodPlaybackMode)playbackMode{
+- (void)setPlaykMode:(PLVVodMediaPlaybackMode)playbackMode{
     [self.player setPlaybackMode:playbackMode];
     self.mediaPlayerState.isChangingPlaySource = YES;
-    if (playbackMode == PLVVodPlaybackModeAudio) {
+    if (playbackMode == PLVVodMediaPlaybackModeAudio) {
         // 音频模式
         self.mediaPlayerState.curPlayMode = PLVMediaPlayerPlayModeAudio;
         [self.mediaSkinContainer showAudioModeUI];
@@ -187,7 +187,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 #pragma mark 【Syn Method  同步 player、mediaState、mediaSkinContainer 之间的数据】
-- (void)syncPlayerStateWithModel:(PLVVodVideo *)videoModel{
+- (void)syncPlayerStateWithModel:(PLVVodMediaVideo *)videoModel{
     dispatch_async(dispatch_get_main_queue(), ^{
         // 视频区域 对应 播放器 的 实时数据模型
         self.mediaPlayerState.curQualityLevel = videoModel.preferredQuality;
@@ -219,7 +219,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 
 - (void)synPlayQuality:(NSInteger)qualityLevel {
     // 播放器核心 - 裸播放器
-    [self.player setPlayQuality:(PLVVodQuality)qualityLevel];
+    [self.player setPlayQuality:(PLVVodMediaQuality)qualityLevel];
     // 视频区域 对应 播放器 的 实时数据模型
     self.mediaPlayerState.curQualityLevel = qualityLevel;
     // 视频区域 对应 播放器 的皮肤
@@ -238,12 +238,12 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 #pragma mark 【Orientation 横竖屏设置】
 /// 切换到 横向-全屏皮肤
 - (void)changeToLandscape{
-    [PLVOrientationUtil changeUIOrientation:UIDeviceOrientationLandscapeLeft];
+    [PLVVodMediaOrientationUtil changeUIOrientation:UIDeviceOrientationLandscapeLeft];
 }
 
 /// 切换到 竖向-半屏皮肤
 - (void)changeToProtrait{
-    [PLVOrientationUtil changeUIOrientation:UIDeviceOrientationPortrait];
+    [PLVVodMediaOrientationUtil changeUIOrientation:UIDeviceOrientationPortrait];
 }
 
 /// 更新 播放器皮肤 —— 触发 竖向-半屏皮肤 和 横向-全屏皮肤 的切换
@@ -259,7 +259,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         // 横屏状态，需要先返回竖屏状态
         UIInterfaceOrientation interfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
         if (UIInterfaceOrientationIsLandscape(interfaceOrientation)) {
-            [PLVOrientationUtil changeUIOrientation:UIDeviceOrientationPortrait];
+            [PLVVodMediaOrientationUtil changeUIOrientation:UIDeviceOrientationPortrait];
         }
         [self.player startPictureInPicture];
     }
@@ -275,7 +275,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 
 /// 返回 按钮事件 处理
 - (void)mediaPlayerSkinContainerView_BackEvent:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
-    BOOL isFullScreen = [PLVOrientationUtil isLandscape];
+    BOOL isFullScreen = [PLVVodMediaOrientationUtil isLandscape];
     if (isFullScreen) { // 横向-全屏
         // 切换到 竖向-半屏
         [self changeToProtrait];
@@ -294,12 +294,12 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 
 /// 切换到视频模式 按钮事件 处理
 - (void)mediaPlayerSkinContainerView_SwitchToVideoMode:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
-    [self setPlaykMode:PLVVodPlaybackModeVideo];
+    [self setPlaykMode:PLVVodMediaPlaybackModeVideo];
 }
 
 /// 切换到音频模式 按钮事件 处理
 - (void)mediaPlayerSkinContainerView_SwitchToAudioMode:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
-    [self setPlaykMode:PLVVodPlaybackModeAudio];
+    [self setPlaykMode:PLVVodMediaPlaybackModeAudio];
 }
 
 /// 画中画 按钮事件 处理
@@ -339,9 +339,9 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     [self.player play];
 }
 
-#pragma mark 【PLVPlayerCore Delegate 播放器核心（播放状态时间）的回调方法】
+#pragma mark 【PLVMediaPlayerCore Delegate 播放器核心（播放状态时间）的回调方法】
 /// 播放器 ’加载状态‘ 发生改变
--(void)plvPlayerCore:(PLVPlayerCore *)player playerLoadStateDidChange:(PLVPlayerLoadState)loadState{
+-(void)plvMediaPlayerCore:(PLVMediaPlayerCore *)player playerLoadStateDidChange:(PLVPlayerLoadState)loadState{
     NSLog(@"%@", NSStringFromSelector(_cmd));
     // 加载速度显示
     if (loadState == PLVPlayerLoadStateStalled){
@@ -353,7 +353,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 播放器 已准备好播放
-- (void)plvPlayerCore:(PLVPlayerCore *)player playerIsPreparedToPlay:(BOOL)prepared{
+- (void)plvMediaPlayerCore:(PLVMediaPlayerCore *)player playerIsPreparedToPlay:(BOOL)prepared{
     NSLog(@"%@", NSStringFromSelector(_cmd));
     // 同步播放速率
     [self synPlayRate:self.mediaPlayerState.curPlayRate];
@@ -369,7 +369,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 播放器 ‘播放状态’ 发生改变
-- (void)plvPlayerCore:(PLVPlayerCore *)player playerPlaybackStateDidChange:(PLVPlaybackState)playbackState{
+- (void)plvMediaPlayerCore:(PLVMediaPlayerCore *)player playerPlaybackStateDidChange:(PLVPlaybackState)playbackState{
     NSLog(@"%@", NSStringFromSelector(_cmd));
     BOOL isPlaying = (playbackState == PLVPlaybackStatePlaying ||
                       playbackState == PLVPlaybackStateSeekingForward ||
@@ -396,7 +396,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 播放器 播放结束
-- (void)plvPlayerCore:(PLVPlayerCore *)player playerPlaybackDidFinish:(PLVPlayerFinishReason)finishReson{
+- (void)plvMediaPlayerCore:(PLVMediaPlayerCore *)player playerPlaybackDidFinish:(PLVPlayerFinishReason)finishReson{
     if (PLVPlayerFinishReasonPlaybackEnded == finishReson){
         if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(vodMediaAreaVC_PlayFinishEvent:)]){
             [self.mediaAreaVcDelegate vodMediaAreaVC_PlayFinishEvent:self];
@@ -413,13 +413,13 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 播放器首帧渲染
-- (void)plvPlayerCore:(PLVPlayerCore *)player firstFrameRendered:(BOOL)rendered{
+- (void)plvMediaPlayerCore:(PLVMediaPlayerCore *)player firstFrameRendered:(BOOL)rendered{
     NSLog(@"%@", NSStringFromSelector(_cmd));
 }
 
 #pragma mark 【PLVVodMediaPlayerDelegate 播放器的回调方法】
 /// 播放器 定时返回当前播放进度
-- (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer
+- (void)PLVVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer
            playedProgress:(CGFloat)playedProgress
          playedTimeString:(NSString *)playedTimeString
        durationTimeString:(NSString *)durationTimeString{
@@ -436,7 +436,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 画中画 状态回调
-- (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer pictureInPictureChangeState:(PLVPictureInPictureState)pipState{
+- (void)PLVVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer pictureInPictureChangeState:(PLVPictureInPictureState)pipState{
     if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(vodMediaAreaVC_PictureInPictureChangeState:state:)]){
         [self.mediaAreaVcDelegate vodMediaAreaVC_PictureInPictureChangeState:self state:pipState];
     }
@@ -456,7 +456,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 画中画 开启失败
-- (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer startPictureInPictureWithError:(NSError *)error{
+- (void)PLVVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer startPictureInPictureWithError:(NSError *)error{
     // 画中画开启失败
     if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(vodMediaAreaVC_StartPictureInPictureFailed:error:)]){
         [self.mediaAreaVcDelegate vodMediaAreaVC_StartPictureInPictureFailed:self error:error];
@@ -468,7 +468,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 }
 
 /// 当前网络状态不佳 回调状态
-- (void)plvVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer poorNetworkState:(BOOL)poorState {
+- (void)PLVVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer poorNetworkState:(BOOL)poorState {
     dispatch_async(dispatch_get_main_queue(), ^{
         self.mediaPlayerState.qualityState = PLVMediaPlayerQualityStatePrepare;
         [self.mediaSkinContainer showDefinitionTipsView];

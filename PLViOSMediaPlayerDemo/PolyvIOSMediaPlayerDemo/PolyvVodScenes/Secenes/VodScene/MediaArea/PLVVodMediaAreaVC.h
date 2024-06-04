@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setPlayQuality:(NSInteger )qualityLevel;
 
 // 切换音频、视频播放模式
-- (void)setPlaykMode:(PLVVodPlaybackMode )playbackMode;
+- (void)setPlaykMode:(PLVVodMediaPlaybackMode )playbackMode;
 
 // 显示播放完毕视图
 - (void)showPlayFinishUI;

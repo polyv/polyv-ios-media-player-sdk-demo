@@ -1,13 +1,13 @@
 //
-//  PLVVodFeedData.m
+//  PLVVodMediaFeedData.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/9/4.
 //
 
-#import "PLVFeedData.h"
+#import "PLVVodMediaFeedData.h"
 
-@implementation PLVFeedData
+@implementation PLVVodMediaFeedData
 
 - (NSString *)hashKey{
     return self.vid;

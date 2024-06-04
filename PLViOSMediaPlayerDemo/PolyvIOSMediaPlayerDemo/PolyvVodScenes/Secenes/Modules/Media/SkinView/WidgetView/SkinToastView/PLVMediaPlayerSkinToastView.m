@@ -84,7 +84,7 @@
     self.hidden = NO;
     self.targetPoint = targetPoint;
     
-    NSString *timeStr = [PLVVodFdUtil secondsToString:curTime];
+    NSString *timeStr = [PLVVodMediaFdUtil secondsToString:curTime];
     NSString *tipsText = nil;
     if (uiStyle == PLVMediaPlayerSkinToastViewUIStyleLongVideo){
         tipsText = [NSString stringWithFormat:@"您上次观看至%@，已为您续播", timeStr];

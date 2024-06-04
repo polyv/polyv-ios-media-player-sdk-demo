@@ -1,17 +1,17 @@
 //
-//  PLVMarqueeView.m
+//  PLVVodMediaMarqueeView.m
 //  PLVFoundationSDK
 //
 //  Created by PLV-UX on 2021/3/10.
 //  Copyright © 2021 PLV. All rights reserved.
 //
 
-#import "PLVMarqueeView.h"
-#import "PLVMarqueeAnimationManager.h"
+#import "PLVVodMediaMarqueeView.h"
+#import "PLVVodMediaMarqueeAnimationManager.h"
 
-@interface PLVMarqueeView ()<CAAnimationDelegate>
+@interface PLVVodMediaMarqueeView ()<CAAnimationDelegate>
 
-@property (nonatomic, strong) PLVMarqueeModel *marqueeModel;
+@property (nonatomic, strong) PLVVodMediaMarqueeModel *marqueeModel;
 @property (nonatomic, strong) CALayer *mainMarqueeLayer;
 @property (nonatomic, strong) CALayer *secondMarqueeLayer;
 
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation PLVMarqueeView
+@implementation PLVVodMediaMarqueeView
 
 #pragma mark - Init & Dealloc
 
@@ -42,7 +42,7 @@
 
 #pragma mark - Setter
 
-- (void)setPLVMarqueeModel:(PLVMarqueeModel *)marqueeModel {
+- (void)setPLVVodMediaMarqueeModel:(PLVVodMediaMarqueeModel *)marqueeModel {
     if (!marqueeModel) {
         [self removeMarquee];
         return;
@@ -65,8 +65,8 @@
         [self.layer addSublayer:self.mainMarqueeLayer];
         
         //双跑马灯，开启第二个跑马灯layer
-        if (marqueeModel.style == PLVMarqueeModelStyleDoubleRoll ||
-            marqueeModel.style == PLVMarqueeModelStyleDoubleFlash) {
+        if (marqueeModel.style == PLVVodMediaMarqueeModelStyleDoubleRoll ||
+            marqueeModel.style == PLVVodMediaMarqueeModelStyleDoubleFlash) {
             
             NSAttributedString *secondAttributedString = [marqueeModel createSecondMarqueeAttributedContent];
             CGSize secondMarqueeSize = [marqueeModel secondmarqueeAttributedContentSize];
@@ -95,23 +95,23 @@
     if (self.mainMarqueeLayer) {
         self.isRunning = YES;
         self.mainMarqueeLayer.hidden = NO;
-        if ([PLVMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.mainMarqueeLayer]) {
+        if ([PLVVodMediaMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.mainMarqueeLayer]) {
             //当前已经添加动画,启动动画
-            [PLVMarqueeAnimationManager startMarqueeAnimation:self.mainMarqueeLayer];
+            [PLVVodMediaMarqueeAnimationManager startMarqueeAnimation:self.mainMarqueeLayer];
         }else {
             //没有添加动画，则添加
-            [PLVMarqueeAnimationManager addAnimationForLayer:self.mainMarqueeLayer randomOriginInBounds:self.bounds withModel:self.marqueeModel animationDelegate:self];
+            [PLVVodMediaMarqueeAnimationManager addAnimationForLayer:self.mainMarqueeLayer randomOriginInBounds:self.bounds withModel:self.marqueeModel animationDelegate:self];
         }
     }
     
     if (self.secondMarqueeLayer) {
         self.secondMarqueeLayer.hidden = NO;
-        if ([PLVMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.secondMarqueeLayer]) {
+        if ([PLVVodMediaMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.secondMarqueeLayer]) {
             //当前已经添加动画,启动动画
-            [PLVMarqueeAnimationManager startMarqueeAnimation:self.secondMarqueeLayer];
+            [PLVVodMediaMarqueeAnimationManager startMarqueeAnimation:self.secondMarqueeLayer];
         } else {
             //没有添加动画，则添加
-            [PLVMarqueeAnimationManager addDoubleFlashAnimationForSecondLayer:self.secondMarqueeLayer randomOriginInBounds:self.bounds withModel:self.marqueeModel animationDelegate:self];
+            [PLVVodMediaMarqueeAnimationManager addDoubleFlashAnimationForSecondLayer:self.secondMarqueeLayer randomOriginInBounds:self.bounds withModel:self.marqueeModel animationDelegate:self];
         }
     }
 }
@@ -126,17 +126,17 @@
     if (self.mainMarqueeLayer) {
         self.isRunning = NO;
         self.mainMarqueeLayer.hidden = self.marqueeModel.isHiddenWhenPause;
-        if ([PLVMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.mainMarqueeLayer]) {
+        if ([PLVVodMediaMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.mainMarqueeLayer]) {
             //当前已经添加动画，暂停动画
-            [PLVMarqueeAnimationManager pauseMarqueeAnimation:self.mainMarqueeLayer];
+            [PLVVodMediaMarqueeAnimationManager pauseMarqueeAnimation:self.mainMarqueeLayer];
         }
     }
 
     if (self.secondMarqueeLayer) {
         self.secondMarqueeLayer.hidden = self.marqueeModel.isHiddenWhenPause;
-        if ([PLVMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.secondMarqueeLayer]) {
+        if ([PLVVodMediaMarqueeAnimationManager checkLayerHaveMarqueeAnimation:self.secondMarqueeLayer]) {
             //当前已经添加动画，暂停动画
-            [PLVMarqueeAnimationManager pauseMarqueeAnimation:self.secondMarqueeLayer];
+            [PLVVodMediaMarqueeAnimationManager pauseMarqueeAnimation:self.secondMarqueeLayer];
         }
     }
 }

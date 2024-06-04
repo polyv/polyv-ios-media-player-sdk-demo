@@ -8,8 +8,8 @@
 #import "PLVMediaPlayerSkinAudioModeView.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
-#import "UIImage+Tint.h"
-#import "PLVOrientationUtil.h"
+#import "UIImage+PLVVodMediaTint.h"
+#import "PLVVodMediaOrientationUtil.h"
 
 @interface PLVMediaPlayerSkinAudioModeView()
 
@@ -59,7 +59,7 @@
 
 - (void)updateUI{
     self.backgroudImgView.frame = self.bounds;
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     
     if (isLandscape){ // 横向
         CGFloat leftPad = 220;
@@ -113,8 +113,8 @@
     [self.audioCoverImage sd_setImageWithURL:[NSURL URLWithString:url]];
 }
 
-- (void)switchToPlayMode:(PLVVodPlaybackMode)mode {
-    if (mode == PLVVodPlaybackModeAudio) {
+- (void)switchToPlayMode:(PLVVodMediaPlaybackMode)mode {
+    if (mode == PLVVodMediaPlaybackModeAudio) {
 //        self.audioCoverContainerView.hidden = NO;
     } else {
 //        self.audioCoverContainerView.hidden = YES;
@@ -158,7 +158,7 @@
 - (UIImageView *)backgroudImgView{
     if (!_backgroudImgView){
         _backgroudImgView = [[UIImageView alloc] init];
-        _backgroudImgView.backgroundColor = [PLVVodColorUtil colorFromHexString:@"#3F76FC" alpha:0.2];
+        _backgroudImgView.backgroundColor = [PLVVodMediaColorUtil colorFromHexString:@"#3F76FC" alpha:0.2];
     }
     
     return _backgroudImgView;

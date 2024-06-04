@@ -7,7 +7,7 @@
 
 #import "PLVMediaPlayerSkinMoreView.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
-#import "UIImage+Tint.h"
+#import "UIImage+PLVVodMediaTint.h"
 
 @interface PLVMediaPlayerSkinMoreView()
 
@@ -94,10 +94,10 @@
     if (!_audioModeBtn){
         _audioModeBtn = [self buttonWithTitle:@"音频模式" tag:0];
         [_audioModeBtn addTarget:self action:@selector(audioModeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [_audioModeBtn setTitleColor:[PLVVodColorUtil colorFromHexString:@"#FFFFFF"] forState:UIControlStateNormal];
+        [_audioModeBtn setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#FFFFFF"] forState:UIControlStateNormal];
 
         UIImage *selImg = [UIImage imageNamed:@"plv_skin_menu_audio_mode"];
-        UIImage *defaultImg = [selImg imageWithCustomTintColor:[PLVVodColorUtil colorFromHexString:@"#FFFFFF"]];
+        UIImage *defaultImg = [selImg imageWithCustomTintColor:[PLVVodMediaColorUtil colorFromHexString:@"#FFFFFF"]];
         [_audioModeBtn setImage:defaultImg forState:UIControlStateNormal];
         [_audioModeBtn setImage:selImg forState:UIControlStateSelected];
         
@@ -111,11 +111,11 @@
     if (!_picInPicBtn){
         _picInPicBtn = [self buttonWithTitle:@"小窗播放" tag:0];
         [_picInPicBtn addTarget:self action:@selector(picInPicButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-        [_picInPicBtn setTitleColor:[PLVVodColorUtil colorFromHexString:@"#FFFFFF"] forState:UIControlStateNormal];
+        [_picInPicBtn setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#FFFFFF"] forState:UIControlStateNormal];
 
         UIImage *orig = [UIImage imageNamed:@"plv_skin_menu_icon_picinpic"];
-        UIImage *defaultImg = [orig imageWithCustomTintColor:[PLVVodColorUtil colorFromHexString:@"#3FFFFFF"]];
-        UIImage *selImg = [defaultImg imageWithCustomTintColor:[PLVVodColorUtil colorFromHexString:@"#3F76FC"]];
+        UIImage *defaultImg = [orig imageWithCustomTintColor:[PLVVodMediaColorUtil colorFromHexString:@"#3FFFFFF"]];
+        UIImage *selImg = [defaultImg imageWithCustomTintColor:[PLVVodMediaColorUtil colorFromHexString:@"#3F76FC"]];
         [_picInPicBtn setImage:defaultImg forState:UIControlStateNormal];
         [_picInPicBtn setImage:selImg forState:UIControlStateSelected];
         
@@ -128,8 +128,8 @@
 - (UIButton *)buttonWithTitle:(NSString *)title tag:(NSInteger )tag{
     UIButton *button = [[UIButton alloc] init];
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[PLVVodColorUtil colorFromHexString:@"#333333"] forState:UIControlStateNormal];
-    [button setTitleColor:[PLVVodColorUtil colorFromHexString:@"#3F76FC"] forState:UIControlStateSelected];
+    [button setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#333333"] forState:UIControlStateNormal];
+    [button setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#3F76FC"] forState:UIControlStateSelected];
     button.titleLabel.font = [UIFont systemFontOfSize:12];
     button.tag = tag;
     

@@ -1,13 +1,13 @@
 //
-//  PLVVodUtil.m
+//  PLVVodMediaUtil.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/10/25.
 //
 
-#import "PLVVodErrorUtil.h"
+#import "PLVVodMediaErrorUtil.h"
 
-@implementation PLVVodErrorUtil
+@implementation PLVVodMediaErrorUtil
 
 + (NSDictionary *)errorDescriptionDict {
     NSDictionary *errorDict =
@@ -67,7 +67,7 @@
     return errorDict;
 }
 
-+ (NSString *)getErrorMsgWithCode:(PLVVodErrorCode )errorCod{
++ (NSString *)getErrorMsgWithCode:(PLVVodMediaErrorCode )errorCod{
     NSDictionary *errorDict = [self errorDescriptionDict];
     return [errorDict objectForKey:@(errorCod)] ?: @"";
 }

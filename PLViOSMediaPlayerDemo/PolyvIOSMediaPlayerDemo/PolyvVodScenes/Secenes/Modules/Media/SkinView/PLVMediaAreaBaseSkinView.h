@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "PLVProgressSlider.h"
+#import "PLVVodMediaProgressSlider.h"
 #import "PLVMediaProgressPreviewView.h"
 
 #ifndef NormalPlayerViewScale
@@ -50,7 +50,7 @@ typedef NS_ENUM(NSUInteger, PLVMediaAreaBaseSkinViewType) {
 @property (nonatomic, strong) UILabel * currentTimeLabel;  // 当前时间 文本框
 @property (nonatomic, strong) UILabel * diagonalsLabel;    // 斜杆符号 文本框
 @property (nonatomic, strong) UILabel * durationLabel;     // 视频总时 文本框
-@property (nonatomic, strong) PLVProgressSlider * progressSlider; // 播放进度条
+@property (nonatomic, strong) PLVVodMediaProgressSlider * progressSlider; // 播放进度条
 @property (nonatomic, strong) PLVMediaProgressPreviewView *progressPreviewView; // 调整视频播放进度时 的预览视图，包括 时间预览文本框 和 视频预览图片
 
 // 手势识别

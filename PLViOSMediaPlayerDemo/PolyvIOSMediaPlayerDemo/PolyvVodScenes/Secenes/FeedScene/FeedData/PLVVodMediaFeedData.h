@@ -1,5 +1,5 @@
 //
-//  PLVVodFeedData.h
+//  PLVVodMediaFeedData.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/9/4.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PLVFeedData : NSObject
+@interface PLVVodMediaFeedData : NSObject
 
 @property (nonatomic, strong) NSString *hashKey;
 @property (nonatomic, strong) NSString *vid;

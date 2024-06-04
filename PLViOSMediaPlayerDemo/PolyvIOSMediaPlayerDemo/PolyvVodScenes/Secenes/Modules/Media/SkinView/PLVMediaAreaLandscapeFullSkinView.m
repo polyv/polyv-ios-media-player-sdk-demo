@@ -76,7 +76,7 @@
     CGSize backButtonSize = CGSizeMake(40.0, 20.0f);
     CGFloat topPadding = isPad ? 30.0 : 16.0;
 
-    if (![PLVVodFdUtil isiPhoneXSeries]) {
+    if (![PLVVodMediaFdUtil isiPhoneXSeries]) {
         leftSafePadding = 6;
         rightSafePadding = 6;
     }

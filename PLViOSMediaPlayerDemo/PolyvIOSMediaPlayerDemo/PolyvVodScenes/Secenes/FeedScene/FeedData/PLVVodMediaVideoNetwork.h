@@ -1,5 +1,5 @@
 //
-//  PLVVideoNetwork.h
+//  PLVVodMediaVideoNetwork.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/11/8.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PLVVideoNetwork : NSObject
+@interface PLVVodMediaVideoNetwork : NSObject
 
 + (void)requestAccountVideoWithPageCount:(NSInteger)pageCount
                                     page:(NSInteger)page

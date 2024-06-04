@@ -1,5 +1,5 @@
 //
-//  PLVFeedDataManager.h
+//  PLVVodMediaFeedDataManager.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by Dhan on 2023/9/7.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PLVFeedDataManager : NSObject
+@interface PLVVodMediaFeedDataManager : NSObject
 
 @property (nonatomic, strong, readonly) NSArray *currentData; // 当前数据的持有属性
 

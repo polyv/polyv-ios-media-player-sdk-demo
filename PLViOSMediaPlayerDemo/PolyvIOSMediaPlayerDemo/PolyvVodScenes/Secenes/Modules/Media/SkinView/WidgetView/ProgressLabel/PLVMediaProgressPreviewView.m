@@ -70,14 +70,14 @@
     NSInteger hour = self.durationTime / 3600;
     if (hour > 0) { // 显示 时分秒
         self.progressLabel.text = @"00:00:00";
-        self.durationLabel.text = [PLVVodFdUtil secondsToString2:durationTime];
+        self.durationLabel.text = [PLVVodMediaFdUtil secondsToString2:durationTime];
     } else { // 显示 分秒
         self.progressLabel.text = @"00:00";
-        self.durationLabel.text = [PLVVodFdUtil secondsToString:durationTime];
+        self.durationLabel.text = [PLVVodMediaFdUtil secondsToString:durationTime];
     }
     
     self.ratio = ratio;
-    self.isShowPreviewImageView = [PLVVodFdUtil checkStringUseable:self.progressImageString] && self.ratio>=1; // 有 雪碧图 且是 横向视频
+    self.isShowPreviewImageView = [PLVVodMediaFdUtil checkStringUseable:self.progressImageString] && self.ratio>=1; // 有 雪碧图 且是 横向视频
     
     if (self.isShowPreviewImageView) { // 显示 预览图
         self.progressLabel.font = [UIFont fontWithName:@"PingFang SC" size:20];
@@ -129,9 +129,9 @@
 - (void)updateProgressTime:(NSTimeInterval)progressTime {
     NSInteger hour = self.durationTime / 3600;
     if (hour > 0) { // 显示 时分秒
-        self.progressLabel.text = [PLVVodFdUtil secondsToString2:progressTime];
+        self.progressLabel.text = [PLVVodMediaFdUtil secondsToString2:progressTime];
     } else { // 显示 分秒
-        self.progressLabel.text = [PLVVodFdUtil secondsToString:progressTime];
+        self.progressLabel.text = [PLVVodMediaFdUtil secondsToString:progressTime];
     }
     
     if (!self.isShowPreviewImageView) {

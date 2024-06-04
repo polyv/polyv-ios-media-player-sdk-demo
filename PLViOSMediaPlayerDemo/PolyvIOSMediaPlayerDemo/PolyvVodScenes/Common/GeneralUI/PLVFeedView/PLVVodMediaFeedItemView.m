@@ -1,22 +1,22 @@
 //
-//  PLVFeedItemView.m
+//  PLVVodMediaFeedItemView.m
 //  PolyvLiveScenesDemo
 //
 //  Created by MissYasiky on 2023/6/21.
 //  Copyright © 2023 PLV. All rights reserved.
 //
 
-#import "PLVFeedItemView.h"
+#import "PLVVodMediaFeedItemView.h"
 
-@interface PLVFeedItemView ()
+@interface PLVVodMediaFeedItemView ()
 
-@property (nonatomic, strong) UIView <PLVFeedItemCustomViewDelegate>*customContentView;
+@property (nonatomic, strong) UIView <PLVVodMediaFeedItemCustomViewDelegate>*customContentView;
 
 @end
 
-@implementation PLVFeedItemView
+@implementation PLVVodMediaFeedItemView
 
-- (void)setCustomContentView:(UIView <PLVFeedItemCustomViewDelegate>*)customContentView {
+- (void)setCustomContentView:(UIView <PLVVodMediaFeedItemCustomViewDelegate>*)customContentView {
     _customContentView = customContentView;
     
     for (UIView *subview in self.contentView.subviews) { // 把contentView里的视图清空

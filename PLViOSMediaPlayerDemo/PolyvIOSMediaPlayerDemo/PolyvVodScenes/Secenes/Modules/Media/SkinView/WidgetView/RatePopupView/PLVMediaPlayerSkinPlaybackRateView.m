@@ -6,7 +6,7 @@
 //
 
 #import "PLVMediaPlayerSkinPlaybackRateView.h"
-#import "UIImage+Tint.h"
+#import "UIImage+PLVVodMediaTint.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
 @interface PLVMediaPlayerSkinPlaybackRateView()
@@ -130,7 +130,7 @@
 - (UIButton *)buttonWithTitle:(NSString *)title tag:(NSInteger )tag{
     UIButton *button = [[UIButton alloc] init];
     [button setTitle:title forState:UIControlStateNormal];
-    [button setTitleColor:[PLVVodColorUtil colorFromHexString:@"#3F76FC"] forState:UIControlStateSelected];
+    [button setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#3F76FC"] forState:UIControlStateSelected];
     button.titleLabel.font = [UIFont systemFontOfSize:14];
     button.tag = tag;
     

@@ -1,5 +1,5 @@
 //
-//  PLVProgressSlider.h
+//  PLVVodMediaProgressSlider.h
 //  PLVLiveScenesDemo
 //
 //  Created by Lincal on 2020/11/11.
@@ -10,13 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol PLVProgressSliderDelegate;
+@protocol PLVVodMediaProgressSliderDelegate;
 
 /// 进度滑杆视图
 ///
 /// @note 适用于 “回放、点播” 等场景下，需要展现观看进度的、可拖动的进度滑杆条；
 ///       同时，可显示缓冲进度；
-@interface PLVProgressSlider : UIView
+@interface PLVVodMediaProgressSlider : UIView
 
 #pragma mark 可配置项
 /// delegate
@@ -31,12 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 #pragma mark UI
 /// 进度条
 ///
-/// @note 用于显示 ‘已缓存进度’；可在 [[PLVProgressSlider alloc]init] 后，对 progressView 作需要的自定义设置，如色值；
+/// @note 用于显示 ‘已缓存进度’；可在 [[PLVVodMediaProgressSlider alloc]init] 后，对 progressView 作需要的自定义设置，如色值；
 @property (nonatomic, strong, readonly) UIProgressView * progressView;
 
 /// 滑杆条
 ///
-/// @note 用于显示 ‘已观看进度’；可在 [[PLVProgressSlider alloc]init] 后，对 slider 作需要的自定义设置，如色值、图标；
+/// @note 用于显示 ‘已观看进度’；可在 [[PLVVodMediaProgressSlider alloc]init] 后，对 slider 作需要的自定义设置，如色值、图标；
 @property (nonatomic, strong, readonly) UISlider * slider;
 
 #pragma mark 方法
@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@protocol PLVProgressSliderDelegate <NSObject>
+@protocol PLVVodMediaProgressSliderDelegate <NSObject>
 
 /// 进度滑杆条 正在被拖动
 ///
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// @param progressSlider 进度滑杆视图对象本身
 /// @param currentSliderProgress 当前正在观看的位置点
-- (void)plvProgressSlider:(PLVProgressSlider *)progressSlider sliderDragingProgressChange:(CGFloat)currentSliderProgress;
+- (void)PLVVodMediaProgressSlider:(PLVVodMediaProgressSlider *)progressSlider sliderDragingProgressChange:(CGFloat)currentSliderProgress;
 
 /// 进度滑杆挑 拖动结束
 ///
@@ -68,7 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///
 /// @param progressSlider 进度滑杆视图对象本身
 /// @param currentSliderProgress 拖动结束时，当前正在观看的位置点
-- (void)plvProgressSlider:(PLVProgressSlider *)progressSlider sliderDragEnd:(CGFloat)currentSliderProgress;
+- (void)PLVVodMediaProgressSlider:(PLVVodMediaProgressSlider *)progressSlider sliderDragEnd:(CGFloat)currentSliderProgress;
 
 @end
 

@@ -1,5 +1,5 @@
 //
-//  PLVVodErrorUtil.h
+//  PLVVodMediaErrorUtil.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/10/25.
@@ -10,10 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PLVVodErrorUtil : NSObject
+@interface PLVVodMediaErrorUtil : NSObject
 
 /// 根据错误码获取错误提示信息
-+ (NSString *)getErrorMsgWithCode:(PLVVodErrorCode )errorCod;
++ (NSString *)getErrorMsgWithCode:(PLVVodMediaErrorCode )errorCod;
 
 @end
 

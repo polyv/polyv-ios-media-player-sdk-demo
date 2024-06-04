@@ -6,29 +6,29 @@
 //
 
 #import "PLVDemoVideoFeedViewController.h"
-#import "PLVFeedView.h"
+#import "PLVVodMediaFeedView.h"
 #import "PLVShortVideoMediaAreaVC.h"
 #import "PLVShortVideoFeedDataManager.h"
 #import "PLVPictureInPictureRestoreManager.h"
-#import "PLVOrientationUtil.h"
+#import "PLVVodMediaOrientationUtil.h"
 
 /// UI View Hierarchy
 ///
 /// (UIView) self.view
-///   └── (PLVFeedView) feedView
+///   └── (PLVVodMediaFeedView) feedView
 ///     └── (PLVShortVideoMediaAreaVC) feedViewItem
 
 @interface PLVDemoVideoFeedViewController ()<
-PLVFeedViewDataSource,
+PLVVodMediaFeedViewDataSource,
 PLVShortVideoMediaAreaVCDelegate
 >
 
 #pragma mark UI
-@property (nonatomic, strong) PLVFeedView *feedView; // Feed组件
+@property (nonatomic, strong) PLVVodMediaFeedView *feedView; // Feed组件
 @property (nonatomic, weak) PLVShortVideoMediaAreaVC *currentFeedItemView; // 当前显示的Feed item
 @property (nonatomic, assign) NSInteger curIndex; // 当前显示的Feed item 索引
 
-@property (nonatomic, strong) NSMutableArray<PLVFeedData *> *dataSource;
+@property (nonatomic, strong) NSMutableArray<PLVVodMediaFeedData *> *dataSource;
 @property (nonatomic, strong) PLVShortVideoFeedDataManager *dataManager;
 
 @property (nonatomic, assign) BOOL isInited; // 是否已完成UI初始化
@@ -103,7 +103,7 @@ PLVShortVideoMediaAreaVCDelegate
         safeInset = self.view.safeAreaInsets;
     }
     
-    BOOL isLandscape = [PLVOrientationUtil isLandscape];
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     if (isLandscape){ // 横向-全屏
         if (@available(iOS 14.0, *)){
             // 不响应, 系统函数调用，子控件自动更细布局
@@ -155,16 +155,16 @@ PLVShortVideoMediaAreaVCDelegate
     return _dataManager;
 }
 
-- (NSMutableArray<PLVFeedData *> *)dataSource{
+- (NSMutableArray<PLVVodMediaFeedData *> *)dataSource{
     if (!_dataSource){
         _dataSource = [[NSMutableArray alloc] init];
     }
     return _dataSource;
 }
 
-- (PLVFeedView *)feedView{
+- (PLVVodMediaFeedView *)feedView{
     if (!_feedView){
-        self.feedView = [[PLVFeedView alloc] init];
+        self.feedView = [[PLVVodMediaFeedView alloc] init];
         self.feedView.dataSource = self;
     }
     return _feedView;
@@ -217,20 +217,20 @@ PLVShortVideoMediaAreaVCDelegate
     }
 }
 
-#pragma mark 【PLVFeedViewDataSource Delegate - Feed流 数据源 回调方法】
-- (NSInteger)numberOfSectionsInFeedView:(PLVFeedView *)feedView {
+#pragma mark 【PLVVodMediaFeedViewDataSource Delegate - Feed流 数据源 回调方法】
+- (NSInteger)numberOfSectionsInFeedView:(PLVVodMediaFeedView *)feedView {
     return 1;
 }
 
-- (NSInteger)feedView:(PLVFeedView *)feedView numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)feedView:(PLVVodMediaFeedView *)feedView numberOfItemsInSection:(NSInteger)section {
     return [self.dataManager.feedDataArray count];
 }
 
-- (UIView <PLVFeedItemCustomViewDelegate>*)feedView:(PLVFeedView *)feedView contentViewForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UIView <PLVVodMediaFeedItemCustomViewDelegate>*)feedView:(PLVVodMediaFeedView *)feedView contentViewForItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.dataManager.feedDataArray.count == indexPath.row){
         return  nil;
     }
-    PLVFeedData *feedData = self.dataManager.feedDataArray[indexPath.row];
+    PLVVodMediaFeedData *feedData = self.dataManager.feedDataArray[indexPath.row];
     feedData.index = indexPath.row;
     PLVShortVideoMediaAreaVC *feedItemView = (PLVShortVideoMediaAreaVC *)[feedView dequeueReusableFeedItemCustomViewWithIdentifier:feedData.hashKey];
     if (!feedItemView) {
@@ -246,7 +246,7 @@ PLVShortVideoMediaAreaVCDelegate
     return feedItemView;
 }
 
-- (void)feedViewNeedsRefresh:(PLVFeedView *)feedView completion:(void (^)(BOOL))completion {
+- (void)feedViewNeedsRefresh:(PLVVodMediaFeedView *)feedView completion:(void (^)(BOOL))completion {
     [self.dataManager refreshDataWithCompletion:^{
         NSLog(@"PLVTEST -请求刷新成功");
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -263,7 +263,7 @@ PLVShortVideoMediaAreaVCDelegate
     }];
 }
 
-- (void)feedViewNeedsLoadMore:(PLVFeedView *)feedView completion:(void (^)(BOOL))completion {
+- (void)feedViewNeedsLoadMore:(PLVVodMediaFeedView *)feedView completion:(void (^)(BOOL))completion {
     [self.dataManager loadMoreDataWithCompletion:^(BOOL lastPage) {
         NSLog(@"PLVTEST -请求加载成功");
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -313,7 +313,7 @@ PLVShortVideoMediaAreaVCDelegate
 - (void)shortVideoMediaAreaVC_BecomeActive:(PLVShortVideoMediaAreaVC *)mediaAreaVC {
     self.currentFeedItemView = mediaAreaVC;
     _curIndex = mediaAreaVC.feedData.index;
-    [PLVOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
+    [PLVVodMediaOrientationUtil setNeedsUpdateOfSupportedInterfaceOrientations];
     NSLog(@"%@ :curindex: %ld", NSStringFromSelector(_cmd), _curIndex);
 }
 

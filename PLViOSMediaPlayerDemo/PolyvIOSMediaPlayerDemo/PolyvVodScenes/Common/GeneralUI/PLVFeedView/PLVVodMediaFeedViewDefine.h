@@ -1,15 +1,15 @@
 //
-//  PLVFeedViewDefine.h
+//  PLVVodMediaFeedViewDefine.h
 //  PolyvLiveScenesDemo
 //
 //  Created by MissYasiky on 2023/6/27.
 //  Copyright © 2023 PLV. All rights reserved.
 //
 
-#ifndef PLVFeedViewDefine_h
-#define PLVFeedViewDefine_h
+#ifndef PLVVodMediaFeedViewDefine_h
+#define PLVVodMediaFeedViewDefine_h
 
-@protocol PLVFeedItemCustomViewDelegate <NSObject>
+@protocol PLVVodMediaFeedItemCustomViewDelegate <NSObject>
 
 // 视图复用ID
 @property (nonatomic, strong) NSString *reuseIdentifier;
@@ -20,4 +20,4 @@
 
 @end
 
-#endif /* PLVFeedViewDefine_h */
+#endif /* PLVVodMediaFeedViewDefine_h */

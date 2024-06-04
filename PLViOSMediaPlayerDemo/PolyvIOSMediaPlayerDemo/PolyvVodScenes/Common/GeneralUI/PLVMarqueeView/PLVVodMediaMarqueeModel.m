@@ -1,14 +1,14 @@
 //
-//  PLVMarqueeStyleModel.m
+//  PLVVodMediaMarqueeStyleModel.m
 //  PLVFoundationSDK
 //
 //  Created by PLV-UX on 2021/3/10.
 //  Copyright © 2021 PLV. All rights reserved.
 //
 
-#import "PLVMarqueeModel.h"
+#import "PLVVodMediaMarqueeModel.h"
 
-@interface PLVMarqueeModel ()
+@interface PLVVodMediaMarqueeModel ()
 
 /// 富文本字符串属性
 @property (nonatomic, strong) NSMutableDictionary *attributes;
@@ -41,10 +41,10 @@ static float FloatValueWithJsonValue(id obj) {
     }
 }
 
-@implementation PLVMarqueeModel
+@implementation PLVVodMediaMarqueeModel
 - (instancetype)init {
     if (self = [super init]) {
-        _style = PLVMarqueeModelStyleRoll;
+        _style = PLVVodMediaMarqueeModelStyleRoll;
         _content = @"PLV跑马灯";
         _fontSize = 30;
         _fontColor = @"#000000";
@@ -76,8 +76,8 @@ static float FloatValueWithJsonValue(id obj) {
                                      fontSize:(NSUInteger)fontSize
                                     fontColor:(NSString *)fontColor
                                         alpha:(float)alpha
-                                        style:(PLVMarqueeModelStyle)style {
-    PLVMarqueeModel *model = [[PLVMarqueeModel alloc]init];
+                                        style:(PLVVodMediaMarqueeModelStyle)style {
+    PLVVodMediaMarqueeModel *model = [[PLVVodMediaMarqueeModel alloc]init];
     model.content = content;
     model.fontSize = fontSize;
     model.fontColor = [fontColor stringByReplacingOccurrencesOfString:@"0x" withString:@"#"];
@@ -98,7 +98,7 @@ static float FloatValueWithJsonValue(id obj) {
         || ![StringValueWithJsonValue(marqueeDict[@"show"]) isEqualToString:@"on"]) {
         return nil;
     }
-    PLVMarqueeModel *model = [[PLVMarqueeModel alloc]init];
+    PLVVodMediaMarqueeModel *model = [[PLVVodMediaMarqueeModel alloc]init];
     model.errorMessage = StringValueWithJsonValue(marqueeDict[@"msg"]);
     model.style = IntegerValueWithJsonValue(marqueeDict[@"setting"]);
     model.content = StringValueWithJsonValue(marqueeDict[@"username"]);
