@@ -8,7 +8,7 @@
 #import "PLVDemoVodMediaViewController.h"
 #import "PLVVodMediaAreaVC.h"
 #import "PLVMediaPlayerSkinOutMoreView.h"
-#import "PLVPictureInPictureRestoreManager.h"
+#import "PLVVodMediaPictureInPictureRestoreManager.h"
 #import "AppDelegate.h"
 #import "PLVVodMediaToast.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
@@ -160,10 +160,10 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)changePictureInPictureState:(PLVPictureInPictureState)state {
     if (state == PLVPictureInPictureStateDidStart) { // 启动 画中画
         // 画中画已经开启
-        // 设定画中画恢复逻辑的处理者为PLVPictureInPictureRestoreManager
-        [PLVMediaPlayerPictureInPictureManager sharedInstance].restoreDelegate = [PLVPictureInPictureRestoreManager sharedInstance];
-        [PLVPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
-        [PLVPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
+        // 设定画中画恢复逻辑的处理者为PLVVodMediaPictureInPictureRestoreManager
+        [PLVMediaPlayerPictureInPictureManager sharedInstance].restoreDelegate = [PLVVodMediaPictureInPictureRestoreManager sharedInstance];
+        [PLVVodMediaPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
+        [PLVVodMediaPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
     
         if ([PLVMediaPlayerPictureInPictureManager sharedInstance].isBackgroudStartMode){
             // 停留在当前界面，客户也可以自定义交互
@@ -179,7 +179,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     } else if (state == PLVPictureInPictureStateDidEnd) { // 关闭 画中画
         // 画中画已经关闭
         // 清理恢复逻辑的处理者
-        [[PLVPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
+        [[PLVVodMediaPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
     }
 }
 

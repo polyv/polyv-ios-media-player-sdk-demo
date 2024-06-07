@@ -1,5 +1,5 @@
 //
-//  PLVPictureInPictureRestoreManager.h
+//  PLVVodMediaPictureInPictureRestoreManager.h
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/10/5.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PLVPictureInPictureRestoreManager : NSObject<PLVMediaPlayerPictureInPictureRestoreDelegate>
+@interface PLVVodMediaPictureInPictureRestoreManager : NSObject<PLVMediaPlayerPictureInPictureRestoreDelegate>
 
 #pragma mark - [ 属性 ]
 

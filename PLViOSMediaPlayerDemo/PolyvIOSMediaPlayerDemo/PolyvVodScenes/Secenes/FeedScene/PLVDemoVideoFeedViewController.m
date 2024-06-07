@@ -9,7 +9,7 @@
 #import "PLVVodMediaFeedView.h"
 #import "PLVShortVideoMediaAreaVC.h"
 #import "PLVShortVideoFeedDataManager.h"
-#import "PLVPictureInPictureRestoreManager.h"
+#import "PLVVodMediaPictureInPictureRestoreManager.h"
 #import "PLVVodMediaOrientationUtil.h"
 
 /// UI View Hierarchy
@@ -328,9 +328,9 @@ PLVShortVideoMediaAreaVCDelegate
 - (void)shortVideoMediaAreaVC_PictureInPictureChangeState:(PLVShortVideoMediaAreaVC *)mediaAreaVC state:(PLVPictureInPictureState )state {
     // 画中画状态回调
     if (state == PLVPictureInPictureStateDidStart){
-        [PLVMediaPlayerPictureInPictureManager sharedInstance].restoreDelegate = [PLVPictureInPictureRestoreManager sharedInstance];
-        [PLVPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
-        [PLVPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
+        [PLVMediaPlayerPictureInPictureManager sharedInstance].restoreDelegate = [PLVVodMediaPictureInPictureRestoreManager sharedInstance];
+        [PLVVodMediaPictureInPictureRestoreManager sharedInstance].holdingViewController = self;
+        [PLVVodMediaPictureInPictureRestoreManager sharedInstance].restoreWithPresent = YES;
 
         if ([PLVMediaPlayerPictureInPictureManager sharedInstance].isBackgroudStartMode){
             // 停留在当前界面，客户也可以自定义交互
@@ -340,7 +340,7 @@ PLVShortVideoMediaAreaVCDelegate
             [self exitCurrentController];
         }
     } else if (state == PLVPictureInPictureStateDidEnd){
-        [[PLVPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
+        [[PLVVodMediaPictureInPictureRestoreManager sharedInstance] cleanRestoreManager];
     }
 }
 

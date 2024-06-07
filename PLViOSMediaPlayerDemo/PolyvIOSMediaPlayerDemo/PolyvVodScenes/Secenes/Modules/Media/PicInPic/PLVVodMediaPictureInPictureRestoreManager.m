@@ -1,18 +1,18 @@
 //
-//  PLVPictureInPictureRestoreManager.m
+//  PLVVodMediaPictureInPictureRestoreManager.m
 //  PolyvIOSMediaPlayerDemo
 //
 //  Created by polyv on 2023/10/5.
 //
 
-#import "PLVPictureInPictureRestoreManager.h"
+#import "PLVVodMediaPictureInPictureRestoreManager.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
-@interface PLVPictureInPictureRestoreManager ()
+@interface PLVVodMediaPictureInPictureRestoreManager ()
 @property (nonatomic, strong) UINavigationController *holdingNavigation;
 @end
 
-@implementation PLVPictureInPictureRestoreManager
+@implementation PLVVodMediaPictureInPictureRestoreManager
 
 #pragma mark - [ Life Cycle ]
 
@@ -31,7 +31,7 @@
 #pragma mark - [ Public Method ]
 
 + (instancetype)sharedInstance {
-    static PLVPictureInPictureRestoreManager *_sharedInstance = nil;
+    static PLVVodMediaPictureInPictureRestoreManager *_sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedInstance = [self new];
