@@ -50,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 显示播放完毕视图
 - (void)showPlayFinishUI;
 
+// 更新字幕
+- (void)updateVideoSubtile;
+
 @end
 
 @protocol PLVVodMediaAreaVCDelegate <NSObject>

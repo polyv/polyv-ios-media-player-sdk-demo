@@ -8,8 +8,9 @@
 #import "PLVMediaPlayerSkinOutMoreView.h"
 #import "UIImage+PLVVodMediaTint.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
+#import "PLVMediaPlayerSkinSubtitleSetView.h"
 
-@interface PLVMediaPlayerSkinOutMoreView()
+@interface PLVMediaPlayerSkinOutMoreView()<PLVMediaPlayerSkinSubtitleSetViewDelegate>
 
 @property (nonatomic, strong) UIView *bgView;
 @property (nonatomic, strong) UIView *contentView;
@@ -17,6 +18,7 @@
 
 @property (nonatomic, strong) UIButton *audioModeBtn;
 @property (nonatomic, strong) UIButton *picInPicBtn;
+@property (nonatomic, strong) UIButton *subtitleSetBtn;
 
 @property (nonatomic, strong) UILabel *qualityLbl;
 @property (nonatomic, strong) UIButton *lowQualityBtn;
@@ -28,6 +30,8 @@
 @property (nonatomic, strong) UIButton *playRate2Btn; // 1
 @property (nonatomic, strong) UIButton *playRate3Btn; // 1.5
 @property (nonatomic, strong) UIButton *playRate4Btn; // 2
+
+@property (nonatomic, strong) PLVMediaPlayerSkinSubtitleSetView *subtitleSetView;
 
 
 @end
@@ -59,6 +63,8 @@
     [self.contentView addSubview:self.audioModeBtn];
     // pic in pic
     [self.contentView addSubview:self.picInPicBtn];
+    // subtitle set
+    [self.contentView addSubview:self.subtitleSetBtn];
     
     // quality
     [self.contentView addSubview:self.qualityLbl];
@@ -80,9 +86,10 @@
 - (void)updateUI{
     self.bgView.frame = self.bounds;
     NSInteger content_height = 240;
-    if (self.audioModeBtn.hidden && self.picInPicBtn.hidden){
-        content_height = 160;
-    }
+    // 字幕按钮一直存在，无需以下判断
+//    if (self.audioModeBtn.hidden && self.picInPicBtn.hidden){
+//        content_height = 160;
+//    }
     self.contentView.frame = CGRectMake(0, self.bounds.size.height - content_height, self.bounds.size.width, content_height);
     
     CGFloat topInset = 48.0;
@@ -102,10 +109,19 @@
     origin = CGPointMake(offset_x, origin.y);
     self.picInPicBtn.frame = CGRectMake(origin.x, origin.y, 60, 60);
     
-    CGFloat start_y = CGRectGetMaxY(self.audioModeBtn.frame);
-    if (self.audioModeBtn.hidden && self.picInPicBtn.hidden){
-        start_y = CGRectGetMinY(self.audioModeBtn.frame);
+    // 字幕设置
+    offset_x = leftInset;
+    if (!self.picInPicBtn.hidden){
+        offset_x = CGRectGetMaxX(self.picInPicBtn.frame) + 30;
     }
+    else if (!self.audioModeBtn.hidden){
+        offset_x = CGRectGetMaxX(self.audioModeBtn.frame) + 30;
+    }
+    origin = CGPointMake(offset_x, origin.y);
+    self.subtitleSetBtn.frame = CGRectMake(origin.x, origin.y, 60, 60);
+    
+    // 清晰度
+    CGFloat start_y = CGRectGetMaxY(self.subtitleSetBtn.frame);
     origin = CGPointMake(leftInset + 4, start_y + 28);
     self.qualityLbl.frame = CGRectMake(origin.x, origin.y, 60, 20);
     origin = CGPointMake(CGRectGetMaxX(self.qualityLbl.frame) + 20, origin.y);
@@ -204,6 +220,22 @@
     return _picInPicBtn;
 }
 
+- (UIButton *)subtitleSetBtn{
+    if (!_subtitleSetBtn){
+        _subtitleSetBtn = [self buttonWithTitle:@"字幕设置" tag:0];
+        [_subtitleSetBtn addTarget:self action:@selector(subtitleSetButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIImage *selImg = [UIImage imageNamed:@"plv_skin_menu_setsubtitle_select"];
+        UIImage *defaultImg =  [UIImage imageNamed:@"plv_skin_menu_setsubtitle"];
+        [_subtitleSetBtn setImage:defaultImg forState:UIControlStateNormal];
+        [_subtitleSetBtn setImage:selImg forState:UIControlStateSelected];
+        
+        [self layoutButtonWithEdgeInsetsStyle:1 imageTitleSpace:1 button:_subtitleSetBtn];
+    }
+    
+    return _subtitleSetBtn;
+}
+
 - (UILabel *)qualityLbl{
     if (!_qualityLbl){
         _qualityLbl = [[UILabel alloc] init];
@@ -299,6 +331,15 @@
     return button;
 }
 
+- (PLVMediaPlayerSkinSubtitleSetView *)subtitleSetView{
+    if (!_subtitleSetView){
+        _subtitleSetView = [[PLVMediaPlayerSkinSubtitleSetView alloc] init];
+        _subtitleSetView.delegate = self;
+    }
+    
+    return _subtitleSetView;
+}
+
 #pragma mark button action
 - (void)closeButtonClick:(UIButton *)closeButton{
     [self hideMoreView];
@@ -329,6 +370,15 @@
     if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_StartPictureInPicture)]){
         [self.skinOutMoreViewDelegate mediaPlayerSkinOutMoreView_StartPictureInPicture];
     }
+}
+
+- (void)subtitleSetButtonClick:(UIButton *)subtitleBtn{
+//    [self hideMoreView];
+    
+    [self addSubview:self.subtitleSetView];
+    self.subtitleSetView.frame = self.bounds;
+    
+    [self.subtitleSetView showWithConfigModel:self.mediaPlayerState.subtitleConfig];
 }
 
 - (void)qualityButtonClick:(UIButton *)qualityButton{
@@ -430,6 +480,9 @@
     
     self.picInPicBtn.hidden = !mediaPlayerState.isSupportWindowMode;
     self.picInPicBtn.selected = mediaPlayerState.curWindowMode == PLVMediaPlayerWindowModePIP ? YES:NO;
+    
+    // subtitle
+    self.subtitleSetBtn.selected = mediaPlayerState.subtitleConfig.subtitlesEnabled;
 }
 
 #pragma mark public
@@ -500,6 +553,18 @@
     // 4. 赋值
     button.titleEdgeInsets = labelEdgeInsets;
     button.imageEdgeInsets = imageEdgeInsets;
+    
+    
+}
+
+#pragma mark [PLVMediaPlayerSkinSubtitleSetViewDelegate]
+- (void)mediaPlayerSkinSubtitleSetView_SelectSubtitle{
+    // 刷新字幕
+    self.subtitleSetBtn.selected = self.mediaPlayerState.subtitleConfig.subtitlesEnabled;
+    
+    if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_SetSubtitle)]){
+        [self.skinOutMoreViewDelegate mediaPlayerSkinOutMoreView_SetSubtitle];
+    }
 }
 
 /*

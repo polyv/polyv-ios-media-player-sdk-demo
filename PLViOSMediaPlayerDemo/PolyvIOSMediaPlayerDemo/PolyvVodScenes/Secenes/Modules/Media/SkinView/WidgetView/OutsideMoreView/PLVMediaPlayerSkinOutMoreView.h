@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)mediaPlayerSkinOutMoreView_SwitchQualityLevel:(NSInteger )qualityLevel;
 - (void)mediaPlayerSkinOutMoreView_SwitchPlayMode:(PLVMediaPlayerSkinOutMoreView *)outMoreView;
 - (void)mediaPlayerSkinOutMoreView_StartPictureInPicture;
+- (void)mediaPlayerSkinOutMoreView_SetSubtitle;
 
 @end
 

@@ -9,6 +9,7 @@
 #import "PLVVodMediaOrientationUtil.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVVodMediaMarqueeView.h"
+#import "PLVMediaPlayerSubtitleModule.h"
 #import <PLVTimer.h>
 #import "PLVMediaPlayerConst.h"
 
@@ -25,6 +26,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 >
 
 @property (nonatomic, strong) PLVVodMediaMarqueeView *marqueeView; /// 跑马灯
+@property (nonatomic, strong) PLVMediaPlayerSubtitleModule *subtitleModule; /// 字幕模块
 @property (nonatomic, strong) PLVTimer *playbackTimer;     /// 播放过程定时器，用于UI相关实时更新
 
 @end
@@ -65,7 +67,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     // 根据业务需要进行配置
     // 广告、片头
 //    self.player.enableAd = YES;
-    self.player.enableTeaser = YES;
+//    self.player.enableTeaser = YES;
     
     // seek 类型 精准seek
     self.player.seekType = PLVVodMediaPlaySeekTypePrecise;
@@ -75,6 +77,12 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     
     // 设置刷新定时器
     [self setupPlaybackTimer];
+    
+    // 加密视频，配置外部传递token 播放
+    [self.player setRequestCustomKeyTokenBlock:^NSString * _Nonnull(NSString * _Nonnull vid) {
+        // 同步请求获取到token
+        return @"token";
+    }];
 }
 
 - (void)initMarqueeView{
@@ -90,12 +98,20 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     [self updateUIForOrientation];
 }
 
+#pragma mark [player timer]
 - (void)setupPlaybackTimer{
     __weak typeof(self) weakSelf = self;
     self.playbackTimer = [PLVTimer repeatWithInterval:0.5 repeatBlock:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             // 网络加载速度更新
             [weakSelf updateLoadSpeed];
+            
+            // 同步更新字幕内容 字幕布局
+            if(weakSelf.mediaPlayerState.subtitleConfig.subtitlesEnabled){
+                [weakSelf.subtitleModule showSubtilesWithPlaytime:weakSelf.player.currentPlaybackTime];
+                // 更新字幕位置
+                [weakSelf.mediaSkinContainer updateSubtitleViewUIWithDouble:weakSelf.mediaPlayerState.subtitleConfig.isCurDouble];
+            }
         });
     }];
 }
@@ -133,6 +149,14 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         _mediaPlayerState = [[PLVMediaPlayerState alloc] init];
     }
     return _mediaPlayerState;
+}
+
+- (PLVMediaPlayerSubtitleModule *)subtitleModule{
+    if (!_subtitleModule){
+        _subtitleModule = [[PLVMediaPlayerSubtitleModule alloc] init];
+    }
+    
+    return _subtitleModule;
 }
 
 #pragma mark [Private Method]
@@ -186,6 +210,11 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     [self.mediaSkinContainer showLoopPlayUI];
 }
 
+- (void)updateVideoSubtile{
+    [self.subtitleModule updateSubtitleWithName:self.mediaPlayerState.subtitleConfig.selectedSubtitleKey
+                                           show:self.mediaPlayerState.subtitleConfig.subtitlesEnabled];
+}
+
 #pragma mark 【Syn Method  同步 player、mediaState、mediaSkinContainer 之间的数据】
 - (void)syncPlayerStateWithModel:(PLVVodMediaVideo *)videoModel{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -198,10 +227,18 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         self.mediaPlayerState.videoTitle = videoModel.title;
         self.mediaPlayerState.progressImageString = videoModel.progressImage;
         self.mediaPlayerState.duration = videoModel.duration;
-        
-        
+        // 字幕信息配置
+        self.mediaPlayerState.subtitleConfig = [[PLVMediaPlayerSubtitleConfigModel alloc] initWithVideoModel:videoModel];
+        // 加载字幕信息
+        [self.subtitleModule loadSubtitlsWithVideoModel:videoModel
+                                                  label:self.mediaSkinContainer.subtitleView.subtitleLabel
+                                               topLabel:self.mediaSkinContainer.subtitleView.subtitleTopLabel
+                                                 label2:self.mediaSkinContainer.subtitleView.subtitleLabel2
+                                              topLabel2:self.mediaSkinContainer.subtitleView.subtitleTopLabel2];
         // 视频区域 对应 播放器 的皮肤
         [self.mediaSkinContainer syncSkinWithMode:self.mediaPlayerState];
+        
+   
         
         [self updateUI];
     });
@@ -337,6 +374,12 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     NSTimeInterval currentTime = self.player.duration * sliderValue;
     [self.player seekToTime:currentTime];
     [self.player play];
+}
+
+/// 横屏 字幕选中事件
+- (void)mediaPlayerSkinContainerView_SelectSubtitle:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
+    // 更新字幕
+    [self updateVideoSubtile];
 }
 
 #pragma mark 【PLVMediaPlayerCore Delegate 播放器核心（播放状态时间）的回调方法】
@@ -475,5 +518,11 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     });
 }
 
+///  播放器播放错误回调
+- (void)PLVVodMediaPlayer:(PLVVodMediaPlayer *)vodMediaPlayer loadMainPlayerFailureWithError:(NSError *)error{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%@", error);
+    });
+}
 
 @end

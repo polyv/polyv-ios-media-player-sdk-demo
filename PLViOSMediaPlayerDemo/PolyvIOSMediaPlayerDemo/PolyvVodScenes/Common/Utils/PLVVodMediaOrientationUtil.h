@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)setNeedsUpdateOfSupportedInterfaceOrientations;
 
++ (BOOL)isIPhone8Plus;
+
 @end
 
 NS_ASSUME_NONNULL_END

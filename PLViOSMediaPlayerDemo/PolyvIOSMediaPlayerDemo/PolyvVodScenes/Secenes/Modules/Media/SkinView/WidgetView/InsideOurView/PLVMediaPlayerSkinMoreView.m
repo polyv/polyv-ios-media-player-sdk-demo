@@ -14,12 +14,14 @@
 @property (nonatomic, strong) UIButton *closeBtn;
 @property (nonatomic, strong) UIButton *audioModeBtn;
 @property (nonatomic, strong) UIButton *picInPicBtn;
+@property (nonatomic, strong) UIButton *subtitleBtn;
 @property (nonatomic, strong) CAGradientLayer *bgLayer;
 
 @end
 
 @implementation PLVMediaPlayerSkinMoreView
 
+#pragma mark [life cycle]
 - (void)layoutSubviews{
     [super layoutSubviews];
     
@@ -34,6 +36,7 @@
     return self;
 }
 
+#pragma mark [init]
 - (void)setupUI{
     
     //
@@ -48,12 +51,15 @@
     // pic in pic
     [self addSubview:self.picInPicBtn];
     
+    // subtitle
+    [self addSubview:self.subtitleBtn];
+    
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
     [self addGestureRecognizer:tapGes];
 }
 
 - (void)updateUI{
-    CGFloat rightInset = 227;
+    CGFloat rightInset = 80;
     CGFloat topInset = 48;
     CGSize buttonSize = CGSizeMake(60, 60);
     
@@ -61,11 +67,20 @@
     
     self.closeBtn.frame = CGRectMake(self.bounds.size.width - 24 - 20, 20, 24, 24);
     
+    // subtitle
     CGPoint origin = CGPointMake(self.bounds.size.width - rightInset - buttonSize.width, topInset);
+    self.subtitleBtn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
+    
+    // pip
+    origin = CGPointMake(CGRectGetMinX(self.subtitleBtn.frame) - 28 -buttonSize.width, topInset);
     self.picInPicBtn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
     
-    origin = CGPointMake(CGRectGetMinX(self.picInPicBtn.frame)- 28 -buttonSize.width, origin.y);
-    self.audioModeBtn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
+    // mode
+    CGFloat start_x = CGRectGetMinX(self.picInPicBtn.frame) - 28 -buttonSize.width;
+    if (self.picInPicBtn.hidden){
+        start_x = CGRectGetMinX(self.subtitleBtn.frame) - 28 -buttonSize.width;
+    }
+    self.audioModeBtn.frame = CGRectMake(start_x, origin.y, buttonSize.width, buttonSize.height);
 }
 
 - (CAGradientLayer *)bgLayer{
@@ -123,6 +138,21 @@
     }
     
     return _picInPicBtn;
+}
+
+- (UIButton *)subtitleBtn{
+    if (!_subtitleBtn){
+        _subtitleBtn = [self buttonWithTitle:@"字幕设置" tag:0];
+        [_subtitleBtn addTarget:self action:@selector(subtitleButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [_subtitleBtn setTitleColor:[PLVVodMediaColorUtil colorFromHexString:@"#FFFFFF"] forState:UIControlStateNormal];
+
+        [_subtitleBtn setImage:[UIImage imageNamed:@"plv_skin_control_icon_landscape_subtitle"] forState:UIControlStateNormal];
+        [_subtitleBtn setImage:[UIImage imageNamed:@"plv_skin_control_icon_landscape_subtitle_select"] forState:UIControlStateSelected];
+        
+        [self layoutButtonWithEdgeInsetsStyle:1 imageTitleSpace:1 button:_subtitleBtn];
+    }
+    
+    return _subtitleBtn;
 }
 
 - (UIButton *)buttonWithTitle:(NSString *)title tag:(NSInteger )tag{
@@ -211,6 +241,8 @@
     self.picInPicBtn.hidden = !mediaPlayerState.isSupportWindowMode;
     self.picInPicBtn.selected = mediaPlayerState.curWindowMode == PLVMediaPlayerWindowModePIP ? YES:NO;
     
+    self.subtitleBtn.selected = mediaPlayerState.subtitleConfig.subtitlesEnabled ;
+    
     [self updateUI];
 }
 
@@ -240,4 +272,13 @@
         [self.delegate mediaPlayerSkinMoreView_StartPictureInPicture:self];
     }
 }
+
+- (void)subtitleButtonClick:(UIButton *)subtitleButton{
+    [self hideMoreView];
+
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinMoreView_SetSubtitle:)]){
+        [self.delegate mediaPlayerSkinMoreView_SetSubtitle:self];
+    }
+}
+
 @end

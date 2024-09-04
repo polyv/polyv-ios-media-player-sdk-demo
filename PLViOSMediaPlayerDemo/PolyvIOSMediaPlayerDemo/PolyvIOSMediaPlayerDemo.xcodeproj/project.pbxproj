@@ -19,6 +19,17 @@
 		0437D2C52AA5F1D900AED404 /* PLVVodMediaFeedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0437D2C32AA5F1D900AED404 /* PLVVodMediaFeedView.m */; };
 		0437D2C82AA5F21700AED404 /* PLVDemoVideoFeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0437D2C72AA5F21700AED404 /* PLVDemoVideoFeedViewController.m */; };
 		0437D2CE2AA5F51200AED404 /* PLVVodMediaFeedData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0437D2CD2AA5F51200AED404 /* PLVVodMediaFeedData.m */; };
+		043A60632C6B3CCA00C00576 /* PLVVodSubtitleViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A605A2C6B3CCA00C00576 /* PLVVodSubtitleViewModel.m */; };
+		043A60642C6B3CCB00C00576 /* PLVVodSubtitleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A605B2C6B3CCA00C00576 /* PLVVodSubtitleManager.m */; };
+		043A60652C6B3CCB00C00576 /* PLVVodSubtitleParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A605F2C6B3CCA00C00576 /* PLVVodSubtitleParser.m */; };
+		043A60662C6B3CCB00C00576 /* PLVVodSubtitleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A60622C6B3CCA00C00576 /* PLVVodSubtitleItem.m */; };
+		043A606A2C6B3FE900C00576 /* PLVMediaPlayerSkinSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A60692C6B3FE900C00576 /* PLVMediaPlayerSkinSubtitleView.m */; };
+		043A606E2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A606D2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.m */; };
+		043A60722C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A60712C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.m */; };
+		043A60752C6C593500C00576 /* PLVMediaPlayerSkinSubtitleSetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A60742C6C593500C00576 /* PLVMediaPlayerSkinSubtitleSetCell.m */; };
+		043A60782C6C9DF200C00576 /* PLVMediaPlayerSubtitleConfigModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A60772C6C9DF200C00576 /* PLVMediaPlayerSubtitleConfigModel.m */; };
+		043A607C2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A607B2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.m */; };
+		043A607F2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 043A607E2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.m */; };
 		045FE00D2A8C580200F957C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 045FE00C2A8C580200F957C7 /* AppDelegate.m */; };
 		045FE0102A8C580200F957C7 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 045FE00F2A8C580200F957C7 /* SceneDelegate.m */; };
 		045FE0132A8C580200F957C7 /* PLVEntranceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 045FE0122A8C580200F957C7 /* PLVEntranceViewController.m */; };
@@ -53,12 +64,13 @@
 		04E006EF2B91AC8600CA3D3E /* PLVMediaPlayerSkinToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E006EE2B91AC8600CA3D3E /* PLVMediaPlayerSkinToastView.m */; };
 		04E5E6322ACEF74A0039CDA2 /* PLVVodMediaPictureInPictureRestoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E5E6312ACEF74A0039CDA2 /* PLVVodMediaPictureInPictureRestoreManager.m */; };
 		04E73F212B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E73F202B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m */; };
+		04ED7BDE2C7D724200871940 /* PLVVodMediaCommonUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 04ED7BDD2C7D724200871940 /* PLVVodMediaCommonUtil.m */; };
 		04F3B97E2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3B97D2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m */; };
 		04F3B9812AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3B9802AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.m */; };
 		65A07CD72B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65A07CD62B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.m */; };
 		65D91E892AA972D6007954C7 /* PLVVodMediaFeedDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D91E882AA972D6007954C7 /* PLVVodMediaFeedDataManager.m */; };
 		65D91E8C2AA974BB007954C7 /* PLVShortVideoFeedDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D91E8B2AA974BB007954C7 /* PLVShortVideoFeedDataManager.m */; };
-		966D094CA2C9C4B3C8596368 /* libPods-mediaplayer-PolyvIOSMediaPlayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57DEF98A19DCD1A61FF393ED /* libPods-mediaplayer-PolyvIOSMediaPlayerDemo.a */; };
+		C3FE7071D9121DF4202130F0 /* libPods-PolyvIOSMediaPlayerDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C8ED55811D7AC9D41F384FE /* libPods-PolyvIOSMediaPlayerDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -100,6 +112,28 @@
 		0437D2C72AA5F21700AED404 /* PLVDemoVideoFeedViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVDemoVideoFeedViewController.m; sourceTree = "<group>"; };
 		0437D2CC2AA5F51200AED404 /* PLVVodMediaFeedData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVVodMediaFeedData.h; sourceTree = "<group>"; };
 		0437D2CD2AA5F51200AED404 /* PLVVodMediaFeedData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaFeedData.m; sourceTree = "<group>"; };
+		043A605A2C6B3CCA00C00576 /* PLVVodSubtitleViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVVodSubtitleViewModel.m; sourceTree = "<group>"; };
+		043A605B2C6B3CCA00C00576 /* PLVVodSubtitleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVVodSubtitleManager.m; sourceTree = "<group>"; };
+		043A605C2C6B3CCA00C00576 /* PLVVodSubtitleViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVVodSubtitleViewModel.h; sourceTree = "<group>"; };
+		043A605D2C6B3CCA00C00576 /* PLVVodSubtitleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVVodSubtitleManager.h; sourceTree = "<group>"; };
+		043A605F2C6B3CCA00C00576 /* PLVVodSubtitleParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVVodSubtitleParser.m; sourceTree = "<group>"; };
+		043A60602C6B3CCA00C00576 /* PLVVodSubtitleItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVVodSubtitleItem.h; sourceTree = "<group>"; };
+		043A60612C6B3CCA00C00576 /* PLVVodSubtitleParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVVodSubtitleParser.h; sourceTree = "<group>"; };
+		043A60622C6B3CCA00C00576 /* PLVVodSubtitleItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVVodSubtitleItem.m; sourceTree = "<group>"; };
+		043A60682C6B3FE900C00576 /* PLVMediaPlayerSkinSubtitleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinSubtitleView.h; sourceTree = "<group>"; };
+		043A60692C6B3FE900C00576 /* PLVMediaPlayerSkinSubtitleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinSubtitleView.m; sourceTree = "<group>"; };
+		043A606C2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSubtitleModule.h; sourceTree = "<group>"; };
+		043A606D2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSubtitleModule.m; sourceTree = "<group>"; };
+		043A60702C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinSubtitleSetView.h; sourceTree = "<group>"; };
+		043A60712C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinSubtitleSetView.m; sourceTree = "<group>"; };
+		043A60732C6C593500C00576 /* PLVMediaPlayerSkinSubtitleSetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinSubtitleSetCell.h; sourceTree = "<group>"; };
+		043A60742C6C593500C00576 /* PLVMediaPlayerSkinSubtitleSetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinSubtitleSetCell.m; sourceTree = "<group>"; };
+		043A60762C6C9DF200C00576 /* PLVMediaPlayerSubtitleConfigModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSubtitleConfigModel.h; sourceTree = "<group>"; };
+		043A60772C6C9DF200C00576 /* PLVMediaPlayerSubtitleConfigModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSubtitleConfigModel.m; sourceTree = "<group>"; };
+		043A607A2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinLandscapeSubtitleSetView.h; sourceTree = "<group>"; };
+		043A607B2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinLandscapeSubtitleSetView.m; sourceTree = "<group>"; };
+		043A607D2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinLandscapeSubtitleSetCell.h; sourceTree = "<group>"; };
+		043A607E2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinLandscapeSubtitleSetCell.m; sourceTree = "<group>"; };
 		045FE0082A8C580200F957C7 /* PolyvIOSMediaPlayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PolyvIOSMediaPlayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		045FE00B2A8C580200F957C7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		045FE00C2A8C580200F957C7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -166,12 +200,15 @@
 		04E5E6312ACEF74A0039CDA2 /* PLVVodMediaPictureInPictureRestoreManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaPictureInPictureRestoreManager.m; sourceTree = "<group>"; };
 		04E73F1F2B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinPicInPicPlaceholderView.h; sourceTree = "<group>"; };
 		04E73F202B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinPicInPicPlaceholderView.m; sourceTree = "<group>"; };
+		04ED7BDC2C7D724200871940 /* PLVVodMediaCommonUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVVodMediaCommonUtil.h; sourceTree = "<group>"; };
+		04ED7BDD2C7D724200871940 /* PLVVodMediaCommonUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaCommonUtil.m; sourceTree = "<group>"; };
 		04F3B97C2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinLoopPlayView.h; sourceTree = "<group>"; };
 		04F3B97D2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinLoopPlayView.m; sourceTree = "<group>"; };
 		04F3B97F2AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinFastForwardView.h; sourceTree = "<group>"; };
 		04F3B9802AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinFastForwardView.m; sourceTree = "<group>"; };
+		109B83EDE8492AC195D729C8 /* Pods-PolyvIOSMediaPlayerDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PolyvIOSMediaPlayerDemo.release.xcconfig"; path = "Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo.release.xcconfig"; sourceTree = "<group>"; };
 		2BEC71CCED6E151081F4BD9C /* Pods_mediaplayer_PolyvIOSMediaPlayerDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mediaplayer_PolyvIOSMediaPlayerDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		57DEF98A19DCD1A61FF393ED /* libPods-mediaplayer-PolyvIOSMediaPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mediaplayer-PolyvIOSMediaPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C8ED55811D7AC9D41F384FE /* libPods-PolyvIOSMediaPlayerDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PolyvIOSMediaPlayerDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CC5BBAF929D4B4D7046778D /* Pods-mediaplayer-PolyvIOSMediaPlayerDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mediaplayer-PolyvIOSMediaPlayerDemo.release.xcconfig"; path = "Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo.release.xcconfig"; sourceTree = "<group>"; };
 		65A07CD52B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinDefinitionTipsView.h; sourceTree = "<group>"; };
 		65A07CD62B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinDefinitionTipsView.m; sourceTree = "<group>"; };
@@ -179,6 +216,7 @@
 		65D91E882AA972D6007954C7 /* PLVVodMediaFeedDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaFeedDataManager.m; sourceTree = "<group>"; };
 		65D91E8A2AA974BB007954C7 /* PLVShortVideoFeedDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVShortVideoFeedDataManager.h; sourceTree = "<group>"; };
 		65D91E8B2AA974BB007954C7 /* PLVShortVideoFeedDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVShortVideoFeedDataManager.m; sourceTree = "<group>"; };
+		6A9D67CE182BD27C57E760E7 /* Pods-PolyvIOSMediaPlayerDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PolyvIOSMediaPlayerDemo.debug.xcconfig"; path = "Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		B0F4FB09B3E89B072EEC9432 /* Pods-mediaplayer-PolyvIOSMediaPlayerDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mediaplayer-PolyvIOSMediaPlayerDemo.debug.xcconfig"; path = "Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -188,7 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				045FE1262A8CA07A00F957C7 /* PolyvMediaPlayerSDK.framework in Frameworks */,
-				966D094CA2C9C4B3C8596368 /* libPods-mediaplayer-PolyvIOSMediaPlayerDemo.a in Frameworks */,
+				C3FE7071D9121DF4202130F0 /* libPods-PolyvIOSMediaPlayerDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +265,7 @@
 		040CBEDA2A8F478E00AD215A /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				043A606B2C6B4CA200C00576 /* Manager */,
 				040CBEDB2A8F47CA00AD215A /* Media */,
 			);
 			path = Modules;
@@ -279,6 +318,7 @@
 		040CBF452A8F6E3E00AD215A /* GeneralUI */ = {
 			isa = PBXGroup;
 			children = (
+				043A60582C6B3CCA00C00576 /* PLVSubtitle */,
 				04D211612B3D744D00E008BF /* PLVMarqueeView */,
 				04C1CCE52AE8A4FA006446AD /* PLVToast */,
 				0437D2BE2AA5F1D900AED404 /* PLVFeedView */,
@@ -319,6 +359,8 @@
 				0434EE422AB85394008A4DB1 /* PLVMediaPlayerState.h */,
 				0434EE432AB85394008A4DB1 /* PLVMediaPlayerState.m */,
 				04E006F02B91DACE00CA3D3E /* PLVMediaPlayerConst.h */,
+				043A60762C6C9DF200C00576 /* PLVMediaPlayerSubtitleConfigModel.h */,
+				043A60772C6C9DF200C00576 /* PLVMediaPlayerSubtitleConfigModel.m */,
 			);
 			path = PlayerData;
 			sourceTree = "<group>";
@@ -344,6 +386,71 @@
 				0437D2C72AA5F21700AED404 /* PLVDemoVideoFeedViewController.m */,
 			);
 			path = FeedScene;
+			sourceTree = "<group>";
+		};
+		043A60582C6B3CCA00C00576 /* PLVSubtitle */ = {
+			isa = PBXGroup;
+			children = (
+				043A60592C6B3CCA00C00576 /* UI */,
+				043A605E2C6B3CCA00C00576 /* Parser */,
+			);
+			path = PLVSubtitle;
+			sourceTree = "<group>";
+		};
+		043A60592C6B3CCA00C00576 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				043A605D2C6B3CCA00C00576 /* PLVVodSubtitleManager.h */,
+				043A605B2C6B3CCA00C00576 /* PLVVodSubtitleManager.m */,
+				043A605C2C6B3CCA00C00576 /* PLVVodSubtitleViewModel.h */,
+				043A605A2C6B3CCA00C00576 /* PLVVodSubtitleViewModel.m */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		043A605E2C6B3CCA00C00576 /* Parser */ = {
+			isa = PBXGroup;
+			children = (
+				043A60602C6B3CCA00C00576 /* PLVVodSubtitleItem.h */,
+				043A60622C6B3CCA00C00576 /* PLVVodSubtitleItem.m */,
+				043A60612C6B3CCA00C00576 /* PLVVodSubtitleParser.h */,
+				043A605F2C6B3CCA00C00576 /* PLVVodSubtitleParser.m */,
+			);
+			path = Parser;
+			sourceTree = "<group>";
+		};
+		043A60672C6B3D5D00C00576 /* SubtitleView */ = {
+			isa = PBXGroup;
+			children = (
+				043A60792C6DD5E400C00576 /* LandscapeSubtitleSetView */,
+				043A60682C6B3FE900C00576 /* PLVMediaPlayerSkinSubtitleView.h */,
+				043A60692C6B3FE900C00576 /* PLVMediaPlayerSkinSubtitleView.m */,
+				043A60702C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.h */,
+				043A60712C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.m */,
+				043A60732C6C593500C00576 /* PLVMediaPlayerSkinSubtitleSetCell.h */,
+				043A60742C6C593500C00576 /* PLVMediaPlayerSkinSubtitleSetCell.m */,
+			);
+			path = SubtitleView;
+			sourceTree = "<group>";
+		};
+		043A606B2C6B4CA200C00576 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				043A606C2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.h */,
+				043A606D2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.m */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		043A60792C6DD5E400C00576 /* LandscapeSubtitleSetView */ = {
+			isa = PBXGroup;
+			children = (
+				043A607A2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.h */,
+				043A607B2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.m */,
+				043A607D2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.h */,
+				043A607E2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.m */,
+			);
+			path = LandscapeSubtitleSetView;
 			sourceTree = "<group>";
 		};
 		043FC6392AD3A67E000D0643 /* FeedData */ = {
@@ -435,6 +542,7 @@
 		04B0C00D2B182F420007E5BA /* WidgetView */ = {
 			isa = PBXGroup;
 			children = (
+				043A60672C6B3D5D00C00576 /* SubtitleView */,
 				04E73F1E2B96B965009D4337 /* PIPPlaceholderView */,
 				04E006EC2B91AB6C00CA3D3E /* SkinToastView */,
 				0430B5502B510C9300A1862E /* LoadingView */,
@@ -554,6 +662,8 @@
 				04C1CCEB2AE8A6E5006446AD /* PLVVodMediaErrorUtil.m */,
 				04B0C00A2B172C180007E5BA /* PLVVodMediaOrientationUtil.h */,
 				04B0C00B2B172C180007E5BA /* PLVVodMediaOrientationUtil.m */,
+				04ED7BDC2C7D724200871940 /* PLVVodMediaCommonUtil.h */,
+				04ED7BDD2C7D724200871940 /* PLVVodMediaCommonUtil.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -603,7 +713,7 @@
 			children = (
 				045FE0F32A8C823B00F957C7 /* PolyvMediaPlayerSDK.framework */,
 				2BEC71CCED6E151081F4BD9C /* Pods_mediaplayer_PolyvIOSMediaPlayerDemo.framework */,
-				57DEF98A19DCD1A61FF393ED /* libPods-mediaplayer-PolyvIOSMediaPlayerDemo.a */,
+				4C8ED55811D7AC9D41F384FE /* libPods-PolyvIOSMediaPlayerDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -622,6 +732,8 @@
 			children = (
 				B0F4FB09B3E89B072EEC9432 /* Pods-mediaplayer-PolyvIOSMediaPlayerDemo.debug.xcconfig */,
 				5CC5BBAF929D4B4D7046778D /* Pods-mediaplayer-PolyvIOSMediaPlayerDemo.release.xcconfig */,
+				6A9D67CE182BD27C57E760E7 /* Pods-PolyvIOSMediaPlayerDemo.debug.xcconfig */,
+				109B83EDE8492AC195D729C8 /* Pods-PolyvIOSMediaPlayerDemo.release.xcconfig */,
 			);
 			name = Pods;
 			path = ../Pods;
@@ -704,15 +816,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4E75CE18AAB2378F9DA3BB42 /* [CP] Embed Pods Frameworks */ = {
@@ -721,15 +833,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-mediaplayer-PolyvIOSMediaPlayerDemo/Pods-mediaplayer-PolyvIOSMediaPlayerDemo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		89ABD5ED05120DF619F0C1BA /* [CP] Check Pods Manifest.lock */ = {
@@ -747,7 +859,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-mediaplayer-PolyvIOSMediaPlayerDemo-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-PolyvIOSMediaPlayerDemo-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -762,17 +874,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				04C1CCEC2AE8A6E5006446AD /* PLVVodMediaErrorUtil.m in Sources */,
+				043A60652C6B3CCB00C00576 /* PLVVodSubtitleParser.m in Sources */,
 				041A4D9E2AB2B87D00E62202 /* PLVShortVideoMediaPlayerSkinContainer.m in Sources */,
 				045FE0132A8C580200F957C7 /* PLVEntranceViewController.m in Sources */,
+				043A606A2C6B3FE900C00576 /* PLVMediaPlayerSkinSubtitleView.m in Sources */,
+				04ED7BDE2C7D724200871940 /* PLVVodMediaCommonUtil.m in Sources */,
 				04B8A9DC2A9E239900F861AC /* PLVShortVideoMediaAreaVC.m in Sources */,
 				046A34EB2AAEAA5900933D64 /* PLVMediaPlayerSkinPlaybackRateView.m in Sources */,
 				0434EE442AB85394008A4DB1 /* PLVMediaPlayerState.m in Sources */,
 				04B8A9E52A9F249A00F861AC /* PLVMediaAreaPortraitHalfSkinView.m in Sources */,
 				04B0C00C2B172C180007E5BA /* PLVVodMediaOrientationUtil.m in Sources */,
+				043A607F2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.m in Sources */,
 				04D211682B3D744E00E008BF /* PLVVodMediaMarqueeView.m in Sources */,
 				040CBF2F2A8F47CA00AD215A /* PLVMediaProgressPreviewView.m in Sources */,
 				65A07CD72B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.m in Sources */,
 				04193B132B207A0C009EDC2E /* PLVNavigationController.m in Sources */,
+				043A606E2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.m in Sources */,
 				04C1CCE82AE8A52D006446AD /* PLVVodMediaToast.m in Sources */,
 				04B0C0062B171F520007E5BA /* PLVVodMediaPlayerSkinContainerView.m in Sources */,
 				0437D2CE2AA5F51200AED404 /* PLVVodMediaFeedData.m in Sources */,
@@ -783,9 +900,13 @@
 				04083A172AFB562E00C7DB1E /* PLVVodMediaVideoNetwork.m in Sources */,
 				046A34CA2AAD801800933D64 /* PLVMediaPlayerSkinMoreView.m in Sources */,
 				046A34E82AAEAA1300933D64 /* PLVMediaPlayerSkinDefinitionView.m in Sources */,
+				043A607C2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.m in Sources */,
+				043A60722C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.m in Sources */,
 				04D211692B3D744E00E008BF /* PLVVodMediaMarqueeAnimationManager.m in Sources */,
+				043A60632C6B3CCA00C00576 /* PLVVodSubtitleViewModel.m in Sources */,
 				0430B5532B510D6E00A1862E /* PLVMediaPlayerSkinLoadingView.m in Sources */,
 				046A34C72AAC9E3A00933D64 /* PLVDemoVodMediaViewController.m in Sources */,
+				043A60662C6B3CCB00C00576 /* PLVVodSubtitleItem.m in Sources */,
 				0437D2C52AA5F1D900AED404 /* PLVVodMediaFeedView.m in Sources */,
 				04E5E6322ACEF74A0039CDA2 /* PLVVodMediaPictureInPictureRestoreManager.m in Sources */,
 				04E006EF2B91AC8600CA3D3E /* PLVMediaPlayerSkinToastView.m in Sources */,
@@ -793,9 +914,12 @@
 				65D91E892AA972D6007954C7 /* PLVVodMediaFeedDataManager.m in Sources */,
 				04B8A9DF2A9F240F00F861AC /* PLVMediaAreaBaseSkinView.m in Sources */,
 				045FE00D2A8C580200F957C7 /* AppDelegate.m in Sources */,
+				043A60782C6C9DF200C00576 /* PLVMediaPlayerSubtitleConfigModel.m in Sources */,
 				045FE01E2A8C580300F957C7 /* main.m in Sources */,
 				04B8A9E22A9F244700F861AC /* PLVMediaAreaLandscapeFullSkinView.m in Sources */,
+				043A60752C6C593500C00576 /* PLVMediaPlayerSkinSubtitleSetCell.m in Sources */,
 				046A34CD2AAD806600933D64 /* PLVMediaPlayerSkinOutMoreView.m in Sources */,
+				043A60642C6B3CCB00C00576 /* PLVVodSubtitleManager.m in Sources */,
 				04B8A9E82A9F5A1F00F861AC /* PLVMediaAreaPortraitFullSkinView.m in Sources */,
 				04E73F212B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m in Sources */,
 				045FE0102A8C580200F957C7 /* SceneDelegate.m in Sources */,
@@ -944,7 +1068,7 @@
 		};
 		045FE0222A8C580300F957C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B0F4FB09B3E89B072EEC9432 /* Pods-mediaplayer-PolyvIOSMediaPlayerDemo.debug.xcconfig */;
+			baseConfigurationReference = 6A9D67CE182BD27C57E760E7 /* Pods-PolyvIOSMediaPlayerDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -967,7 +1091,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.0;
+				MARKETING_VERSION = 2.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.mediaplayer.sdk.demo.intest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -980,7 +1104,7 @@
 		};
 		045FE0232A8C580300F957C7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5CC5BBAF929D4B4D7046778D /* Pods-mediaplayer-PolyvIOSMediaPlayerDemo.release.xcconfig */;
+			baseConfigurationReference = 109B83EDE8492AC195D729C8 /* Pods-PolyvIOSMediaPlayerDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1002,7 +1126,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.0;
+				MARKETING_VERSION = 2.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.mediaplayer.sdk.demo.intest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

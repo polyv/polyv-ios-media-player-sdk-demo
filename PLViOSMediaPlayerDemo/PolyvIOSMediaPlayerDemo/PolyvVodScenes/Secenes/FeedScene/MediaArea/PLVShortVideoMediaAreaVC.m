@@ -18,6 +18,8 @@
 #import "UIImage+PLVVodMediaTint.h"
 #import "PLVVodMediaMarqueeView.h"
 #import "PLVMediaPlayerConst.h"
+#import "PLVMediaPlayerSubtitleModule.h"
+#import <PLVTimer.h>
 
 
 /// UI View Hierarchy
@@ -39,15 +41,20 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 @property (nonatomic, strong) PLVMediaPlayerSkinOutMoreView *skinOutMoreView;
 @property (nonatomic, strong) UIImageView *displayCoverView; // 视频封面图
 @property (nonatomic, strong) PLVVodMediaMarqueeView *marqueeView; // 跑马灯
+@property (nonatomic, strong) PLVMediaPlayerSubtitleModule *subtitleModule; /// 字幕模块
 
 
 // 布局 部分 - 用于 横竖屏切换
-@property (nonatomic, strong) UIView *displayView; // 裸播放器对应的渲染View
+@property (nonatomic, strong) UIView *displayView; // 裸播放器对应的渲染View，展示视频画面
 @property (nonatomic, assign) CGRect originFrame;  // 视频区域原始尺寸
 @property (nonatomic, assign) UIView *originSuperView; // 视频区域原始父视图
 
 /// 状态控制 部分
 @property (nonatomic, assign) BOOL isShowInUIWindow;
+
+/// timer UI 相关刷新
+@property (nonatomic, strong) PLVTimer *playbackTimer;     /// 播放过程定时器，用于UI相关实时更新
+
 
 @end
 
@@ -59,6 +66,8 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)dealloc{
     [self.player clearPlayer];
     [self.marqueeView stop];
+    [self.playbackTimer cancel];
+    self.playbackTimer = nil;
 }
 
 -(instancetype)init{
@@ -94,6 +103,9 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     
     // 设置新版跑马灯（2.0）
     [self initMarqueeView];
+    
+    // 设置刷新定时器
+    [self setupPlaybackTimer];
 }
 
 - (void)updateUI{
@@ -127,7 +139,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
                     self.displayView.frame = CGRectMake(0, 0, self.bounds.size.width, display_height);
                 }
                 else{
-                    // 以高为基准，计算宽度
+                    // 全屏展示
                     self.displayView.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
                 }
             }
@@ -150,6 +162,23 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     self.marqueeView.frame = self.displayView.bounds;
     [self.marqueeView setPLVVodMediaMarqueeModel:marqueeModel];
     [self.displayView addSubview:self.marqueeView];
+}
+
+#pragma mark [player timer]
+- (void)setupPlaybackTimer{
+    __weak typeof(self) weakSelf = self;
+    self.playbackTimer = [PLVTimer repeatWithInterval:0.5 repeatBlock:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            // 同步更新字幕内容 字幕布局
+            if(weakSelf.mediaPlayerState.subtitleConfig.subtitlesEnabled){
+                [weakSelf.subtitleModule showSubtilesWithPlaytime:weakSelf.player.currentPlaybackTime];
+                // 更新字幕位置
+                [weakSelf.mediaSkinContainer updateSubtitleViewUIWithDouble:weakSelf.mediaPlayerState.subtitleConfig.isCurDouble];
+                
+            }
+        });
+    }];
 }
 
 #pragma mark 【Back 页面返回处理】
@@ -205,6 +234,14 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         _displayView.backgroundColor = [UIColor blackColor];
     }
     return _displayView;
+}
+
+- (PLVMediaPlayerSubtitleModule *)subtitleModule{
+    if (!_subtitleModule){
+        _subtitleModule = [[PLVMediaPlayerSubtitleModule alloc] init];
+    }
+    
+    return _subtitleModule;
 }
 
 // 跑马灯播放控制
@@ -301,6 +338,12 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     }
 }
 
+/// 更新字幕
+- (void)updateVideoSubtile{
+    [self.subtitleModule updateSubtitleWithName:self.mediaPlayerState.subtitleConfig.selectedSubtitleKey
+                                         show:self.mediaPlayerState.subtitleConfig.subtitlesEnabled];
+}
+
 #pragma mark 【Syn Method  同步 player、mediaState、mediaSkinContainer 之间的数据】
 - (void)syncPlayerStateWithModel:(PLVVodMediaVideo *)videoModel{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -315,6 +358,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         self.mediaPlayerState.progressImageString = videoModel.progressImage;
         self.mediaPlayerState.duration = videoModel.duration;
         
+        // 封面图设置
         __weak typeof(self) weakSelf = self;
         [self.displayCoverView sd_setImageWithURL:[NSURL URLWithString:videoModel.snapshot] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (image && [image isKindOfClass:[UIImage class]]){
@@ -322,6 +366,15 @@ PLVMediaPlayerSkinOutMoreViewDelegate
                 weakSelf.displayCoverView.image = blurimage;
             }
         }];
+        
+        // 字幕信息配置
+        self.mediaPlayerState.subtitleConfig = [[PLVMediaPlayerSubtitleConfigModel alloc] initWithVideoModel:videoModel];
+        // 加载字幕信息
+        [self.subtitleModule loadSubtitlsWithVideoModel:videoModel
+                                                  label:self.mediaSkinContainer.subtitleView.subtitleLabel
+                                               topLabel:self.mediaSkinContainer.subtitleView.subtitleTopLabel
+                                                 label2:self.mediaSkinContainer.subtitleView.subtitleLabel2
+                                              topLabel2:self.mediaSkinContainer.subtitleView.subtitleTopLabel2];
         // 同步播放器皮肤
         [self.mediaSkinContainer syncSkinWithMode:self.mediaPlayerState];
         
@@ -628,6 +681,12 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     }
 }
 
+/// 横屏 字幕选中事件
+- (void)mediaPlayerSkinContainerView_SelectSubtitle:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer{
+    // 更新字幕
+    [self updateVideoSubtile];
+}
+
 #pragma mark 【PLVMediaPlayerSkinOutMoreView Delegate - 更多弹层 回调方法】
 - (void)mediaPlayerSkinOutMoreView_SwitchPlayRate:(CGFloat)rate{
     [self synPlayRate:rate];
@@ -648,6 +707,10 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 - (void)mediaPlayerSkinOutMoreView_StartPictureInPicture{
     [self.player startPictureInPicture];
+}
+
+- (void)mediaPlayerSkinOutMoreView_SetSubtitle{
+    [self updateVideoSubtile];
 }
 
 #pragma mark 【PLVFeedItemCustomView Delegate】

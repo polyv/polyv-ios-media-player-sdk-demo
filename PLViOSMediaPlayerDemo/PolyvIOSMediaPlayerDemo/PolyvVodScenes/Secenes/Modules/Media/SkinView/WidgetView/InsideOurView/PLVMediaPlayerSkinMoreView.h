@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)mediaPlayerSkinMoreView_SwitchPlayMode:(PLVMediaPlayerSkinMoreView *)moreView;
 - (void)mediaPlayerSkinMoreView_StartPictureInPicture:(PLVMediaPlayerSkinMoreView *)moreView;
+- (void)mediaPlayerSkinMoreView_SetSubtitle:(PLVMediaPlayerSkinMoreView *)moreView;
 
 @end
 

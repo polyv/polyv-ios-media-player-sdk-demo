@@ -123,8 +123,23 @@
     PLVDemoVodMediaViewController *vodMediaVC = [[PLVDemoVodMediaViewController alloc] init];
     if (PushOrModel) {
         vodMediaVC.hidesBottomBarWhenPushed = YES;
-        vodMediaVC.vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; //
-        [self.navigationController pushViewController:vodMediaVC animated:YES];
+        // 公共账号
+        vodMediaVC.vid = @"a0f97cbb56ae78349fb12567623fb411_a";
+        //        vodMediaVC.vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; //
+
+        // 本龙
+//        vodMediaVC.vid = @"a0f97cbb567948c6d3544ca11d5e4b9e_a";
+        
+        // 宏涛
+//        vodMediaVC.vid = @"c847d354590d799e9635574d98e98780_c";  // 预览图 10mins
+//        vodMediaVC.vid = @"c847d35459cdc9f329deecbf53cf44c3_c";  // 预览图 10mins 1secs
+        if ([PLVMediaPlayerPictureInPictureManager sharedInstance].pictureInPictureActive &&
+            [[PLVMediaPlayerPictureInPictureManager sharedInstance].currentPlaybackVid isEqualToString:vodMediaVC.vid]) {
+            [[PLVMediaPlayerPictureInPictureManager sharedInstance] stopPictureInPicture];
+        }
+        else{
+            [self.navigationController pushViewController:vodMediaVC animated:YES];
+        }
     }else{
         vodMediaVC.modalPresentationStyle = UIModalPresentationFullScreen;
         [self presentViewController:vodMediaVC animated:YES completion:nil];

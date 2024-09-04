@@ -21,6 +21,7 @@
 #import "PLVMediaPlayerSkinLoadingView.h"
 #import "PLVMediaPlayerSkinToastView.h"
 #import "PLVMediaPlayerSkinPicInPicPlaceholderView.h"
+#import "PLVMediaPlayerSkinLandscapeSubtitleSetView.h"
 #import "PLVVodMediaOrientationUtil.h"
 
 /// UI View Hierarchy
@@ -38,7 +39,8 @@ PLVMediaPlayerSkinMoreViewDelegate,
 PLVMediaPlayerSkinDefinitionViewDelegate,
 PLVMediaPlayerSkinPlaybackRateViewDelegate,
 PLVMediaPlayerSkinDefinitionTipsViewDelegate,
-PLVMediaPlayerSkinLoopPlayViewDelegate
+PLVMediaPlayerSkinLoopPlayViewDelegate,
+PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
 >
 
 @property (nonatomic, strong) PLVMediaPlayerSkinMoreView *skinMoreView;
@@ -52,6 +54,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 @property (nonatomic, strong) PLVMediaPlayerSkinLoadingView *loadingView;
 @property (nonatomic, strong) PLVMediaPlayerSkinToastView *progressToastView;
 @property (nonatomic, strong) PLVMediaPlayerSkinPicInPicPlaceholderView *picInPicHolderView;
+@property (nonatomic, strong) PLVMediaPlayerSkinLandscapeSubtitleSetView *landscapeSubtitleSetView;
 
 @end
 
@@ -73,6 +76,9 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 
 #pragma mark 【UI setup & update】
 - (void)setupUI {
+    // 字幕 最底层视图 一直展示
+    [self addSubview:self.subtitleView];
+    
     [self addSubview:self.portraitHalfSkinView];
     [self addSubview:self.landscapeFullSkinView];
     [self addSubview:self.definitionTipsView];
@@ -111,6 +117,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         self.definitionView.hidden = YES;
         self.playbackRateView.hidden = YES;
         self.portraitHalfSkinView.hidden = NO;
+        self.landscapeSubtitleSetView.hidden = YES;
         self.portraitHalfSkinView.frame = self.bounds;
         self.audioModeView.frame = self.bounds;
 
@@ -123,6 +130,7 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         }
     }
     
+    // 清晰度提示
     self.definitionTipsView.frame = self.bounds;
     [self.landscapeFullSkinView layoutIfNeeded]; // 避免第一次横屏时 横屏皮肤未刷新布局获取错误提示点位
     [self.definitionTipsView updateUIWithTargetPoint:[self calculateDefinitionTipsViewPosition] abovePoint:isLandscape];
@@ -130,9 +138,14 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         self.progressToastView.frame = self.bounds;
         [self.progressToastView updateWithTargetPoint:[self calculateProgressToastViewPosition]];
     }
+    // 小窗占位视图
     if (!self.picInPicHolderView.hidden && self.picInPicHolderView.superview){
         self.picInPicHolderView.frame = self.bounds;
     }
+    
+    // 字幕视频
+    self.subtitleView.frame = self.bounds;
+    [self.subtitleView updateUIWithSubviewTargetPoint:[self calculateSubtitleSubviewPosition]];
 }
 
 #pragma mark 【Getter & Setter】
@@ -236,6 +249,24 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         _picInPicHolderView = [[PLVMediaPlayerSkinPicInPicPlaceholderView alloc] init];
     }
     return _picInPicHolderView;
+}
+
+/// 字幕内容展示
+- (PLVMediaPlayerSkinSubtitleView *)subtitleView{
+    if (!_subtitleView){
+        _subtitleView = [[PLVMediaPlayerSkinSubtitleView alloc] init];
+    }
+    
+    return _subtitleView;
+}
+
+/// 横屏 - 字幕设置
+- (PLVMediaPlayerSkinLandscapeSubtitleSetView *)landscapeSubtitleSetView{
+    if (!_landscapeSubtitleSetView){
+        _landscapeSubtitleSetView = [[PLVMediaPlayerSkinLandscapeSubtitleSetView alloc] init];
+    }
+    
+    return _landscapeSubtitleSetView;
 }
 
 #pragma mark 【Public Method】
@@ -350,6 +381,21 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     }
 }
 
+/// 实时更新字幕布局
+- (void)updateSubtitleViewUIWithDouble:(BOOL)doubleSubtitle{
+    [self.subtitleView freshUIWithDoubleSubtile:doubleSubtitle];
+}
+
+/// 横屏模式 - 字幕设置界面
+- (void)showLandscapeSubtitleSetView{
+    [self addSubview:self.landscapeSubtitleSetView];
+    self.landscapeSubtitleSetView.frame = self.bounds;
+    self.landscapeSubtitleSetView.delegate = self;
+    
+    // 确保subtitleConfig 有值， 播放时候已经初始化
+    [self.landscapeSubtitleSetView showWithConfigModel:self.mediaPlayerState.subtitleConfig];
+}
+
 #pragma mark 【Private Method】
 
 - (CGPoint)calculateDefinitionTipsViewPosition {
@@ -373,6 +419,20 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
         targetPoint = CGPointMake(CGRectGetMinX(self.landscapeFullSkinView.progressSlider.frame), CGRectGetMinY(self.landscapeFullSkinView.progressSlider.frame));
     } else {
         targetPoint = CGPointMake(CGRectGetMinX(self.portraitHalfSkinView.progressSlider.frame), CGRectGetMinY(self.portraitHalfSkinView.progressSlider.frame));
+    }
+    
+    return targetPoint;
+}
+
+- (CGPoint)calculateSubtitleSubviewPosition{
+    BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
+    
+    CGPoint targetPoint;
+    // 固定显示在底部
+    if (isLandscape) {
+        targetPoint = CGPointMake(0, self.landscapeFullSkinView.frame.size.height -20);
+    } else {
+        targetPoint = CGPointMake(0, self.portraitHalfSkinView.frame.size.height -15);
     }
     
     return targetPoint;
@@ -472,6 +532,10 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     [self mediaPlayerSkinPlaybackRateView_SwitchPlayRate:self.mediaPlayerState.curPlayRate];
 }
 
+/// 播放器皮肤 显示、隐藏回调
+- (void)plvMediaAreaBaseSkinView:(PLVMediaAreaBaseSkinView *)skinView didChangedSkinShowStatus:(BOOL)skinShow{
+}
+
 #pragma mark 【PLVMediaPlayerSkinAudioModeView Delegate - 音频模式视图的回调方法】
 - (void)mediaPlayerSkinAudioModeView_switchVideoMode:(PLVMediaPlayerSkinAudioModeView *)audioModeView{
     if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchToVideoMode:)]){
@@ -530,6 +594,13 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
     }
 }
 
+///  字幕设置 按钮事件
+- (void)mediaPlayerSkinMoreView_SetSubtitle:(PLVMediaPlayerSkinMoreView *)moreView{
+    // 显示字幕设置界面
+    // 当前类处理
+    [self showLandscapeSubtitleSetView];
+}
+
 #pragma mark 【PLVMediaPlayerSkinDefinitionView Delegate - 清晰度切换弹层 回调方法】
 /// 清晰度 切换事件 回调方法
 - (void)mediaPlayerSkinDefinitionView_SwitchQualtiy:(NSInteger)qualityLevel{
@@ -573,6 +644,13 @@ PLVMediaPlayerSkinLoopPlayViewDelegate
 - (void)mediaPlayerSkinDefinitionTipsView_SwitchQuality:(NSInteger)qualityLevel {
     if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SwitchQualtiy:qualityLevel:)]){
         [self.containerDelegate mediaPlayerSkinContainerView_SwitchQualtiy:self qualityLevel:qualityLevel];
+    }
+}
+
+#pragma mark [PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage - 横屏 字幕选中回调方法]
+- (void)mediaPlayerSkinLandscapeSubtitleSetView_SelectSubtitle{
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_SelectSubtitle:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_SelectSubtitle:self];
     }
 }
 

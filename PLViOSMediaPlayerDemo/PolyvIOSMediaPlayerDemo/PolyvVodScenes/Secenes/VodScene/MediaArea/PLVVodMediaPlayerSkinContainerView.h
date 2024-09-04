@@ -8,6 +8,8 @@
 #import <UIKit/UIKit.h>
 #import "PLVMediaAreaPortraitHalfSkinView.h"
 #import "PLVMediaAreaLandscapeFullSkinView.h"
+#import "PLVMediaPlayerSkinSubtitleView.h"
+
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVMediaPlayerState.h"
 
@@ -23,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) PLVMediaAreaPortraitHalfSkinView *portraitHalfSkinView;
 @property (nonatomic, strong) PLVMediaAreaLandscapeFullSkinView *landscapeFullSkinView;
+@property (nonatomic, strong) PLVMediaPlayerSkinSubtitleView *subtitleView;
+
 @property (nonatomic, strong) PLVMediaPlayerState *mediaPlayerState;
 
 /// 同步播放器皮肤
@@ -59,6 +63,10 @@ NS_ASSUME_NONNULL_BEGIN
 /// 显示、隐藏画中画占位图
 /// @param status  YES,显示 NO 隐藏
 - (void)showPicInPicPlaceholderViewWithStatus:(BOOL)status;
+
+/// 更新字幕显示布局
+/// @param doubleSubtitle YES  双语字幕 NO 单语字幕
+- (void)updateSubtitleViewUIWithDouble:(BOOL)doubleSubtitle;
 
 @end
 
@@ -97,6 +105,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 推动进度面板事件
 - (void)mediaPlayerSkinContainerview_ProgressViewPan:(PLVVodMediaPlayerSkinContainerView *)skinContainer scrubTime:(NSTimeInterval)scrubTime;
 
+/// 横屏 - 字幕选中事件
+- (void)mediaPlayerSkinContainerView_SelectSubtitle:(PLVVodMediaPlayerSkinContainerView *)skinContainer;
 
 @end
 

@@ -107,6 +107,10 @@ PLVShortVideoMediaAreaVCDelegate
     if (isLandscape){ // 横向-全屏
         if (@available(iOS 14.0, *)){
             // 不响应, 系统函数调用，子控件自动更细布局
+            // 部分设备需要手动调用
+            if ([PLVVodMediaOrientationUtil isIPhone8Plus]){
+                [self.currentFeedItemView adaptUIForLandscape];
+            }
         }
         else{
             // 系统函数不自动调用，手动更新，feed流当前活动视图横屏适配

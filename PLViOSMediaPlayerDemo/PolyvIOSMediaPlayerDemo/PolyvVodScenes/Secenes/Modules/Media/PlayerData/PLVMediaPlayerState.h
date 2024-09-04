@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PLVMediaPlayerSubtitleConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,6 +50,8 @@ typedef NS_ENUM(NSInteger) {
 @property (nonatomic, assign) BOOL isPlaying;  // 当前是否正在播放中
 @property (nonatomic, assign) BOOL isLocking;  // 当前是否锁屏中
 @property (nonatomic, assign) BOOL isChangingPlaySource; // 是否正在切换播放源 （清晰度切换，音频/视频模式切换）
+
+@property (nonatomic, strong) PLVMediaPlayerSubtitleConfigModel *subtitleConfig; // 视频字幕配置信息
 
 @end
 

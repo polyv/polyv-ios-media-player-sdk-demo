@@ -119,6 +119,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 //    vid = @"a0f97cbb565ea16cbdea547040669841_a"; // 多分辨率加密视频 lien
 //    vid = @"a0f97cbb565c26a5e04055f135fb04bf_a";   // app级别加密
     vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; // 公号点播
+    vid = @"a0f97cbb56ae78349fb12567623fb411_a"; // 字幕测试
     return vid;
 }
 
@@ -256,6 +257,10 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     else{
         [self.vodMediaAreaVC.player startPictureInPicture];
     }
+}
+
+- (void)mediaPlayerSkinOutMoreView_SetSubtitle{
+    [self.vodMediaAreaVC updateVideoSubtile];
 }
 
 @end
