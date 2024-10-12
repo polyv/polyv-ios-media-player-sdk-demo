@@ -63,18 +63,14 @@ PLVShortVideoMediaAreaVCDelegate
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self.navigationController setNavigationBarHidden:YES];
     
-    if (self.isHideProtraitBackButton){
-        [self enterFeedVC];
-    }
+    [self enterFeedVC];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     [self.navigationController setNavigationBarHidden:NO];
-    
-    if (self.isHideProtraitBackButton){
-        [self leaveFeedVC];
-    }
+
+    [self leaveFeedVC];
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle{
@@ -128,13 +124,13 @@ PLVShortVideoMediaAreaVCDelegate
 
 - (void)leaveFeedVC{
     if (self.currentFeedItemView){
-        [self.currentFeedItemView pause];
+        [self.currentFeedItemView endActive];
     }
 }
 
 - (void)enterFeedVC{
     if (self.currentFeedItemView){
-        [self.currentFeedItemView play];
+        [self.currentFeedItemView startActive];
     }
 }
 

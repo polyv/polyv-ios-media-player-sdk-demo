@@ -14,6 +14,7 @@
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVVodMediaErrorUtil.h"
 #import "PLVVodMediaOrientationUtil.h"
+#import "PLVDownloadCenterViewController.h"
 
 /// UI View Hierarchy
 ///
@@ -43,6 +44,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     self = [super init];
     if (self) {
         _actionAfterPlayFinish = 0; // 0：显示播放结束UI（缺省）  1：重新播放  2：播放下一个
+        _isOffPlayModel = NO;
     }
     return self;
 }
@@ -66,6 +68,17 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES];
+    
+    // 下载事件回调设置
+    [self initDownloadModule];
+}
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    [self.navigationController setNavigationBarHidden:NO];
+    
+    // 暂停播放
+    [self.vodMediaAreaVC.player pause];
 }
 
 - (void)viewWillLayoutSubviews{
@@ -78,6 +91,9 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     self.view.backgroundColor = [UIColor colorWithRed:15/255.0 green:32/255.0 blue:57.0/255.0 alpha:1.0];
     
     [self.view addSubview:self.vodMediaAreaVC.view];
+    // 离线播放模式设置
+    self.vodMediaAreaVC.mediaPlayerState.isOffPlayMode = self.isOffPlayModel;
+    
     [self.view addSubview:self.skinOutMoreView];
 }
 
@@ -232,6 +248,11 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     [self startPictureInPictureFailed:error];
 }
 
+/// 横屏 -开始下载
+- (void)vodMediaAreaVC_StartDownloadEvent:(PLVVodMediaAreaVC *)playerVC{
+    [self startDownload];
+}
+
 #pragma mark 【PLVMediaPlayerSkinOutMoreView Delegate - 更多弹层 回调方法】
 - (void)mediaPlayerSkinOutMoreView_SwitchPlayRate:(CGFloat)rate{
     [self.vodMediaAreaVC setPlayRate:rate];
@@ -261,6 +282,102 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 - (void)mediaPlayerSkinOutMoreView_SetSubtitle{
     [self.vodMediaAreaVC updateVideoSubtile];
+}
+
+- (void)mediaPlayerSkinOutMoreView_StartDownload{
+    [self startDownload];
+}
+
+#pragma mark [下载相关业务逻辑处理]
+- (void)startDownload{
+    PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] getDownloadInfo:self.vid
+                                                                               fileType:PLVDownloadFileTypeVideo];
+    if (downloadItem){
+        // 已经创建下载任务
+        switch (downloadItem.state) {
+            case PLVVodDownloadStatePreparing:
+            case PLVVodDownloadStatePreparingTask:
+            case PLVVodDownloadStateReady:
+            case PLVVodDownloadStateStopping:
+            case PLVVodDownloadStateStopped:{
+                // 等待中 不处理 or (跳转下载中列表)
+                [self pushToDownloadCenter:1];
+
+            } break;
+            case PLVVodDownloadStateRunning:{
+                // 下载中 跳转下载中列表
+                [self pushToDownloadCenter:1];
+
+            } break;
+            case PLVVodDownloadStateSuccess:{
+                // 已完成 跳转完成列表
+                [self pushToDownloadCenter:0];
+
+            } break;
+            case PLVVodDownloadStateFailed:{
+                // 下载失败或者暂停 重新下载
+                [self restartDownloadTask:downloadItem];
+
+            } break;
+        }
+    }
+    else{
+        __weak typeof(self) weakSelf = self;
+        // 调用可以缓存video 数据的方法
+        [PLVVodMediaVideo requestVideoPriorityCacheWithVid:self.vid completion:^(PLVVodMediaVideo *video, NSError *error) {
+            // 添加下载任务
+            PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] addVideoTask:video
+                                                                                     quality:weakSelf.vodMediaAreaVC.mediaPlayerState.curQualityLevel];
+            [weakSelf setDownloadEventWithItem:downloadItem];
+        }];
+    }
+}
+
+- (void)initDownloadModule{
+    PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] getDownloadInfo:self.vid 
+                                                                               fileType:PLVDownloadFileTypeVideo];
+    if (downloadItem){
+        [self setDownloadEventWithItem:downloadItem];
+        // 更新一次下载状态
+        [self.skinOutMoreView.downloadProgressView updateDownloadState:downloadItem.state];
+        [self.vodMediaAreaVC.mediaSkinContainer.skinMoreView.downloadProgressView updateDownloadState:downloadItem.state];
+    }
+    else{
+        [self.skinOutMoreView.downloadProgressView resetProgressView];
+        [self.vodMediaAreaVC.mediaSkinContainer.skinMoreView.downloadProgressView resetProgressView];
+    }
+}
+
+- (void)restartDownloadTask:(PLVDownloadInfo *)downloadInfo{
+    [[PLVDownloadManager sharedManager] startDownloadTask:downloadInfo highPriority:NO];
+}
+
+- (void)setDownloadEventWithItem:(PLVDownloadInfo *)downloadItem{
+    __weak typeof(self) weakSelf = self;
+    downloadItem.stateDidChangeBlock = ^(PLVDownloadInfo *info) {
+        // 下载状态
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.skinOutMoreView.downloadProgressView updateDownloadState:info.state];
+            [weakSelf.vodMediaAreaVC.mediaSkinContainer.skinMoreView.downloadProgressView updateDownloadState:info.state];
+        });
+    };
+    
+    downloadItem.progressDidChangeBlock = ^(PLVDownloadInfo *info) {
+        // 下载进度
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.skinOutMoreView.downloadProgressView.progressView setProgress:info.progress];
+            [weakSelf.vodMediaAreaVC.mediaSkinContainer.skinMoreView.downloadProgressView.progressView setProgress:info.progress];
+        });
+    };
+}
+
+- (void)pushToDownloadCenter:(NSInteger )selectIndex{
+    // 竖屏模式才跳转
+    if (![PLVVodMediaOrientationUtil isLandscape]){
+        PLVDownloadCenterViewController *center = [[PLVDownloadCenterViewController alloc] init];
+        center.selectedIndex = selectIndex;
+        [self.navigationController pushViewController:center animated:YES];
+    }
 }
 
 @end

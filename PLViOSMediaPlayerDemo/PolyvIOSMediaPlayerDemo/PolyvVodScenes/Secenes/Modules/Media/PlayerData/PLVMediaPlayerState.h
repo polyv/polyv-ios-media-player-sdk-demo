@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVMediaPlayerSubtitleConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -34,7 +35,7 @@ typedef NS_ENUM(NSInteger) {
 @property (nonatomic, assign, readonly) BOOL isSupportWindowMode; // 小窗模式
 @property (nonatomic, assign) PLVMediaPlayerPlayMode curPlayMode;    // 当前播放模式 1:视频模式 2：音频模式
 @property (nonatomic, assign) PLVMediaPlayerWindowMode curWindowMode;  // 当前窗口模式 1:普通模式 2：小窗模式
-@property (nonatomic, assign) NSInteger curQualityLevel; // 当前清晰度
+@property (nonatomic, assign) PLVVodMediaQuality curQualityLevel; // 当前清晰度
 @property (nonatomic, assign) NSInteger qualityCount;    // 清晰度数量
 @property (nonatomic, assign) PLVMediaPlayerQualityState qualityState; // 清晰度切换状态
 @property (nonatomic, assign) CGFloat curPlayRate;       // 当前倍速
@@ -52,6 +53,8 @@ typedef NS_ENUM(NSInteger) {
 @property (nonatomic, assign) BOOL isChangingPlaySource; // 是否正在切换播放源 （清晰度切换，音频/视频模式切换）
 
 @property (nonatomic, strong) PLVMediaPlayerSubtitleConfigModel *subtitleConfig; // 视频字幕配置信息
+
+@property (nonatomic, assign) BOOL isOffPlayMode; // 离线播放模式 隐藏下载按钮 默认NO
 
 @end
 

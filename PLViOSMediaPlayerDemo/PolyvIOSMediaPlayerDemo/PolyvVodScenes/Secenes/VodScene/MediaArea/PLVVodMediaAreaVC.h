@@ -72,6 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// 画中画开启失败
 - (void)vodMediaAreaVC_StartPictureInPictureFailed:(PLVVodMediaAreaVC *)playerVC error:(NSError *)error;
 
+/// 横屏 -开始下载事件
+- (void)vodMediaAreaVC_StartDownloadEvent:(PLVVodMediaAreaVC *)playerVC;
+
 @end
 
 NS_ASSUME_NONNULL_END

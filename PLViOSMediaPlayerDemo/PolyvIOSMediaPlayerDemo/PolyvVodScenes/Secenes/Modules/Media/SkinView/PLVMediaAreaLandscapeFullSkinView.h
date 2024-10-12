@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// 是否需要显示皮肤控件，当通过外部控件 调用 hiddenMediaPlayerFullSkinView 关闭皮肤时内部会记录此皮肤当前显示状态
 @property (nonatomic, assign) BOOL needShowSkin;
 
-@property (nonatomic, strong) id<PLVMediaAreaLandscapeFullSkinViewDelegate> fullSkinDelegate;
+@property (nonatomic, weak) id<PLVMediaAreaLandscapeFullSkinViewDelegate> fullSkinDelegate;
 
 /// 隐藏和显示皮肤视图 控件
 /// @param isHidden YES 隐藏控件，NO显示控件

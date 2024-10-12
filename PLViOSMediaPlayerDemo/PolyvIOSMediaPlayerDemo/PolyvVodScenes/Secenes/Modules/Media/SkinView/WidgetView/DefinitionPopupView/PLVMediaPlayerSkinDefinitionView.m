@@ -153,15 +153,15 @@
     [self resetButtonState];
     self.hidden = NO;
     
-    NSInteger qualityLevel = mediaState.curQualityLevel;
+    PLVVodMediaQuality qualityLevel = mediaState.curQualityLevel;
     switch (qualityLevel) {
-        case 1:
+        case PLVVodMediaQualityStandard:
             _lowQualityBtn.selected = YES;
             break;
-        case 2:
+        case PLVVodMediaQualityHigh:
             _midQualityBtn.selected = YES;
             break;
-        case 3:
+        case PLVVodMediaQualityUltra:
             _highQualtiyBtn.selected = YES;
             break;
         default:

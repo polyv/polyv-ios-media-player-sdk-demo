@@ -10,7 +10,9 @@
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVMediaPlayerSkinSubtitleSetView.h"
 
-@interface PLVMediaPlayerSkinOutMoreView()<PLVMediaPlayerSkinSubtitleSetViewDelegate>
+@interface PLVMediaPlayerSkinOutMoreView()<
+PLVMediaPlayerSkinSubtitleSetViewDelegate,
+PLVDownloadCircularProgressViewDelegate>
 
 @property (nonatomic, strong) UIView *bgView;
 @property (nonatomic, strong) UIView *contentView;
@@ -65,6 +67,8 @@
     [self.contentView addSubview:self.picInPicBtn];
     // subtitle set
     [self.contentView addSubview:self.subtitleSetBtn];
+    // download
+    [self.contentView addSubview:self.downloadProgressView];
     
     // quality
     [self.contentView addSubview:self.qualityLbl];
@@ -87,9 +91,9 @@
     self.bgView.frame = self.bounds;
     NSInteger content_height = 240;
     // 字幕按钮一直存在，无需以下判断
-//    if (self.audioModeBtn.hidden && self.picInPicBtn.hidden){
-//        content_height = 160;
-//    }
+    //    if (self.audioModeBtn.hidden && self.picInPicBtn.hidden){
+    //        content_height = 160;
+    //    }
     self.contentView.frame = CGRectMake(0, self.bounds.size.height - content_height, self.bounds.size.width, content_height);
     
     CGFloat topInset = 48.0;
@@ -120,16 +124,31 @@
     origin = CGPointMake(offset_x, origin.y);
     self.subtitleSetBtn.frame = CGRectMake(origin.x, origin.y, 60, 60);
     
+    // 下载
+    offset_x = CGRectGetMaxX(self.subtitleSetBtn.frame) + 30;
+    origin = CGPointMake(offset_x, origin.y);
+    self.downloadProgressView.frame = CGRectMake(origin.x, origin.y, 60, 60);
+    
     // 清晰度
     CGFloat start_y = CGRectGetMaxY(self.subtitleSetBtn.frame);
     origin = CGPointMake(leftInset + 4, start_y + 28);
     self.qualityLbl.frame = CGRectMake(origin.x, origin.y, 60, 20);
     origin = CGPointMake(CGRectGetMaxX(self.qualityLbl.frame) + 20, origin.y);
     self.lowQualityBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
-    origin = CGPointMake(CGRectGetMaxX(self.lowQualityBtn.frame) + 20, origin.y);
-    self.midQualityBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
-    origin = CGPointMake(CGRectGetMaxX(self.midQualityBtn.frame) + 20, origin.y);
-    self.highQualtiyBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
+    if (self.mediaPlayerState.qualityCount == 2){
+        // 高清
+        origin = CGPointMake(CGRectGetMaxX(self.lowQualityBtn.frame) + 20, origin.y);
+        self.midQualityBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
+    }
+    else if (self.mediaPlayerState.qualityCount == 3){
+        // 高清
+        origin = CGPointMake(CGRectGetMaxX(self.lowQualityBtn.frame) + 20, origin.y);
+        self.midQualityBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
+        
+        // 超清
+        origin = CGPointMake(CGRectGetMaxX(self.midQualityBtn.frame) + 20, origin.y);
+        self.highQualtiyBtn.frame = CGRectMake(origin.x, origin.y, 50, 20);
+    }
     
     start_y = CGRectGetMaxY(self.qualityLbl.frame);
     if (self.qualityLbl.hidden){
@@ -340,6 +359,15 @@
     return _subtitleSetView;
 }
 
+- (PLVDownloadCircularProgressView *)downloadProgressView{
+    if (!_downloadProgressView){
+        _downloadProgressView = [[PLVDownloadCircularProgressView alloc] init];
+        _downloadProgressView.delegate = self;
+    }
+    return _downloadProgressView;
+    
+}
+
 #pragma mark button action
 - (void)closeButtonClick:(UIButton *)closeButton{
     [self hideMoreView];
@@ -483,6 +511,9 @@
     
     // subtitle
     self.subtitleSetBtn.selected = mediaPlayerState.subtitleConfig.subtitlesEnabled;
+    
+    // download
+    self.downloadProgressView.hidden = self.mediaPlayerState.isOffPlayMode;
 }
 
 #pragma mark public
@@ -567,12 +598,12 @@
     }
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+#pragma mark [PLVDownloadCircularProgressViewDelegate]
+/// 开始下载
+- (void)circularProgressView_startDownload:(PLVDownloadCircularProgressView *)progressView{
+    if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_StartDownload)]){
+        [self.skinOutMoreViewDelegate mediaPlayerSkinOutMoreView_StartDownload];
+    }
 }
-*/
 
 @end

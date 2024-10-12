@@ -8,7 +8,6 @@
 #import "PLVShortVideoMediaPlayerSkinContainer.h"
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
-#import "PLVMediaPlayerSkinMoreView.h"
 #import "PLVMediaPlayerSkinAudioModeView.h"
 #import "PLVMediaPlayerSkinLockScreenView.h"
 #import "PLVMediaPlayerSkinMoreView.h"
@@ -39,7 +38,6 @@ PLVMediaPlayerSkinPlaybackRateViewDelegate,
 PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
 >
 
-@property (nonatomic, strong) PLVMediaPlayerSkinMoreView *skinMoreView;
 @property (nonatomic, strong) PLVMediaPlayerSkinAudioModeView *audioModeView;
 @property (nonatomic, strong) PLVMediaPlayerSkinLockScreenView *lockScreenView;
 @property (nonatomic, strong) PLVMediaPlayerSkinDefinitionView *definitionView;
@@ -570,6 +568,13 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
     // 显示字幕设置界面
     // 当前类处理
     [self showLandscapeSubtitleSetView];
+}
+
+/// 开始下载
+- (void)mediaPlayerSkinMoreView_StartDownload{
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_StartDownload:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_StartDownload:self];
+    }
 }
 
 #pragma mark 【PLVMediaPlayerSkinDefinitionView Delegate - 清晰度切换弹层 回调方法】

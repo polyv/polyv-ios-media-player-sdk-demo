@@ -9,7 +9,8 @@
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "UIImage+PLVVodMediaTint.h"
 
-@interface PLVMediaPlayerSkinMoreView()
+@interface PLVMediaPlayerSkinMoreView()<
+PLVDownloadCircularProgressViewDelegate>
 
 @property (nonatomic, strong) UIButton *closeBtn;
 @property (nonatomic, strong) UIButton *audioModeBtn;
@@ -54,6 +55,9 @@
     // subtitle
     [self addSubview:self.subtitleBtn];
     
+    // download
+    [self addSubview:self.downloadProgressView];
+    
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
     [self addGestureRecognizer:tapGes];
 }
@@ -67,8 +71,12 @@
     
     self.closeBtn.frame = CGRectMake(self.bounds.size.width - 24 - 20, 20, 24, 24);
     
-    // subtitle
+    // dowload
     CGPoint origin = CGPointMake(self.bounds.size.width - rightInset - buttonSize.width, topInset);
+    self.downloadProgressView.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
+
+    // subtitle
+    origin = CGPointMake(CGRectGetMinX(self.downloadProgressView.frame) - 28 -buttonSize.width, topInset);
     self.subtitleBtn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
     
     // pip
@@ -166,6 +174,18 @@
     return button;
 }
 
+- (PLVDownloadCircularProgressView *)downloadProgressView{
+    if (!_downloadProgressView){
+        _downloadProgressView = [[PLVDownloadCircularProgressView alloc] init];
+        _downloadProgressView.statusLable.textColor = [UIColor whiteColor];
+        _downloadProgressView.progressView.textColor = [UIColor whiteColor];
+        [_downloadProgressView.startDownload setImage:[UIImage imageNamed:@"plv_skin_control_icon_landscape_download"] forState:UIControlStateNormal];
+        _downloadProgressView.delegate = self;
+    }
+    return _downloadProgressView;
+    
+}
+
 - (void)tapGestureAction:(UITapGestureRecognizer *)tap{
     // 处理解锁按钮的显示/隐藏
     [self hideMoreView];
@@ -243,6 +263,9 @@
     
     self.subtitleBtn.selected = mediaPlayerState.subtitleConfig.subtitlesEnabled ;
     
+    // download
+    self.downloadProgressView.hidden = mediaPlayerState.isOffPlayMode;
+    
     [self updateUI];
 }
 
@@ -280,5 +303,14 @@
         [self.delegate mediaPlayerSkinMoreView_SetSubtitle:self];
     }
 }
+
+#pragma mark [PLVDownloadCircularProgressViewDelegate]
+/// 开始下载
+- (void)circularProgressView_startDownload:(PLVDownloadCircularProgressView *)progressView{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinMoreView_StartDownload)]){
+        [self.delegate mediaPlayerSkinMoreView_StartDownload];
+    }
+}
+
 
 @end

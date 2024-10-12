@@ -28,6 +28,8 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 @property (nonatomic, strong) PLVVodMediaMarqueeView *marqueeView; /// 跑马灯
 @property (nonatomic, strong) PLVMediaPlayerSubtitleModule *subtitleModule; /// 字幕模块
 @property (nonatomic, strong) PLVTimer *playbackTimer;     /// 播放过程定时器，用于UI相关实时更新
+@property (nonatomic, strong) NSString *vid; /// 视频ID
+@property (nonatomic, strong) PLVVodMediaVideo *videoModel; /// 视频数据模型
 
 @end
 
@@ -129,6 +131,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         _player.coreDelegate = self;
         _player.delegateVodMediaPlayer = self;
         _player.autoPlay = YES;
+        _player.videoToolBox = NO;
         _player.rememberLastPosition = YES;
         _player.enablePIPInBackground = YES;
     }
@@ -174,10 +177,26 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 
 #pragma mark 【Public Method】
 - (void)playWithVid:(NSString *)vid{
-    [PLVVodMediaVideo requestVideoWithVid:vid completion:^(PLVVodMediaVideo *video, NSError *error) {
-        [self.player setVideo:video];
-        [self syncPlayerStateWithModel:video]; // 同步播放器状态
-    }];
+    self.vid = vid;
+    if ([PLVVodMediaVideo isVideoCached:self.vid]){
+        // 获取离线视频信息
+        [PLVVodMediaVideo requestVideoPriorityCacheWithVid:self.vid completion:^(PLVVodMediaVideo *video, NSError *error) {
+            [self playWithVideoModel:video];
+        }];
+    }
+    else{
+        [PLVVodMediaVideo requestVideoWithVid:vid completion:^(PLVVodMediaVideo *video, NSError *error) {
+            [self playWithVideoModel:video];
+        }];
+    }
+}
+
+- (void)playWithVideoModel:(PLVVodMediaVideo *)videoModel{
+    [self.player setVideo:videoModel];
+    [self syncPlayerStateWithModel:videoModel]; // 同步播放器状态
+    
+    // 保存视频信息
+    self.videoModel = videoModel;
 }
 
 - (void)setPlayRate:(CGFloat)rate{
@@ -235,11 +254,9 @@ PLVVodMediaPlayerSkinContainerViewDelegate
                                                topLabel:self.mediaSkinContainer.subtitleView.subtitleTopLabel
                                                  label2:self.mediaSkinContainer.subtitleView.subtitleLabel2
                                               topLabel2:self.mediaSkinContainer.subtitleView.subtitleTopLabel2];
+        
         // 视频区域 对应 播放器 的皮肤
         [self.mediaSkinContainer syncSkinWithMode:self.mediaPlayerState];
-        
-   
-        
         [self updateUI];
     });
 }
@@ -380,6 +397,13 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 - (void)mediaPlayerSkinContainerView_SelectSubtitle:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
     // 更新字幕
     [self updateVideoSubtile];
+}
+
+/// 横屏 开始下载
+- (void)mediaPlayerSkinContainerView_StartDownload:(PLVVodMediaPlayerSkinContainerView *)skinContainer{
+    if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(vodMediaAreaVC_StartDownloadEvent:)]){
+        [self.mediaAreaVcDelegate vodMediaAreaVC_StartDownloadEvent:self];
+    }
 }
 
 #pragma mark 【PLVMediaPlayerCore Delegate 播放器核心（播放状态时间）的回调方法】

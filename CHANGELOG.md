@@ -1,3 +1,13 @@
+### 2.3.0
+### Added
+- [DEMO] 新增下载功能
+- [SDK] 新增下载功能
+
+# 注意：
+## 旧版点播PLVVodSDK，升级到新版本点播PolyvMediaPlayerSDK，必须设置 单例PLVDownloadManager 的 previousDownloadDir 属性，用于缓存视频的迁移
+## 新版PolyvMediaPlayerSDK 下载功能的使用，必须调用setAccountID 方法，用于初始化设置
+## 下载功能使用，具体参考DEMO中AppDelegate 的配置，和下载中心api 使用
+
 ### 2.2.1
 ### Added
 - [DEMO] 新增字幕功能

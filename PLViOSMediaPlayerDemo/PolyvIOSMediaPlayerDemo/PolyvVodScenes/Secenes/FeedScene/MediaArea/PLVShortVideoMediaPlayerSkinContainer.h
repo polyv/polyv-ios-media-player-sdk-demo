@@ -9,6 +9,7 @@
 #import "PLVMediaAreaPortraitFullSkinView.h"
 #import "PLVMediaAreaLandscapeFullSkinView.h"
 #import "PLVMediaPlayerSkinSubtitleView.h"
+#import "PLVMediaPlayerSkinMoreView.h"
 
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVMediaPlayerState.h"
@@ -26,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) PLVMediaAreaPortraitFullSkinView *portraitFullSkinView;
 @property (nonatomic, strong) PLVMediaAreaLandscapeFullSkinView *landscapeFullSkinView;
 @property (nonatomic, strong) PLVMediaPlayerSkinSubtitleView *subtitleView;
+@property (nonatomic, strong) PLVMediaPlayerSkinMoreView *skinMoreView;
 
 @property (nonatomic, strong) PLVMediaPlayerState *mediaPlayerState;
 
@@ -96,7 +98,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// 横屏 - 字幕选中事件
 - (void)mediaPlayerSkinContainerView_SelectSubtitle:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer;
 
-
+/// 横屏 - 开始下载
+- (void)mediaPlayerSkinContainerView_StartDownload:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer;
 @end
 
 NS_ASSUME_NONNULL_END

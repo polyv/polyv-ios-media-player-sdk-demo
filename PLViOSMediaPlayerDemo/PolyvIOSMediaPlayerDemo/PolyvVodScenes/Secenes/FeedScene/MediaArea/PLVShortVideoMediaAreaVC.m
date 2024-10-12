@@ -19,6 +19,7 @@
 #import "PLVVodMediaMarqueeView.h"
 #import "PLVMediaPlayerConst.h"
 #import "PLVMediaPlayerSubtitleModule.h"
+#import "PLVDownloadCenterViewController.h"
 #import <PLVTimer.h>
 
 
@@ -68,6 +69,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     [self.marqueeView stop];
     [self.playbackTimer cancel];
     self.playbackTimer = nil;
+    self.displayCoverView = nil;
 }
 
 -(instancetype)init{
@@ -106,6 +108,9 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     
     // 设置刷新定时器
     [self setupPlaybackTimer];
+    
+    // 设置下载事件
+    [self initDownloadModule];
 }
 
 - (void)updateUI{
@@ -190,6 +195,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         _player.delegateVodMediaPlayer = self;
         _player.coreDelegate = self;
         _player.autoPlay = NO;
+        _player.videoToolBox = NO;
         _player.rememberLastPosition = YES;
         _player.enablePIPInBackground = YES;
         _player.seekType = PLVVodMediaPlaySeekTypePrecise;
@@ -258,12 +264,28 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 #pragma mark 【Public Method】
 - (void)playWithVid:(NSString *)vid{
-    [PLVVodMediaVideo requestVideoWithVid:vid completion:^(PLVVodMediaVideo *video, NSError *error) {
-        [self.player setVideo:video];
-        
-        // 同步播放器状态
-        [self syncPlayerStateWithModel:video];
-    }];
+    self.vid = vid;
+    if ([PLVVodMediaVideo isVideoCached:self.vid]){
+        // 获取离线视频信息
+        [PLVVodMediaVideo requestVideoPriorityCacheWithVid:self.vid completion:^(PLVVodMediaVideo *video, NSError *error) {
+            [self playWithVideoModel:video];
+        }];
+    }
+    else{
+        [PLVVodMediaVideo requestVideoWithVid:vid completion:^(PLVVodMediaVideo *video, NSError *error) {
+            [self playWithVideoModel:video];
+        }];
+    }
+    
+    /// 设置vid 的同时 配置下载回调逻辑
+    [self initDownloadModule];
+}
+
+- (void)playWithVideoModel:(PLVVodMediaVideo *)videlModel{
+    [self.player setVideo:videlModel];
+    
+    // 同步播放器状态
+    [self syncPlayerStateWithModel:videlModel];
 }
 
 - (void)play{
@@ -293,6 +315,9 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 - (void)startActive{
     dispatch_async(dispatch_get_main_queue(), ^{
         [self play];
+        
+        // 刷新下载状态
+        [self initDownloadModule];
     });
 }
 
@@ -360,6 +385,8 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         
         // 封面图设置
         __weak typeof(self) weakSelf = self;
+        // 最大内存缓存 5张图片
+        [SDWebImageManager sharedManager].imageCache.maxMemoryCost = 5;
         [self.displayCoverView sd_setImageWithURL:[NSURL URLWithString:videoModel.snapshot] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
             if (image && [image isKindOfClass:[UIImage class]]){
                 UIImage *blurimage = [UIImage boxblurImageWithBlur:0.2 image:image];
@@ -687,6 +714,11 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     [self updateVideoSubtile];
 }
 
+/// 横屏 开始下载
+- (void)mediaPlayerSkinContainerView_StartDownload:(PLVShortVideoMediaPlayerSkinContainer *)skinContainer{
+    [self startDownload];
+}
+
 #pragma mark 【PLVMediaPlayerSkinOutMoreView Delegate - 更多弹层 回调方法】
 - (void)mediaPlayerSkinOutMoreView_SwitchPlayRate:(CGFloat)rate{
     [self synPlayRate:rate];
@@ -705,12 +737,19 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     }
 }
 
+/// 开始画中画
 - (void)mediaPlayerSkinOutMoreView_StartPictureInPicture{
     [self.player startPictureInPicture];
 }
 
+/// 设置字幕
 - (void)mediaPlayerSkinOutMoreView_SetSubtitle{
     [self updateVideoSubtile];
+}
+
+/// 开始下载
+- (void)mediaPlayerSkinOutMoreView_StartDownload{
+    [self startDownload];
 }
 
 #pragma mark 【PLVFeedItemCustomView Delegate】
@@ -743,5 +782,95 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     self.isActive = NO;
     [self endActive];
 }
+
+#pragma mark [下载相关业务逻辑处理]
+- (void)startDownload{
+    PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] getDownloadInfo:self.vid
+                                                                               fileType:PLVDownloadFileTypeVideo];
+    if (downloadItem){
+        // 已经创建下载任务
+        switch (downloadItem.state) {
+            case PLVVodDownloadStatePreparing:
+            case PLVVodDownloadStatePreparingTask:
+            case PLVVodDownloadStateReady:
+            case PLVVodDownloadStateStopping:
+            case PLVVodDownloadStateStopped:{
+                // 等待中 不处理 or (跳转下载中列表)
+                [self pushToDownloadCenter:1];
+
+            } break;
+            case PLVVodDownloadStateRunning:{
+                // 下载中 跳转下载中列表
+                [self pushToDownloadCenter:1];
+
+            } break;
+            case PLVVodDownloadStateSuccess:{
+                // 已完成 跳转完成列表
+                [self pushToDownloadCenter:0];
+
+            } break;
+            case PLVVodDownloadStateFailed:{
+                // 下载失败或者暂停 重新下载
+                [self restartDownloadTask:downloadItem];
+
+            } break;
+        }
+    }
+    else{
+        __weak typeof(self) weakSelf = self;
+        // 调用可以缓存video 数据的方法
+        [PLVVodMediaVideo requestVideoPriorityCacheWithVid:self.vid completion:^(PLVVodMediaVideo *video, NSError *error) {
+            // 添加下载任务
+            PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] addVideoTask:video
+                                                                                     quality:weakSelf.mediaPlayerState.curQualityLevel];
+            [weakSelf setDownloadEventWithItem:downloadItem];
+        }];
+    }
+}
+
+- (void)setDownloadEventWithItem:(PLVDownloadInfo *)downloadItem{
+    __weak typeof(self) weakSelf = self;
+    downloadItem.stateDidChangeBlock = ^(PLVDownloadInfo *info) {
+        // 下载状态
+        [weakSelf.skinOutMoreView.downloadProgressView updateDownloadState:info.state];
+        [weakSelf.mediaSkinContainer.skinMoreView.downloadProgressView updateDownloadState:info.state];
+    };
+    downloadItem.progressDidChangeBlock = ^(PLVDownloadInfo *info) {
+        // 下载进度
+        [weakSelf.skinOutMoreView.downloadProgressView.progressView setProgress:info.progress];
+        [weakSelf.mediaSkinContainer.skinMoreView.downloadProgressView.progressView setProgress:info.progress];
+    };
+}
+
+- (void)initDownloadModule{
+    PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] getDownloadInfo:self.vid
+                                                                               fileType:PLVDownloadFileTypeVideo];
+    if (downloadItem){
+        [self setDownloadEventWithItem:downloadItem];
+        // 更新一次下载状态
+        [self.skinOutMoreView.downloadProgressView updateDownloadState:downloadItem.state];
+        [self.mediaSkinContainer.skinMoreView.downloadProgressView updateDownloadState:downloadItem.state];
+    }
+    else{
+        [self.skinOutMoreView.downloadProgressView resetProgressView];
+        [self.mediaSkinContainer.skinMoreView.downloadProgressView resetProgressView];
+    }
+}
+
+- (void)restartDownloadTask:(PLVDownloadInfo *)downloadInfo{
+    [[PLVDownloadManager sharedManager] startDownloadTask:downloadInfo highPriority:NO];
+}
+
+- (void)pushToDownloadCenter:(NSInteger )selectIndex{
+    // 竖屏模式才跳转
+    if (![PLVVodMediaOrientationUtil isLandscape]){
+        PLVDownloadCenterViewController *center = [[PLVDownloadCenterViewController alloc] init];
+        center.selectedIndex = selectIndex;
+        if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(shortVideoMediaAreaVC:pushController:)]){
+            [self.mediaAreaVcDelegate shortVideoMediaAreaVC:self pushController:center];
+        }
+    }
+}
+
 
 @end
