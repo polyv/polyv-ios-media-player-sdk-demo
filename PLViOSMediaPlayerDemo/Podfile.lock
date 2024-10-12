@@ -7,44 +7,52 @@ PODS:
   - PLVAliHttpDNS/AlicloudHttpDNS (1.10.0)
   - PLVAliHttpDNS/AlicloudUtils (1.10.0)
   - PLVAliHttpDNS/UTDID (1.10.0)
+  - PLVFDB (1.0.5)
   - PLVIJKPlayer (0.13.4)
   - PLVTimer (0.0.4)
-  - PolyvMediaPlayerSDK (2.2.1):
-    - PolyvMediaPlayerSDK/Core (= 2.2.1)
-    - PolyvMediaPlayerSDK/Player (= 2.2.1)
-    - PolyvMediaPlayerSDK/ThirdPart (= 2.2.1)
-  - PolyvMediaPlayerSDK/Core (2.2.1):
+  - PolyvMediaPlayerSDK (2.3.0):
+    - PolyvMediaPlayerSDK/Core (= 2.3.0)
+    - PolyvMediaPlayerSDK/Player (= 2.3.0)
+    - PolyvMediaPlayerSDK/ThirdPart (= 2.3.0)
+  - PolyvMediaPlayerSDK/Core (2.3.0):
     - PLVTimer (~> 0.0.2)
-  - PolyvMediaPlayerSDK/Player (2.2.1):
+  - PolyvMediaPlayerSDK/Player (2.3.0):
     - PLVIJKPlayer (~> 0.13.4)
-  - PolyvMediaPlayerSDK/ThirdPart (2.2.1):
+  - PolyvMediaPlayerSDK/ThirdPart (2.3.0):
     - PLVAliHttpDNS (~> 1.10.0)
   - SDWebImage (4.4.0):
     - SDWebImage/Core (= 4.4.0)
   - SDWebImage/Core (4.4.0)
+  - SSZipArchive (2.1.5)
 
 DEPENDENCIES:
   - MJRefresh (~> 3.5.0)
-  - PolyvMediaPlayerSDK (~> 2.2.1)
+  - PLVFDB (= 1.0.5)
+  - PolyvMediaPlayerSDK (~> 2.3.0)
   - SDWebImage (= 4.4.0)
+  - SSZipArchive (~> 2.1.5)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - MJRefresh
     - PLVAliHttpDNS
+    - PLVFDB
     - PLVIJKPlayer
     - PLVTimer
     - PolyvMediaPlayerSDK
     - SDWebImage
+    - SSZipArchive
 
 SPEC CHECKSUMS:
   MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
   PLVAliHttpDNS: e968fff888b8e96e51828d76d571a9430367475f
+  PLVFDB: d3dd7f38f9a80e7db05737c18f56f6fb2013e6f3
   PLVIJKPlayer: e9dd51f8bb6172bee912854e1fc069fa5914c081
   PLVTimer: 80d2d24d32bb2e9588d089fc25974ff778259ae1
-  PolyvMediaPlayerSDK: 1d636a0f9e7bb3a8d35a1593a82c57fc26cd3b73
+  PolyvMediaPlayerSDK: f4a7d6ee93871bd1a67d520469e84ced5f8f8fae
   SDWebImage: b534502786e43dde36dfcaee89356fe6df30e203
+  SSZipArchive: cefe1364104a0231268a5deb8495bdf2861f52f0
 
-PODFILE CHECKSUM: bcea7aa2c670518a63002e81897b7a78b2d768f9
+PODFILE CHECKSUM: dd162ef29cb2a4913d12eb12e01ee5bb8f70fd2b
 
 COCOAPODS: 1.11.3

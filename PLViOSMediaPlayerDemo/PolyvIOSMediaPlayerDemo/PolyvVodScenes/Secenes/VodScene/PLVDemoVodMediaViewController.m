@@ -58,7 +58,6 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     // Setup Data
     if (!self.vid) {
         NSLog(@"Warning -- Vid is null!!! Set test vid instead!");
-        self.vid = [self testVid];
     }
 
     // Play Vid
@@ -129,15 +128,6 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 }
 
 #pragma mark 【Test Data 测试数据模拟】
-- (NSString *)testVid {
-    NSString *vid = @"a0f97cbb565ea16cbdea547040669841_a"; // 私有加密 lien
-//    vid = @"a0f97cbb567948c6d3544ca11d5e4b9e_a"; // 源视频 lien (ok)
-//    vid = @"a0f97cbb565ea16cbdea547040669841_a"; // 多分辨率加密视频 lien
-//    vid = @"a0f97cbb565c26a5e04055f135fb04bf_a";   // app级别加密
-    vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; // 公号点播
-    vid = @"a0f97cbb56ae78349fb12567623fb411_a"; // 字幕测试
-    return vid;
-}
 
 #pragma mark 【Orientation 横竖屏设置】
 - (BOOL)shouldAutorotate{

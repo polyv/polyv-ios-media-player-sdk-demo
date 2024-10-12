@@ -8,7 +8,7 @@
 
 #import "PLVDownloadCell.h"
 #import "PLVVodMediaCommonUtil.h"
-#import <YYWebImage/YYWebImage.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @implementation PLVDownloadCell
 
@@ -88,7 +88,7 @@
 
 - (void)setThumbnailUrl:(NSString *)thumbnailUrl {
     _thumbnailUrl = thumbnailUrl;
-    [self.thumbnailView yy_setImageWithURL:[NSURL URLWithString:thumbnailUrl] placeholder:[UIImage imageNamed:@"plv_ph_courseCover"]];
+    [self.thumbnailView sd_setImageWithURL:[NSURL URLWithString:thumbnailUrl] placeholderImage:[UIImage imageNamed:@"plv_ph_courseCover"]];
 }
 
 + (NSString *)identifier{

@@ -8,19 +8,19 @@
 #import "PLVEntranceViewController.h"
 #import "PLVDemoVideoFeedViewController.h"
 #import "PLVDemoVodMediaViewController.h"
+#import "PLVDownloadCenterViewController.h"
 #import "AppDelegate.h"
 
 // 依赖库
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
-#import <PLVIJKPlayer/PLVIJKPlayer.h>
 
 #define PushOrModel 1 // 进入页面方式（1-push、0-model）
 
 @interface PLVEntranceViewController ()
 
-@property (nonatomic, strong) UIButton *watchButton;
-@property (nonatomic, strong) UIButton *shortVideoButton;
-@property (nonatomic, strong) UIButton *bankShortVideo;
+@property (nonatomic, strong) UIButton *shortVideoButton; // 短视频
+@property (nonatomic, strong) UIButton *watchButton; // 长视频
+@property (nonatomic, strong) UIButton *cacheVideo; // 视频缓存
 
 @end
 
@@ -36,8 +36,7 @@
     
     [self.view addSubview:self.shortVideoButton];
     [self.view addSubview:self.watchButton];
-        
-    [PLVIJKFFMoviePlayerController setLogLevel:k_IJK_LOG_INFO];
+    [self.view addSubview:self.cacheVideo];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -60,18 +59,18 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    NSInteger buttonCount = 2;
+    NSInteger buttonCount = 3;
     CGFloat buttonWidth = 212.0;
     CGFloat buttonHeight = 108.0;
     CGFloat viewWidth = self.view.bounds.size.width;
     CGFloat viewHeight = self.view.bounds.size.height;
     CGFloat originX = (viewWidth - buttonWidth) / 2.0;
-    CGFloat originY = (viewHeight - (buttonHeight - 16) * buttonCount) / 2.0;
+    CGFloat originY = (viewHeight - (buttonHeight + 16) * buttonCount) / 2.0;
     self.shortVideoButton.frame = CGRectMake(originX, originY, buttonWidth, buttonHeight);
     originY += (buttonHeight + 20);
     self.watchButton.frame = CGRectMake(originX, originY, buttonWidth, buttonHeight);
     originY += (buttonHeight + 20);
-    self.bankShortVideo.frame = CGRectMake(originX, originY, buttonWidth, buttonHeight);
+    self.cacheVideo.frame = CGRectMake(originX, originY, buttonWidth, buttonHeight);
 }
 
 - (UIButton *)shortVideoButton {
@@ -92,18 +91,17 @@
     return _watchButton;
 }
 
-- (UIButton *)bankShortVideo{
-    if (!_bankShortVideo) {
-        _bankShortVideo = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_bankShortVideo setTitle:@"宁行短视频" forState:UIControlStateNormal];
-        [_bankShortVideo setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_bankShortVideo setBackgroundColor:[UIColor blackColor]];
-        _bankShortVideo.titleLabel.font = [UIFont systemFontOfSize:24];
-        _bankShortVideo.titleLabel.textAlignment = NSTextAlignmentLeft;
-        [_bankShortVideo addTarget:self action:@selector(bankShortVideoButton:) forControlEvents:UIControlEventTouchUpInside];
+- (UIButton *)cacheVideo{
+    if (!_cacheVideo) {
+        _cacheVideo = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_cacheVideo setBackgroundImage:[UIImage imageNamed:@"download_video_profile"] forState:UIControlStateNormal];
+        [_cacheVideo setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _cacheVideo.titleLabel.font = [UIFont systemFontOfSize:18];
+        _cacheVideo.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [_cacheVideo addTarget:self action:@selector(cacheVideoButton:) forControlEvents:UIControlEventTouchUpInside];
 
     }
-    return _bankShortVideo;
+    return _cacheVideo;
 }
 
 // 短视频
@@ -124,15 +122,8 @@
     if (PushOrModel) {
         vodMediaVC.hidesBottomBarWhenPushed = YES;
         // 公共账号
-        vodMediaVC.vid = @"a0f97cbb56ae78349fb12567623fb411_a";
-        //        vodMediaVC.vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; //
+        vodMediaVC.vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; //
 
-        // 本龙
-//        vodMediaVC.vid = @"a0f97cbb567948c6d3544ca11d5e4b9e_a";
-        
-        // 宏涛
-//        vodMediaVC.vid = @"c847d354590d799e9635574d98e98780_c";  // 预览图 10mins
-//        vodMediaVC.vid = @"c847d35459cdc9f329deecbf53cf44c3_c";  // 预览图 10mins 1secs
         if ([PLVMediaPlayerPictureInPictureManager sharedInstance].pictureInPictureActive &&
             [[PLVMediaPlayerPictureInPictureManager sharedInstance].currentPlaybackVid isEqualToString:vodMediaVC.vid]) {
             [[PLVMediaPlayerPictureInPictureManager sharedInstance] stopPictureInPicture];
@@ -146,16 +137,16 @@
     }
 }
 
-- (void)bankShortVideoButton:(UIButton *)button{
-//    PLVShortVideoMediaPlayerVC *simpleVC = [[PLVShortVideoMediaPlayerVC alloc] init];
-//    if (PushOrModel) {
-//        [self.navigationController pushViewController:simpleVC animated:YES];
-//    }else{
-//        simpleVC.modalPresentationStyle = UIModalPresentationFullScreen;
-//        [self presentViewController:simpleVC animated:YES completion:nil];
-//    }
+- (void)cacheVideoButton:(UIButton *)button{
+    PLVDownloadCenterViewController *centerVC = [[PLVDownloadCenterViewController alloc] init];
+    if (PushOrModel) {
+        centerVC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:centerVC animated:YES];
+    }else{
+        centerVC.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:centerVC animated:YES completion:nil];
+    }
 }
-
 
 @end
 

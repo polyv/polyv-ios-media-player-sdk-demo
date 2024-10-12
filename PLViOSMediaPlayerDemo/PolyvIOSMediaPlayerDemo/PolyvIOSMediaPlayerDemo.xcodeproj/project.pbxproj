@@ -65,6 +65,20 @@
 		04E5E6322ACEF74A0039CDA2 /* PLVVodMediaPictureInPictureRestoreManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E5E6312ACEF74A0039CDA2 /* PLVVodMediaPictureInPictureRestoreManager.m */; };
 		04E73F212B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E73F202B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m */; };
 		04ED7BDE2C7D724200871940 /* PLVVodMediaCommonUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 04ED7BDD2C7D724200871940 /* PLVVodMediaCommonUtil.m */; };
+		04EE42B72CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42B22CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.m */; };
+		04EE42B82CBA6AC5005B9D98 /* PLVCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42B52CBA6AC5005B9D98 /* PLVCircularProgressView.m */; };
+		04EE42DA2CBA6B1E005B9D98 /* PLVDownloadCenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42BB2CBA6B1E005B9D98 /* PLVDownloadCenterViewController.m */; };
+		04EE42DB2CBA6B1E005B9D98 /* PLVDownloadRuningVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42BD2CBA6B1E005B9D98 /* PLVDownloadRuningVC.m */; };
+		04EE42DC2CBA6B1E005B9D98 /* PLVSlideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42C42CBA6B1E005B9D98 /* PLVSlideView.m */; };
+		04EE42DD2CBA6B1E005B9D98 /* PLVSlideTabCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42C72CBA6B1E005B9D98 /* PLVSlideTabCache.m */; };
+		04EE42DE2CBA6B1E005B9D98 /* PLVSlideTabUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42CB2CBA6B1E005B9D98 /* PLVSlideTabUtil.m */; };
+		04EE42DF2CBA6B1E005B9D98 /* PLVSlideTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42CC2CBA6B1E005B9D98 /* PLVSlideTabView.m */; };
+		04EE42E02CBA6B1E005B9D98 /* PLVFixedTabbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42CE2CBA6B1E005B9D98 /* PLVFixedTabbarView.m */; };
+		04EE42E12CBA6B1E005B9D98 /* PLVDownloadFinishedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42D32CBA6B1E005B9D98 /* PLVDownloadFinishedCell.m */; };
+		04EE42E22CBA6B1E005B9D98 /* PLVDownloadRunningCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42D52CBA6B1E005B9D98 /* PLVDownloadRunningCell.m */; };
+		04EE42E32CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42D62CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.m */; };
+		04EE42E42CBA6B1E005B9D98 /* PLVDownloadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42D82CBA6B1E005B9D98 /* PLVDownloadCell.m */; };
+		04EE42E52CBA6B1E005B9D98 /* PLVDownloadFinishedVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04EE42D92CBA6B1E005B9D98 /* PLVDownloadFinishedVC.m */; };
 		04F3B97E2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3B97D2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m */; };
 		04F3B9812AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04F3B9802AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.m */; };
 		65A07CD72B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65A07CD62B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.m */; };
@@ -202,6 +216,36 @@
 		04E73F202B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinPicInPicPlaceholderView.m; sourceTree = "<group>"; };
 		04ED7BDC2C7D724200871940 /* PLVVodMediaCommonUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVVodMediaCommonUtil.h; sourceTree = "<group>"; };
 		04ED7BDD2C7D724200871940 /* PLVVodMediaCommonUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaCommonUtil.m; sourceTree = "<group>"; };
+		04EE42B22CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadCircularProgressView.m; sourceTree = "<group>"; };
+		04EE42B32CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadCircularProgressView.h; sourceTree = "<group>"; };
+		04EE42B52CBA6AC5005B9D98 /* PLVCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVCircularProgressView.m; sourceTree = "<group>"; };
+		04EE42B62CBA6AC5005B9D98 /* PLVCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVCircularProgressView.h; sourceTree = "<group>"; };
+		04EE42BA2CBA6B1E005B9D98 /* PLVDownloadRuningVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadRuningVC.h; sourceTree = "<group>"; };
+		04EE42BB2CBA6B1E005B9D98 /* PLVDownloadCenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadCenterViewController.m; sourceTree = "<group>"; };
+		04EE42BC2CBA6B1E005B9D98 /* PLVDownloadFinishedVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadFinishedVC.h; sourceTree = "<group>"; };
+		04EE42BD2CBA6B1E005B9D98 /* PLVDownloadRuningVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadRuningVC.m; sourceTree = "<group>"; };
+		04EE42BE2CBA6B1E005B9D98 /* PLVDownloadCenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadCenterViewController.h; sourceTree = "<group>"; };
+		04EE42C02CBA6B1E005B9D98 /* PLVDownloadRunningCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadRunningCell.h; sourceTree = "<group>"; };
+		04EE42C32CBA6B1E005B9D98 /* PLVSlideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVSlideView.h; sourceTree = "<group>"; };
+		04EE42C42CBA6B1E005B9D98 /* PLVSlideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVSlideView.m; sourceTree = "<group>"; };
+		04EE42C62CBA6B1E005B9D98 /* PLVSlideTabCacheProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVSlideTabCacheProtocol.h; sourceTree = "<group>"; };
+		04EE42C72CBA6B1E005B9D98 /* PLVSlideTabCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVSlideTabCache.m; sourceTree = "<group>"; };
+		04EE42C82CBA6B1E005B9D98 /* PLVSlideTabCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVSlideTabCache.h; sourceTree = "<group>"; };
+		04EE42CA2CBA6B1E005B9D98 /* PLVSlideTabUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVSlideTabUtil.h; sourceTree = "<group>"; };
+		04EE42CB2CBA6B1E005B9D98 /* PLVSlideTabUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVSlideTabUtil.m; sourceTree = "<group>"; };
+		04EE42CC2CBA6B1E005B9D98 /* PLVSlideTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVSlideTabView.m; sourceTree = "<group>"; };
+		04EE42CE2CBA6B1E005B9D98 /* PLVFixedTabbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVFixedTabbarView.m; sourceTree = "<group>"; };
+		04EE42CF2CBA6B1E005B9D98 /* PLVSlideTabbarProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVSlideTabbarProtocol.h; sourceTree = "<group>"; };
+		04EE42D02CBA6B1E005B9D98 /* PLVFixedTabbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVFixedTabbarView.h; sourceTree = "<group>"; };
+		04EE42D12CBA6B1E005B9D98 /* PLVSlideTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVSlideTabView.h; sourceTree = "<group>"; };
+		04EE42D22CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadNoDataTipsView.h; sourceTree = "<group>"; };
+		04EE42D32CBA6B1E005B9D98 /* PLVDownloadFinishedCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadFinishedCell.m; sourceTree = "<group>"; };
+		04EE42D42CBA6B1E005B9D98 /* PLVDownloadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadCell.h; sourceTree = "<group>"; };
+		04EE42D52CBA6B1E005B9D98 /* PLVDownloadRunningCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadRunningCell.m; sourceTree = "<group>"; };
+		04EE42D62CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadNoDataTipsView.m; sourceTree = "<group>"; };
+		04EE42D72CBA6B1E005B9D98 /* PLVDownloadFinishedCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVDownloadFinishedCell.h; sourceTree = "<group>"; };
+		04EE42D82CBA6B1E005B9D98 /* PLVDownloadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadCell.m; sourceTree = "<group>"; };
+		04EE42D92CBA6B1E005B9D98 /* PLVDownloadFinishedVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVDownloadFinishedVC.m; sourceTree = "<group>"; };
 		04F3B97C2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinLoopPlayView.h; sourceTree = "<group>"; };
 		04F3B97D2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinLoopPlayView.m; sourceTree = "<group>"; };
 		04F3B97F2AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinFastForwardView.h; sourceTree = "<group>"; };
@@ -254,6 +298,7 @@
 		040CBED62A8F46D800AD215A /* Secenes */ = {
 			isa = PBXGroup;
 			children = (
+				04EE42B92CBA6B1E005B9D98 /* CacheCenter */,
 				046A34BE2AAC97EE00933D64 /* VodScene */,
 				0437D2CF2AA5F51E00AED404 /* FeedScene */,
 				040CBEDA2A8F478E00AD215A /* Modules */,
@@ -542,6 +587,7 @@
 		04B0C00D2B182F420007E5BA /* WidgetView */ = {
 			isa = PBXGroup;
 			children = (
+				04EE42B12CBA6AC5005B9D98 /* DownloadCircularProgressView */,
 				043A60672C6B3D5D00C00576 /* SubtitleView */,
 				04E73F1E2B96B965009D4337 /* PIPPlaceholderView */,
 				04E006EC2B91AB6C00CA3D3E /* SkinToastView */,
@@ -706,6 +752,106 @@
 				04E73F202B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m */,
 			);
 			path = PIPPlaceholderView;
+			sourceTree = "<group>";
+		};
+		04EE42B12CBA6AC5005B9D98 /* DownloadCircularProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42B22CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.m */,
+				04EE42B32CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.h */,
+				04EE42B42CBA6AC5005B9D98 /* CircularProgressView */,
+			);
+			path = DownloadCircularProgressView;
+			sourceTree = "<group>";
+		};
+		04EE42B42CBA6AC5005B9D98 /* CircularProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42B52CBA6AC5005B9D98 /* PLVCircularProgressView.m */,
+				04EE42B62CBA6AC5005B9D98 /* PLVCircularProgressView.h */,
+			);
+			path = CircularProgressView;
+			sourceTree = "<group>";
+		};
+		04EE42B92CBA6B1E005B9D98 /* CacheCenter */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42BE2CBA6B1E005B9D98 /* PLVDownloadCenterViewController.h */,
+				04EE42BB2CBA6B1E005B9D98 /* PLVDownloadCenterViewController.m */,
+				04EE42BC2CBA6B1E005B9D98 /* PLVDownloadFinishedVC.h */,
+				04EE42D92CBA6B1E005B9D98 /* PLVDownloadFinishedVC.m */,
+				04EE42BA2CBA6B1E005B9D98 /* PLVDownloadRuningVC.h */,
+				04EE42BD2CBA6B1E005B9D98 /* PLVDownloadRuningVC.m */,
+				04EE42BF2CBA6B1E005B9D98 /* View */,
+			);
+			path = CacheCenter;
+			sourceTree = "<group>";
+		};
+		04EE42BF2CBA6B1E005B9D98 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42D42CBA6B1E005B9D98 /* PLVDownloadCell.h */,
+				04EE42D82CBA6B1E005B9D98 /* PLVDownloadCell.m */,
+				04EE42D72CBA6B1E005B9D98 /* PLVDownloadFinishedCell.h */,
+				04EE42D32CBA6B1E005B9D98 /* PLVDownloadFinishedCell.m */,
+				04EE42D22CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.h */,
+				04EE42D62CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.m */,
+				04EE42C02CBA6B1E005B9D98 /* PLVDownloadRunningCell.h */,
+				04EE42D52CBA6B1E005B9D98 /* PLVDownloadRunningCell.m */,
+				04EE42C12CBA6B1E005B9D98 /* PLVSlideTabView */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		04EE42C12CBA6B1E005B9D98 /* PLVSlideTabView */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42C52CBA6B1E005B9D98 /* Cache */,
+				04EE42D12CBA6B1E005B9D98 /* PLVSlideTabView.h */,
+				04EE42CC2CBA6B1E005B9D98 /* PLVSlideTabView.m */,
+				04EE42C22CBA6B1E005B9D98 /* Slide */,
+				04EE42CD2CBA6B1E005B9D98 /* Tabbar */,
+				04EE42C92CBA6B1E005B9D98 /* Util */,
+			);
+			path = PLVSlideTabView;
+			sourceTree = "<group>";
+		};
+		04EE42C22CBA6B1E005B9D98 /* Slide */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42C32CBA6B1E005B9D98 /* PLVSlideView.h */,
+				04EE42C42CBA6B1E005B9D98 /* PLVSlideView.m */,
+			);
+			path = Slide;
+			sourceTree = "<group>";
+		};
+		04EE42C52CBA6B1E005B9D98 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42C62CBA6B1E005B9D98 /* PLVSlideTabCacheProtocol.h */,
+				04EE42C72CBA6B1E005B9D98 /* PLVSlideTabCache.m */,
+				04EE42C82CBA6B1E005B9D98 /* PLVSlideTabCache.h */,
+			);
+			path = Cache;
+			sourceTree = "<group>";
+		};
+		04EE42C92CBA6B1E005B9D98 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42CA2CBA6B1E005B9D98 /* PLVSlideTabUtil.h */,
+				04EE42CB2CBA6B1E005B9D98 /* PLVSlideTabUtil.m */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		04EE42CD2CBA6B1E005B9D98 /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				04EE42CE2CBA6B1E005B9D98 /* PLVFixedTabbarView.m */,
+				04EE42CF2CBA6B1E005B9D98 /* PLVSlideTabbarProtocol.h */,
+				04EE42D02CBA6B1E005B9D98 /* PLVFixedTabbarView.h */,
+			);
+			path = Tabbar;
 			sourceTree = "<group>";
 		};
 		24A4363EBF126825DFF7074C /* Frameworks */ = {
@@ -873,6 +1019,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04EE42DC2CBA6B1E005B9D98 /* PLVSlideView.m in Sources */,
 				04C1CCEC2AE8A6E5006446AD /* PLVVodMediaErrorUtil.m in Sources */,
 				043A60652C6B3CCB00C00576 /* PLVVodSubtitleParser.m in Sources */,
 				041A4D9E2AB2B87D00E62202 /* PLVShortVideoMediaPlayerSkinContainer.m in Sources */,
@@ -885,6 +1032,7 @@
 				04B8A9E52A9F249A00F861AC /* PLVMediaAreaPortraitHalfSkinView.m in Sources */,
 				04B0C00C2B172C180007E5BA /* PLVVodMediaOrientationUtil.m in Sources */,
 				043A607F2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.m in Sources */,
+				04EE42B72CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.m in Sources */,
 				04D211682B3D744E00E008BF /* PLVVodMediaMarqueeView.m in Sources */,
 				040CBF2F2A8F47CA00AD215A /* PLVMediaProgressPreviewView.m in Sources */,
 				65A07CD72B46A2AE007CC55A /* PLVMediaPlayerSkinDefinitionTipsView.m in Sources */,
@@ -892,6 +1040,8 @@
 				043A606E2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.m in Sources */,
 				04C1CCE82AE8A52D006446AD /* PLVVodMediaToast.m in Sources */,
 				04B0C0062B171F520007E5BA /* PLVVodMediaPlayerSkinContainerView.m in Sources */,
+				04EE42DF2CBA6B1E005B9D98 /* PLVSlideTabView.m in Sources */,
+				04EE42E32CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.m in Sources */,
 				0437D2CE2AA5F51200AED404 /* PLVVodMediaFeedData.m in Sources */,
 				048850762B10924F00717363 /* PLVTabBarViewController.m in Sources */,
 				04DCA74E2AB06F2600CF6BEC /* UIImage+PLVVodMediaTint.m in Sources */,
@@ -900,16 +1050,22 @@
 				04083A172AFB562E00C7DB1E /* PLVVodMediaVideoNetwork.m in Sources */,
 				046A34CA2AAD801800933D64 /* PLVMediaPlayerSkinMoreView.m in Sources */,
 				046A34E82AAEAA1300933D64 /* PLVMediaPlayerSkinDefinitionView.m in Sources */,
+				04EE42E52CBA6B1E005B9D98 /* PLVDownloadFinishedVC.m in Sources */,
 				043A607C2C6DD7F600C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetView.m in Sources */,
 				043A60722C6C45AF00C00576 /* PLVMediaPlayerSkinSubtitleSetView.m in Sources */,
 				04D211692B3D744E00E008BF /* PLVVodMediaMarqueeAnimationManager.m in Sources */,
 				043A60632C6B3CCA00C00576 /* PLVVodSubtitleViewModel.m in Sources */,
+				04EE42E02CBA6B1E005B9D98 /* PLVFixedTabbarView.m in Sources */,
 				0430B5532B510D6E00A1862E /* PLVMediaPlayerSkinLoadingView.m in Sources */,
 				046A34C72AAC9E3A00933D64 /* PLVDemoVodMediaViewController.m in Sources */,
+				04EE42DB2CBA6B1E005B9D98 /* PLVDownloadRuningVC.m in Sources */,
+				04EE42DE2CBA6B1E005B9D98 /* PLVSlideTabUtil.m in Sources */,
 				043A60662C6B3CCB00C00576 /* PLVVodSubtitleItem.m in Sources */,
+				04EE42E12CBA6B1E005B9D98 /* PLVDownloadFinishedCell.m in Sources */,
 				0437D2C52AA5F1D900AED404 /* PLVVodMediaFeedView.m in Sources */,
 				04E5E6322ACEF74A0039CDA2 /* PLVVodMediaPictureInPictureRestoreManager.m in Sources */,
 				04E006EF2B91AC8600CA3D3E /* PLVMediaPlayerSkinToastView.m in Sources */,
+				04EE42DA2CBA6B1E005B9D98 /* PLVDownloadCenterViewController.m in Sources */,
 				65D91E8C2AA974BB007954C7 /* PLVShortVideoFeedDataManager.m in Sources */,
 				65D91E892AA972D6007954C7 /* PLVVodMediaFeedDataManager.m in Sources */,
 				04B8A9DF2A9F240F00F861AC /* PLVMediaAreaBaseSkinView.m in Sources */,
@@ -922,11 +1078,15 @@
 				043A60642C6B3CCB00C00576 /* PLVVodSubtitleManager.m in Sources */,
 				04B8A9E82A9F5A1F00F861AC /* PLVMediaAreaPortraitFullSkinView.m in Sources */,
 				04E73F212B96BA94009D4337 /* PLVMediaPlayerSkinPicInPicPlaceholderView.m in Sources */,
+				04EE42E42CBA6B1E005B9D98 /* PLVDownloadCell.m in Sources */,
 				045FE0102A8C580200F957C7 /* SceneDelegate.m in Sources */,
+				04EE42E22CBA6B1E005B9D98 /* PLVDownloadRunningCell.m in Sources */,
 				046A34E52AAEA91400933D64 /* PLVMediaPlayerSkinLockScreenView.m in Sources */,
 				04D2116A2B3D744E00E008BF /* PLVVodMediaMarqueeModel.m in Sources */,
 				04F3B9812AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.m in Sources */,
 				040CBF752A8F708F00AD215A /* PLVVodMediaProgressSlider.m in Sources */,
+				04EE42B82CBA6AC5005B9D98 /* PLVCircularProgressView.m in Sources */,
+				04EE42DD2CBA6B1E005B9D98 /* PLVSlideTabCache.m in Sources */,
 				0437D2C42AA5F1D900AED404 /* PLVVodMediaFeedItemView.m in Sources */,
 				04F3B97E2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m in Sources */,
 				04B0C0052B171F520007E5BA /* PLVVodMediaAreaVC.m in Sources */,
@@ -1086,13 +1246,13 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.1;
-				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.mediaplayer.sdk.demo.intest;
+				MARKETING_VERSION = 2.3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.mediaplayer.sdk.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1121,13 +1281,13 @@
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.1;
-				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.mediaplayer.sdk.demo.intest;
+				MARKETING_VERSION = 2.3.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.polyv.mediaplayer.sdk.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
