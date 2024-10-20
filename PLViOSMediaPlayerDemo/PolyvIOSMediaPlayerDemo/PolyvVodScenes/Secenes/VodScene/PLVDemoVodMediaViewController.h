@@ -6,11 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PLVBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /// 长视频播放 演示页面
-@interface PLVDemoVodMediaViewController : UIViewController
+@interface PLVDemoVodMediaViewController : PLVBaseViewController
 
 @property (nonatomic, copy) NSString *vid;
 

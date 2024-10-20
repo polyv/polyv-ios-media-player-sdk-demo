@@ -43,6 +43,8 @@ PLVVodMediaFeedItemCustomViewDelegate // 遵循该协议才能嵌
 
 @property (nonatomic, assign) BOOL isActive;
 
+@property (nonatomic, assign) BOOL sysScreenShotProtect;
+
 /// 设置VID 播放
 - (void)playWithVid:(NSString *)vid;
 

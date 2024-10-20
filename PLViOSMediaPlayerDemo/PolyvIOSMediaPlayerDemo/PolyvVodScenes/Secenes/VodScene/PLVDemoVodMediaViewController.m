@@ -15,6 +15,7 @@
 #import "PLVVodMediaErrorUtil.h"
 #import "PLVVodMediaOrientationUtil.h"
 #import "PLVDownloadCenterViewController.h"
+#import "PLVSecureView.h"
 
 /// UI View Hierarchy
 ///
@@ -47,6 +48,15 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         _isOffPlayModel = NO;
     }
     return self;
+}
+
+- (void)loadView{
+    if (self.sysScreenShotProtect){
+        PLVSecureView *secureView = [[PLVSecureView alloc] init];
+        self.view = secureView.secureView;
+    }else{
+        self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    }
 }
 
 - (void)viewDidLoad {
@@ -367,6 +377,25 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         PLVDownloadCenterViewController *center = [[PLVDownloadCenterViewController alloc] init];
         center.selectedIndex = selectIndex;
         [self.navigationController pushViewController:center animated:YES];
+    }
+}
+
+#pragma mark [录屏保护]
+- (void)startPreventScreenCapture{
+    [super startPreventScreenCapture];
+    
+    // 暂停播放
+    [self.vodMediaAreaVC.player pause];
+    // 保存播放器状态
+    self.isPlayingWhenCaptureStart = self.vodMediaAreaVC.player.playing;
+}
+
+- (void)stopPreventScreenCapture{
+    [super stopPreventScreenCapture];
+    
+    // 恢复播放状态
+    if (self.isPlayingWhenCaptureStart){
+        [self.vodMediaAreaVC.player play];
     }
 }
 

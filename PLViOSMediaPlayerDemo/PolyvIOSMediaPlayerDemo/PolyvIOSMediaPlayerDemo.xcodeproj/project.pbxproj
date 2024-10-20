@@ -11,6 +11,8 @@
 		040CBF212A8F47CA00AD215A /* PLVMediaBrightnessView.m in Sources */ = {isa = PBXBuildFile; fileRef = 040CBEF32A8F47CA00AD215A /* PLVMediaBrightnessView.m */; };
 		040CBF2F2A8F47CA00AD215A /* PLVMediaProgressPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 040CBF172A8F47CA00AD215A /* PLVMediaProgressPreviewView.m */; };
 		040CBF752A8F708F00AD215A /* PLVVodMediaProgressSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 040CBF732A8F708F00AD215A /* PLVVodMediaProgressSlider.m */; };
+		041561992CC4DC5F00EBD316 /* PLVBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 041561982CC4DC5F00EBD316 /* PLVBaseViewController.m */; };
+		0415619D2CC4DC7200EBD316 /* PLVSecureView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0415619B2CC4DC7200EBD316 /* PLVSecureView.m */; };
 		04193B132B207A0C009EDC2E /* PLVNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04193B122B207A0C009EDC2E /* PLVNavigationController.m */; };
 		041A4D9E2AB2B87D00E62202 /* PLVShortVideoMediaPlayerSkinContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 041A4D9D2AB2B87D00E62202 /* PLVShortVideoMediaPlayerSkinContainer.m */; };
 		0430B5532B510D6E00A1862E /* PLVMediaPlayerSkinLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0430B5522B510D6E00A1862E /* PLVMediaPlayerSkinLoadingView.m */; };
@@ -109,6 +111,10 @@
 		040CBF182A8F47CA00AD215A /* PLVMediaProgressPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVMediaProgressPreviewView.h; sourceTree = "<group>"; };
 		040CBF732A8F708F00AD215A /* PLVVodMediaProgressSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaProgressSlider.m; sourceTree = "<group>"; };
 		040CBF742A8F708F00AD215A /* PLVVodMediaProgressSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVVodMediaProgressSlider.h; sourceTree = "<group>"; };
+		041561972CC4DC5F00EBD316 /* PLVBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVBaseViewController.h; sourceTree = "<group>"; };
+		041561982CC4DC5F00EBD316 /* PLVBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVBaseViewController.m; sourceTree = "<group>"; };
+		0415619B2CC4DC7200EBD316 /* PLVSecureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLVSecureView.m; sourceTree = "<group>"; };
+		0415619C2CC4DC7200EBD316 /* PLVSecureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLVSecureView.h; sourceTree = "<group>"; };
 		04193B112B207A0C009EDC2E /* PLVNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVNavigationController.h; sourceTree = "<group>"; };
 		04193B122B207A0C009EDC2E /* PLVNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVNavigationController.m; sourceTree = "<group>"; };
 		041A4D9C2AB2B87D00E62202 /* PLVShortVideoMediaPlayerSkinContainer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVShortVideoMediaPlayerSkinContainer.h; sourceTree = "<group>"; };
@@ -310,6 +316,7 @@
 		040CBEDA2A8F478E00AD215A /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				041561962CC4DC5F00EBD316 /* Base */,
 				043A606B2C6B4CA200C00576 /* Manager */,
 				040CBEDB2A8F47CA00AD215A /* Media */,
 			);
@@ -363,6 +370,7 @@
 		040CBF452A8F6E3E00AD215A /* GeneralUI */ = {
 			isa = PBXGroup;
 			children = (
+				0415619A2CC4DC7200EBD316 /* PLVSecureView */,
 				043A60582C6B3CCA00C00576 /* PLVSubtitle */,
 				04D211612B3D744D00E008BF /* PLVMarqueeView */,
 				04C1CCE52AE8A4FA006446AD /* PLVToast */,
@@ -387,6 +395,24 @@
 				04DCA7492AB066ED00CF6BEC /* PLVMediaPlayer.xcassets */,
 			);
 			path = Resource;
+			sourceTree = "<group>";
+		};
+		041561962CC4DC5F00EBD316 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				041561972CC4DC5F00EBD316 /* PLVBaseViewController.h */,
+				041561982CC4DC5F00EBD316 /* PLVBaseViewController.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		0415619A2CC4DC7200EBD316 /* PLVSecureView */ = {
+			isa = PBXGroup;
+			children = (
+				0415619B2CC4DC7200EBD316 /* PLVSecureView.m */,
+				0415619C2CC4DC7200EBD316 /* PLVSecureView.h */,
+			);
+			path = PLVSecureView;
 			sourceTree = "<group>";
 		};
 		0430B5502B510C9300A1862E /* LoadingView */ = {
@@ -896,9 +922,9 @@
 				045FE0042A8C580200F957C7 /* Sources */,
 				045FE0052A8C580200F957C7 /* Frameworks */,
 				045FE0062A8C580200F957C7 /* Resources */,
-				4E75CE18AAB2378F9DA3BB42 /* [CP] Embed Pods Frameworks */,
 				045FE1282A8CA07B00F957C7 /* Embed Frameworks */,
 				2C2A3D5703661482EE78C0B3 /* [CP] Copy Pods Resources */,
+				D64FEAF3826685512382A1A0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -973,23 +999,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4E75CE18AAB2378F9DA3BB42 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		89ABD5ED05120DF619F0C1BA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1010,6 +1019,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D64FEAF3826685512382A1A0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PolyvIOSMediaPlayerDemo/Pods-PolyvIOSMediaPlayerDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1039,6 +1065,7 @@
 				04193B132B207A0C009EDC2E /* PLVNavigationController.m in Sources */,
 				043A606E2C6B4CFE00C00576 /* PLVMediaPlayerSubtitleModule.m in Sources */,
 				04C1CCE82AE8A52D006446AD /* PLVVodMediaToast.m in Sources */,
+				0415619D2CC4DC7200EBD316 /* PLVSecureView.m in Sources */,
 				04B0C0062B171F520007E5BA /* PLVVodMediaPlayerSkinContainerView.m in Sources */,
 				04EE42DF2CBA6B1E005B9D98 /* PLVSlideTabView.m in Sources */,
 				04EE42E32CBA6B1E005B9D98 /* PLVDownloadNoDataTipsView.m in Sources */,
@@ -1086,6 +1113,7 @@
 				04F3B9812AD29CC40047BE42 /* PLVMediaPlayerSkinFastForwardView.m in Sources */,
 				040CBF752A8F708F00AD215A /* PLVVodMediaProgressSlider.m in Sources */,
 				04EE42B82CBA6AC5005B9D98 /* PLVCircularProgressView.m in Sources */,
+				041561992CC4DC5F00EBD316 /* PLVBaseViewController.m in Sources */,
 				04EE42DD2CBA6B1E005B9D98 /* PLVSlideTabCache.m in Sources */,
 				0437D2C42AA5F1D900AED404 /* PLVVodMediaFeedItemView.m in Sources */,
 				04F3B97E2AD278150047BE42 /* PLVMediaPlayerSkinLoopPlayView.m in Sources */,
@@ -1234,7 +1262,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETRBR9HA5V;
+				DEVELOPMENT_TEAM = "";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_PREFIX_HEADER = "$(SRCROOT)//PolyvIOSMediaPlayerDemo/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1270,7 +1298,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ETRBR9HA5V;
+				DEVELOPMENT_TEAM = "";
 				GCC_PREFIX_HEADER = "$(SRCROOT)//PolyvIOSMediaPlayerDemo/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PolyvIOSMediaPlayerDemo/Info.plist;

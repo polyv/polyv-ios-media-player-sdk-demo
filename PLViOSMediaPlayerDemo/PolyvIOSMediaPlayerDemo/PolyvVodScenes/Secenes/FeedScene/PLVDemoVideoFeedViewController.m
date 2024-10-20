@@ -235,6 +235,8 @@ PLVShortVideoMediaAreaVCDelegate
     PLVShortVideoMediaAreaVC *feedItemView = (PLVShortVideoMediaAreaVC *)[feedView dequeueReusableFeedItemCustomViewWithIdentifier:feedData.hashKey];
     if (!feedItemView) {
         feedItemView = [[PLVShortVideoMediaAreaVC alloc] init];
+        // 设置系统截屏保护
+        feedItemView.sysScreenShotProtect = self.sysScreenShotProtect;
         feedItemView.feedData = feedData;
         feedItemView.mediaAreaVcDelegate = self;
         if (self.isHideProtraitBackButton) {
@@ -366,6 +368,28 @@ PLVShortVideoMediaAreaVCDelegate
         return YES;
     } else {
         return NO;
+    }
+}
+
+#pragma mark [录屏保护]
+- (void)startPreventScreenCapture{
+    [super startPreventScreenCapture];
+    
+    // 暂停播放
+    [self.currentFeedItemView.player pause];
+    self.currentFeedItemView.hidden = YES;
+    // 保存播放器状态
+    self.isPlayingWhenCaptureStart = self.currentFeedItemView.player.playing;
+}
+
+- (void)stopPreventScreenCapture{
+    [super stopPreventScreenCapture];
+    
+    // 恢复播放状态
+    if (self.isPlayingWhenCaptureStart){
+        [self.currentFeedItemView.player play];
+        self.currentFeedItemView.hidden = NO;
+
     }
 }
 

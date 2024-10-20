@@ -20,6 +20,7 @@
 #import "PLVMediaPlayerConst.h"
 #import "PLVMediaPlayerSubtitleModule.h"
 #import "PLVDownloadCenterViewController.h"
+#import "PLVSecureView.h"
 #import <PLVTimer.h>
 
 
@@ -236,7 +237,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 - (UIView *)displayView{
     if (!_displayView){
-        _displayView = [[UIView alloc] init];
+        _displayView = [[UIView alloc] init];;
         _displayView.backgroundColor = [UIColor blackColor];
     }
     return _displayView;
@@ -259,6 +260,15 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         [self.marqueeView pause];
     }else if (playState == PLVPlaybackStateStopped) {
         [self.marqueeView stop];
+    }
+}
+
+- (void)setSysScreenShotProtect:(BOOL)sysScreenShotProtect{
+    if (sysScreenShotProtect){
+        [self.displayView removeFromSuperview];
+        self.displayView = [[PLVSecureView alloc] init].secureView;
+        [self insertSubview:self.displayView atIndex:0];
+        [self.player setupDisplaySuperview:self.displayView];
     }
 }
 
