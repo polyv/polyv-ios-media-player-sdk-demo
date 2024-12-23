@@ -1,9 +1,8 @@
 //
-//  PLVDownloadCell.h
-//  PolyvVodSDKDemo
+//  PLVDownloadBaseCell.h
+//  PolyvIOSMediaPlayerDemo
 //
-//  Created by MissYasiky on 2019/6/12.
-//  Copyright © 2019 POLYV. All rights reserved.
+//  Created by polyv on 2024/12/23.
 //
 
 #import <UIKit/UIKit.h>
@@ -11,7 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PLVDownloadCell : UITableViewCell
+
+@interface PLVDownloadBaseCell : UITableViewCell
 
 /// 标题
 @property (strong, nonatomic) UILabel *titleLabel;
@@ -37,5 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)configCellWithModel:(PLVDownloadInfo *)model;
 
 @end
+
 
 NS_ASSUME_NONNULL_END

@@ -1,16 +1,16 @@
 //
-//  PLVDownloadCell.m
-//  PolyvVodSDKDemo
+//  PLVDownloadBaseCell.m
+//  PolyvIOSMediaPlayerDemo
 //
-//  Created by MissYasiky on 2019/6/12.
-//  Copyright © 2019 POLYV. All rights reserved.
+//  Created by polyv on 2024/12/23.
 //
 
-#import "PLVDownloadCell.h"
+#import "PLVDownloadBaseCell.h"
+
 #import "PLVVodMediaCommonUtil.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@implementation PLVDownloadCell
+@implementation PLVDownloadBaseCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
