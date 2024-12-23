@@ -28,7 +28,7 @@
         
         // 单个视频下载完成回调
         __weak typeof(self) weakSelf = self;
-        [PLVDownloadManager sharedManager].downloadCompleteBlock = ^(PLVDownloadInfo *info) {
+        [PLVDownloadMediaManager sharedManager].downloadCompleteBlock = ^(PLVDownloadInfo *info) {
             // 刷新列表
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.downloadInfos addObject:info];
@@ -67,7 +67,7 @@
 
 - (void)initVideoList{
     // 从数据库中读取已缓存视频详细信息
-    NSArray<PLVDownloadInfo *> *dbInfos = [[PLVDownloadManager sharedManager] getFinishedDownloadList];
+    NSArray<PLVDownloadInfo *> *dbInfos = [[PLVDownloadMediaManager sharedManager] getFinishedDownloadList];
     [self.downloadInfos addObjectsFromArray:dbInfos];
 }
 
@@ -148,7 +148,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PLVDownloadManager *downloadManager = [PLVDownloadManager sharedManager];
+    PLVDownloadMediaManager *downloadManager = [PLVDownloadMediaManager sharedManager];
     PLVDownloadInfo *localModel = self.downloadInfos[indexPath.row];
     [downloadManager removeDownloadTask:localModel error:nil];
     [self.downloadInfos removeObject:localModel];

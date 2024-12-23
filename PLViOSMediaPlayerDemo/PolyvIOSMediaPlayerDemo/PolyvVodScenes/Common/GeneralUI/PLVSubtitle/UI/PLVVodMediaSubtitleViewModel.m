@@ -1,23 +1,22 @@
 //
-//  PLVVodSubtitleViewModel.m
-//  PLVVodSubtitleDemo
+//  PLVVodMediaSubtitleViewModel.m
+//  PolyvIOSMediaPlayerDemo
 //
-//  Created by Bq Lin on 2017/12/4.
-//  Copyright © 2017年 POLYV. All rights reserved.
+//  Created by polyv on 2024/12/23.
 //
 
-#import "PLVVodSubtitleViewModel.h"
+#import "PLVVodMediaSubtitleViewModel.h"
 
-static const double PLVVodSubtitleAnimationDuration = 0.15;
+static const double PLVVodMediaSubtitleAnimationDuration = 0.15;
 
-@interface PLVVodSubtitleItemStyle ()
+@interface PLVVodMediaSubtitleItemStyle ()
 
 @end
 
-@implementation PLVVodSubtitleItemStyle
+@implementation PLVVodMediaSubtitleItemStyle
 
 + (instancetype)styleWithTextColor:(UIColor *)textColor bold:(BOOL)bold italic:(BOOL)italic backgroundColor:(UIColor *)backgroundColor {
-    PLVVodSubtitleItemStyle *style = [[PLVVodSubtitleItemStyle alloc] init];
+    PLVVodMediaSubtitleItemStyle *style = [[PLVVodMediaSubtitleItemStyle alloc] init];
     style.textColor = textColor;
     style.bold = bold;
     style.italic = italic;
@@ -27,11 +26,11 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
 
 @end
 
-@interface PLVVodSubtitleViewModel ()
+@interface PLVVodMediaSubtitleViewModel ()
 
 @end
 
-@implementation PLVVodSubtitleViewModel
+@implementation PLVVodMediaSubtitleViewModel
 
 #pragma mark - dealloc & init
 
@@ -39,21 +38,21 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
 #pragma mark - property
 
 - (void)setEnable:(BOOL)enable {
-	_enable = enable;
-	[self performSelectorOnMainThread:@selector(hideSubtitleWithAnimation) withObject:nil waitUntilDone:YES];
+    _enable = enable;
+    [self performSelectorOnMainThread:@selector(hideSubtitleWithAnimation) withObject:nil waitUntilDone:YES];
 }
 
-- (void)setSubtitleItem:(PLVVodSubtitleItem *)subtitleItem {
-	BOOL same = subtitleItem == _subtitleItem;
-	if (same) {
-		return;
-	}
-	_subtitleItem = subtitleItem;
+- (void)setSubtitleItem:(PLVVodMediaSubtitleItem *)subtitleItem {
+    BOOL same = subtitleItem == _subtitleItem;
+    if (same) {
+        return;
+    }
+    _subtitleItem = subtitleItem;
 
     [self subtitleItemDidChange:subtitleItem];
 }
 
-- (void)setSubtitleAtTopItem:(PLVVodSubtitleItem *)subtitleAtTopItem {
+- (void)setSubtitleAtTopItem:(PLVVodMediaSubtitleItem *)subtitleAtTopItem {
     BOOL same = subtitleAtTopItem == _subtitleAtTopItem;
     if (same) {
         return;
@@ -63,7 +62,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     [self subtitleItemAtTopDidChange:subtitleAtTopItem];
 }
 
-- (void)setSubtitleItem2:(PLVVodSubtitleItem *)subtitleItem2 {
+- (void)setSubtitleItem2:(PLVVodMediaSubtitleItem *)subtitleItem2 {
     BOOL same = subtitleItem2 == _subtitleItem2;
     if (same) {
         return;
@@ -73,7 +72,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     [self subtitleItem2DidChange:subtitleItem2];
 }
 
-- (void)setSubtitleAtTopItem2:(PLVVodSubtitleItem *)subtitleAtTopItem2 {
+- (void)setSubtitleAtTopItem2:(PLVVodMediaSubtitleItem *)subtitleAtTopItem2 {
     BOOL same = subtitleAtTopItem2 == _subtitleAtTopItem2;
     if (same) {
         return;
@@ -87,7 +86,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     [self setSubtitleLabel:subtitleLabel style:nil];
 }
 
-- (void)setSubtitleLabel:(UILabel *)subtitleLabel style:(PLVVodSubtitleItemStyle *)style {
+- (void)setSubtitleLabel:(UILabel *)subtitleLabel style:(PLVVodMediaSubtitleItemStyle *)style {
     _subtitleLabel = subtitleLabel;
     _subtitleItemStyle = style;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -99,7 +98,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     [self setSubtitleTopLabel:subtitleTopLabel style:nil];
 }
 
-- (void)setSubtitleTopLabel:(UILabel *)subtitleTopLabel style:(PLVVodSubtitleItemStyle *)style {
+- (void)setSubtitleTopLabel:(UILabel *)subtitleTopLabel style:(PLVVodMediaSubtitleItemStyle *)style {
     _subtitleTopLabel = subtitleTopLabel;
     _subtitleAtTopItemStyle = style;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -111,7 +110,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     [self setSubtitleLabel2:subtitleLabel2 style:nil];
 }
 
-- (void)setSubtitleLabel2:(UILabel *)subtitleLabel2 style:(PLVVodSubtitleItemStyle *)style {
+- (void)setSubtitleLabel2:(UILabel *)subtitleLabel2 style:(PLVVodMediaSubtitleItemStyle *)style {
     _subtitleLabel2 = subtitleLabel2;
     _subtitleItemStyle2 = style;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -123,7 +122,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     [self setSubtitleTopLabel2:subtitleTopLabel2 style:nil];
 }
 
-- (void)setSubtitleTopLabel2:(UILabel *)subtitleTopLabel2 style:(PLVVodSubtitleItemStyle *)style {
+- (void)setSubtitleTopLabel2:(UILabel *)subtitleTopLabel2 style:(PLVVodMediaSubtitleItemStyle *)style {
     _subtitleTopLabel2 = subtitleTopLabel2;
     _subtitleAtTopItemStyle2 = style;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -134,13 +133,13 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
 #pragma mark - private
 
 - (void)hideSubtitleWithAnimation {
-	[UIView animateWithDuration:PLVVodSubtitleAnimationDuration animations:^{
-		self.subtitleLabel.alpha = self.enable ? 1.0 : 0;
+    [UIView animateWithDuration:PLVVodMediaSubtitleAnimationDuration animations:^{
+        self.subtitleLabel.alpha = self.enable ? 1.0 : 0;
         self.subtitleTopLabel.alpha = self.enable ? 1.0 : 0;
-	}];
+    }];
 }
 
-- (void)setupSubtitleLabel:(UILabel *)subtitleLabel style:(PLVVodSubtitleItemStyle *)style {
+- (void)setupSubtitleLabel:(UILabel *)subtitleLabel style:(PLVVodMediaSubtitleItemStyle *)style {
     subtitleLabel.text = @"";
     subtitleLabel.numberOfLines = 0;
     subtitleLabel.contentMode = UIViewContentModeBottom;
@@ -150,7 +149,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     subtitleLabel.backgroundColor = style.backgroundColor ? style.backgroundColor : [UIColor clearColor];
 }
 
-- (void)setupSubtitleTopLabel:(UILabel *)subtitleTopLabel style:(PLVVodSubtitleItemStyle *)style {
+- (void)setupSubtitleTopLabel:(UILabel *)subtitleTopLabel style:(PLVVodMediaSubtitleItemStyle *)style {
     subtitleTopLabel.text = @"";
     subtitleTopLabel.numberOfLines = 0;
     subtitleTopLabel.contentMode = UIViewContentModeBottom;
@@ -160,7 +159,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     subtitleTopLabel.backgroundColor = style.backgroundColor ? style.backgroundColor : [UIColor clearColor];
 }
 
-- (void)setupSubtitleLabel2:(UILabel *)subtitleLabel style:(PLVVodSubtitleItemStyle *)style {
+- (void)setupSubtitleLabel2:(UILabel *)subtitleLabel style:(PLVVodMediaSubtitleItemStyle *)style {
     subtitleLabel.text = @"";
     subtitleLabel.numberOfLines = 0;
     subtitleLabel.contentMode = UIViewContentModeBottom;
@@ -170,7 +169,7 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     subtitleLabel.backgroundColor = style.backgroundColor ? style.backgroundColor : [UIColor clearColor];
 }
 
-- (void)setupSubtitleTopLabel2:(UILabel *)subtitleTopLabel style:(PLVVodSubtitleItemStyle *)style {
+- (void)setupSubtitleTopLabel2:(UILabel *)subtitleTopLabel style:(PLVVodMediaSubtitleItemStyle *)style {
     subtitleTopLabel.text = @"";
     subtitleTopLabel.numberOfLines = 0;
     subtitleTopLabel.contentMode = UIViewContentModeBottom;
@@ -180,48 +179,48 @@ static const double PLVVodSubtitleAnimationDuration = 0.15;
     subtitleTopLabel.backgroundColor = style.backgroundColor ? style.backgroundColor : [UIColor clearColor];
 }
 
-- (void)subtitleItemDidChange:(PLVVodSubtitleItem *)subtitleItem {
-	//NSLog(@"%@", subtitleItem);
-	[UIView transitionWithView:self.subtitleLabel duration:PLVVodSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
-		self.subtitleLabel.attributedText = [self subtitleItem:subtitleItem style:self.subtitleItemStyle];
-	} completion:^(BOOL finished) {
-		
-	}];
-}
-
-- (void)subtitleItemAtTopDidChange:(PLVVodSubtitleItem *)subtitleItem {
+- (void)subtitleItemDidChange:(PLVVodMediaSubtitleItem *)subtitleItem {
     //NSLog(@"%@", subtitleItem);
-    [UIView transitionWithView:self.subtitleTopLabel duration:PLVVodSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    [UIView transitionWithView:self.subtitleLabel duration:PLVVodMediaSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+        self.subtitleLabel.attributedText = [self subtitleItem:subtitleItem style:self.subtitleItemStyle];
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)subtitleItemAtTopDidChange:(PLVVodMediaSubtitleItem *)subtitleItem {
+    //NSLog(@"%@", subtitleItem);
+    [UIView transitionWithView:self.subtitleTopLabel duration:PLVVodMediaSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         self.subtitleTopLabel.attributedText = [self subtitleItem:subtitleItem style:self.subtitleAtTopItemStyle];
     } completion:^(BOOL finished) {
         
     }];
 }
 
-- (void)subtitleItem2DidChange:(PLVVodSubtitleItem *)subtitleItem {
+- (void)subtitleItem2DidChange:(PLVVodMediaSubtitleItem *)subtitleItem {
     //NSLog(@"%@", subtitleItem);
-    [UIView transitionWithView:self.subtitleLabel2 duration:PLVVodSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    [UIView transitionWithView:self.subtitleLabel2 duration:PLVVodMediaSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         self.subtitleLabel2.attributedText = [self subtitleItem:subtitleItem style:self.subtitleItemStyle2];
     } completion:^(BOOL finished) {
         
     }];
 }
 
-- (void)subtitleItem2AtTopDidChange:(PLVVodSubtitleItem *)subtitleItem {
+- (void)subtitleItem2AtTopDidChange:(PLVVodMediaSubtitleItem *)subtitleItem {
     //NSLog(@"%@", subtitleItem);
-    [UIView transitionWithView:self.subtitleTopLabel2 duration:PLVVodSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
+    [UIView transitionWithView:self.subtitleTopLabel2 duration:PLVVodMediaSubtitleAnimationDuration options:UIViewAnimationOptionTransitionCrossDissolve animations:^{
         self.subtitleTopLabel2.attributedText = [self subtitleItem:subtitleItem style:self.subtitleAtTopItemStyle2];
     } completion:^(BOOL finished) {
         
     }];
 }
 
-- (NSAttributedString *)subtitleItem:(PLVVodSubtitleItem *)subtitleItem style:(PLVVodSubtitleItemStyle *)style {
+- (NSAttributedString *)subtitleItem:(PLVVodMediaSubtitleItem *)subtitleItem style:(PLVVodMediaSubtitleItemStyle *)style {
     if (!subtitleItem.attributedText) {
         return nil;
     }
     
-    if (!style || ![style isKindOfClass:[PLVVodSubtitleItemStyle class]]) {
+    if (!style || ![style isKindOfClass:[PLVVodMediaSubtitleItemStyle class]]) {
         return subtitleItem.attributedText;
     }
     

@@ -58,7 +58,7 @@
     self.tableView.estimatedRowHeight = 92;
     
     __weak typeof(self) weakSelf = self;
-    PLVDownloadManager *downloadManager = [PLVDownloadManager sharedManager];
+    PLVDownloadMediaManager *downloadManager = [PLVDownloadMediaManager sharedManager];
     
     [downloadManager getUnfinishedDownloadList:^(NSArray<PLVDownloadInfo *> *downloadInfos) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -194,7 +194,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PLVDownloadManager *downloadManager = [PLVDownloadManager sharedManager];
+    PLVDownloadMediaManager *downloadManager = [PLVDownloadMediaManager sharedManager];
     PLVDownloadInfo *downloadInfo = self.downloadInfos[indexPath.row];
     
     [downloadManager removeDownloadTask:downloadInfo error:nil];
@@ -219,11 +219,11 @@
 
 #pragma mark -- handle
 - (void)handleStopDownloadVideo:(PLVDownloadInfo *)info{
-    [[PLVDownloadManager sharedManager] stopDownloadTask:info];
+    [[PLVDownloadMediaManager sharedManager] stopDownloadTask:info];
 }
 
 - (void)handleStartDownloadVideo:(PLVDownloadInfo *)info{
-    [[PLVDownloadManager sharedManager] startDownloadTask:info highPriority:NO];
+    [[PLVDownloadMediaManager sharedManager] startDownloadTask:info highPriority:NO];
 }
 
 @end

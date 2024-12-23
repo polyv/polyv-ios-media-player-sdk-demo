@@ -6,12 +6,12 @@
 //
 
 #import "PLVMediaPlayerSubtitleModule.h"
-#import "PLVVodSubtitleManager.h"
+#import "PLVVodMediaSubtitleManager.h"
 #import "PLVVodMediaCommonUtil.h"
 
 @interface PLVMediaPlayerSubtitleModule ()
 
-@property (nonatomic, strong) PLVVodSubtitleManager *subtitleManager;
+@property (nonatomic, strong) PLVVodMediaSubtitleManager *subtitleManager;
 @property (nonatomic, strong) PLVVodMediaVideo *video;
 @property (nonatomic, strong) NSString *selectedSubtitleKey;
 
@@ -102,17 +102,17 @@
 }
 
 - (void)loadSubtitle{
-    PLVVodSubtitleItemStyle *topStyle;
-    PLVVodSubtitleItemStyle *bottomStyle;
-    PLVVodSubtitleItemStyle *singleStyle;
+    PLVVodMediaSubtitleItemStyle *topStyle;
+    PLVVodMediaSubtitleItemStyle *bottomStyle;
+    PLVVodMediaSubtitleItemStyle *singleStyle;
     // 获取字幕样式
     for (PLVVodMediaVideoSubtitlesStyle *style in self.video.player.subtitles) {
         if ([style.style isEqualToString:@"double"] && [style.position isEqualToString:@"top"]) {
-            topStyle = [PLVVodSubtitleItemStyle styleWithTextColor:[self colorFromHexString:style.fontColor] bold:style.fontBold italic:style.fontItalics backgroundColor:[self colorFromRGBAString:style.backgroundColor]];
+            topStyle = [PLVVodMediaSubtitleItemStyle styleWithTextColor:[self colorFromHexString:style.fontColor] bold:style.fontBold italic:style.fontItalics backgroundColor:[self colorFromRGBAString:style.backgroundColor]];
         } else if ([style.style isEqualToString:@"double"] && [style.position isEqualToString:@"bottom"]) {
-            bottomStyle = [PLVVodSubtitleItemStyle styleWithTextColor:[self colorFromHexString:style.fontColor] bold:style.fontBold italic:style.fontItalics backgroundColor:[self colorFromRGBAString:style.backgroundColor]];
+            bottomStyle = [PLVVodMediaSubtitleItemStyle styleWithTextColor:[self colorFromHexString:style.fontColor] bold:style.fontBold italic:style.fontItalics backgroundColor:[self colorFromRGBAString:style.backgroundColor]];
         } else if ([style.style isEqualToString:@"single"]) {
-            singleStyle = [PLVVodSubtitleItemStyle styleWithTextColor:[self colorFromHexString:style.fontColor] bold:style.fontBold italic:style.fontItalics backgroundColor:[self colorFromRGBAString:style.backgroundColor]];
+            singleStyle = [PLVVodMediaSubtitleItemStyle styleWithTextColor:[self colorFromHexString:style.fontColor] bold:style.fontBold italic:style.fontItalics backgroundColor:[self colorFromRGBAString:style.backgroundColor]];
         }
     }
     PLVVodMediaVideoDoubleSubtitleItem *firstItem;
@@ -144,7 +144,7 @@
         }];
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
         BOOL firstItemAtTop = [firstItem.position isEqualToString:@"topSubtitles"];
-        self.subtitleManager = [PLVVodSubtitleManager managerWithSubtitle:firstItemAtTop ? srtContent : srtContent2
+        self.subtitleManager = [PLVVodMediaSubtitleManager managerWithSubtitle:firstItemAtTop ? srtContent : srtContent2
                                                                  style:topStyle
                                                                  error:nil
                                                              subtitle2:firstItemAtTop ? srtContent2 : srtContent
@@ -172,7 +172,7 @@
         [self.class requestStringWithUrl:srtUrl completion:^(NSString *string) {
             NSLog(@"[字幕] -- 在线单字幕");
             NSString *srtContent = string;
-            weakSelf.subtitleManager = [PLVVodSubtitleManager managerWithSubtitle:srtContent 
+            weakSelf.subtitleManager = [PLVVodMediaSubtitleManager managerWithSubtitle:srtContent
                                                                             style:singleStyle
                                                                             error:nil
                                                                         subtitle2:nil

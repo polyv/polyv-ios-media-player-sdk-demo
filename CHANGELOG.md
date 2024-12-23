@@ -1,3 +1,15 @@
+### 2.4.0
+### Added
+-  [DEMO]  字幕功能 类名优化， 解决集成多场景sdk 的冲突
+- [SDK] 下载管理类`PLVDownloadManager ` 更新为`PLVDownloadMediaManager `  解决集成多场景sdk 的冲突
+
+# 注意：
+## 旧版点播PLVVodSDK，升级到新版本点播PolyvMediaPlayerSDK，必须设置 单例PLVDownloadMediaManager 的 previousDownloadDir 属性，用于缓存视频的迁移
+## 新版PolyvMediaPlayerSDK 下载功能的使用，必须调用setAccountID 方法，用于初始化设置
+## 下载功能使用，具体参考DEMO中AppDelegate 的配置，和下载中心api 使用
+
+
+
 ### 2.3.1
 ### Added
 - [DEMO] 新增防录屏，防截屏功能

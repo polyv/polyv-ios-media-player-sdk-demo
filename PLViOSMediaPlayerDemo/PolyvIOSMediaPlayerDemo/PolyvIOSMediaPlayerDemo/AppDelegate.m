@@ -62,17 +62,17 @@
 
 - (void)initDownloadSettings {
     // 下载配置参数
-    [PLVDownloadManager sharedManager].autoStart = YES;
-    [PLVDownloadManager sharedManager].maxRuningCount = 3;
+    [PLVDownloadMediaManager sharedManager].autoStart = YES;
+    [PLVDownloadMediaManager sharedManager].maxRuningCount = 3;
     
     // ！！！注意 注意 注意
     // 旧版本点播升级 配置迁移路径
-    [PLVDownloadManager sharedManager].previousDownloadDir = [self getpreviousDownlaodDir];
+    [PLVDownloadMediaManager sharedManager].previousDownloadDir = [self getpreviousDownlaodDir];
     
     // 设置登入用户唯一标识 比如手机账号
-    [[PLVDownloadManager sharedManager] setAccountID:@"18812345678"];
+    [[PLVDownloadMediaManager sharedManager] setAccountID:@"18812345678"];
     
-    NSLog(@"DownloadDir: %@", [PLVDownloadManager sharedManager].downloadDir);
+    NSLog(@"DownloadDir: %@", [PLVDownloadMediaManager sharedManager].downloadDir);
 }
 
 /// 旧版SDK 默认缓存路径
@@ -84,7 +84,7 @@
 // 为后台下载进行桥接
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier
   completionHandler:(void (^)(void))completionHandler {
-    [[PLVDownloadManager sharedManager] handleEventsForBackgroundURLSession:identifier
+    [[PLVDownloadMediaManager sharedManager] handleEventsForBackgroundURLSession:identifier
                                                              completionHandler:completionHandler];
 }
 

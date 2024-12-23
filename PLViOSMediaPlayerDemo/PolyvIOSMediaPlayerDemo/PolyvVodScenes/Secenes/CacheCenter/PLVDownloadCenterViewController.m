@@ -79,8 +79,8 @@
     self.tabedSlideView.tabbarTrackColor = [PLVVodMediaCommonUtil colorFromHexString:@"#3F76FC"];
     self.tabedSlideView.canScroll = NO;
     
-    NSString *finishString = [NSString stringWithFormat:@"已下载(%ld)",[[PLVDownloadManager sharedManager] getFinishedDownloadList].count];
-    NSString *runningStr = [NSString stringWithFormat:@"下载中(%ld)",[[PLVDownloadManager sharedManager] getUnfinishedDownloadList].count] ;
+    NSString *finishString = [NSString stringWithFormat:@"已下载(%ld)",[[PLVDownloadMediaManager sharedManager] getFinishedDownloadList].count];
+    NSString *runningStr = [NSString stringWithFormat:@"下载中(%ld)",[[PLVDownloadMediaManager sharedManager] getUnfinishedDownloadList].count] ;
     PLVTabedbarItem *item0 = [PLVTabedbarItem itemWithTitle:finishString image:nil selectedImage:nil];
     PLVTabedbarItem *item1 = [PLVTabedbarItem itemWithTitle:runningStr image:nil selectedImage:nil];
     
@@ -117,8 +117,8 @@
 
 - (void)updateTabNumbers:(NSInteger)index{
     
-    NSString *finishString = [NSString stringWithFormat:@"已下载(%ld)",[[PLVDownloadManager sharedManager] getFinishedDownloadList].count];
-    NSString *runningStr = [NSString stringWithFormat:@"下载中(%ld)",[[PLVDownloadManager sharedManager] getUnfinishedDownloadList].count] ;
+    NSString *finishString = [NSString stringWithFormat:@"已下载(%ld)",[[PLVDownloadMediaManager sharedManager] getFinishedDownloadList].count];
+    NSString *runningStr = [NSString stringWithFormat:@"下载中(%ld)",[[PLVDownloadMediaManager sharedManager] getUnfinishedDownloadList].count] ;
     PLVTabedbarItem *item0 = [PLVTabedbarItem itemWithTitle:finishString image:nil selectedImage:nil];
     PLVTabedbarItem *item1 = [PLVTabedbarItem itemWithTitle:runningStr image:nil selectedImage:nil];
     

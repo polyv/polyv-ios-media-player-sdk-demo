@@ -290,7 +290,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 
 #pragma mark [下载相关业务逻辑处理]
 - (void)startDownload{
-    PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] getDownloadInfo:self.vid
+    PLVDownloadInfo *downloadItem = [[PLVDownloadMediaManager sharedManager] getDownloadInfo:self.vid
                                                                                fileType:PLVDownloadFileTypeVideo];
     if (downloadItem){
         // 已经创建下载任务
@@ -326,7 +326,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         // 调用可以缓存video 数据的方法
         [PLVVodMediaVideo requestVideoPriorityCacheWithVid:self.vid completion:^(PLVVodMediaVideo *video, NSError *error) {
             // 添加下载任务
-            PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] addVideoTask:video
+            PLVDownloadInfo *downloadItem = [[PLVDownloadMediaManager sharedManager] addVideoTask:video
                                                                                      quality:weakSelf.vodMediaAreaVC.mediaPlayerState.curQualityLevel];
             [weakSelf setDownloadEventWithItem:downloadItem];
         }];
@@ -334,7 +334,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 }
 
 - (void)initDownloadModule{
-    PLVDownloadInfo *downloadItem = [[PLVDownloadManager sharedManager] getDownloadInfo:self.vid 
+    PLVDownloadInfo *downloadItem = [[PLVDownloadMediaManager sharedManager] getDownloadInfo:self.vid 
                                                                                fileType:PLVDownloadFileTypeVideo];
     if (downloadItem){
         [self setDownloadEventWithItem:downloadItem];
@@ -349,7 +349,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
 }
 
 - (void)restartDownloadTask:(PLVDownloadInfo *)downloadInfo{
-    [[PLVDownloadManager sharedManager] startDownloadTask:downloadInfo highPriority:NO];
+    [[PLVDownloadMediaManager sharedManager] startDownloadTask:downloadInfo highPriority:NO];
 }
 
 - (void)setDownloadEventWithItem:(PLVDownloadInfo *)downloadItem{
