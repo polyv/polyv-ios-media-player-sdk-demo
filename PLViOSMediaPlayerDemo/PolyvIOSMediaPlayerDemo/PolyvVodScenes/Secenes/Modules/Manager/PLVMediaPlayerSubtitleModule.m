@@ -178,10 +178,10 @@
                                                                         subtitle2:nil
                                                                            style2:nil
                                                                            error2:nil
-                                                                            label:self.subtitleLabel
-                                                                         topLabel:self.subtitleTopLabel
-                                                                           label2:self.subtitleLabel2
-                                                                        topLabel2:self.subtitleTopLabel2];
+                                                                            label:weakSelf.subtitleLabel
+                                                                         topLabel:weakSelf.subtitleTopLabel
+                                                                           label2:weakSelf.subtitleLabel2
+                                                                        topLabel2:weakSelf.subtitleTopLabel2];
         }];
     }
     

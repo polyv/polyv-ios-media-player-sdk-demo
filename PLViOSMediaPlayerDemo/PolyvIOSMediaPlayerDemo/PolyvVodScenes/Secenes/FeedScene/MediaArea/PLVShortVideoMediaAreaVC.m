@@ -199,6 +199,7 @@ PLVMediaPlayerSkinOutMoreViewDelegate
         _player.videoToolBox = NO;
         _player.rememberLastPosition = YES;
         _player.enablePIPInBackground = YES;
+        _player.keepPlay = NO;
         _player.seekType = PLVVodMediaPlaySeekTypePrecise;
     }
     return _player;

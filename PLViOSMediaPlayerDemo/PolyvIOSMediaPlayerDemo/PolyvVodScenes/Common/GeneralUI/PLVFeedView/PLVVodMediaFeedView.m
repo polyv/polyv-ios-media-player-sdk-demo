@@ -233,13 +233,13 @@ UICollectionViewDelegateFlowLayout
             [self appendCustomView:contentView];
         }
         // 预加载下一条内容数据
-//        if (indexPath.row + 1 < indexPath.length) {
-//            NSIndexPath *proIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
-//            UIView <PLVVodMediaFeedItemCustomViewDelegate>*proloadView = (UIView <PLVVodMediaFeedItemCustomViewDelegate>*)[self.dataSource feedView:self contentViewForItemAtIndexPath:proIndexPath];
-//            if (proloadView && [proloadView conformsToProtocol:@protocol(PLVVodMediaFeedItemCustomViewDelegate)]) {
-//                [self appendCustomView:proloadView];
-//            }
-//        }
+        if (indexPath.row + 1 < indexPath.length) {
+            NSIndexPath *proIndexPath = [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+            UIView <PLVVodMediaFeedItemCustomViewDelegate>*proloadView = (UIView <PLVVodMediaFeedItemCustomViewDelegate>*)[self.dataSource feedView:self contentViewForItemAtIndexPath:proIndexPath];
+            if (proloadView && [proloadView conformsToProtocol:@protocol(PLVVodMediaFeedItemCustomViewDelegate)]) {
+                [self appendCustomView:proloadView];
+            }
+        }
     }
     
     if (indexPath.row == 0 && !self.activeFeedItemView){
