@@ -22,6 +22,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+//    self.sysScreenRecordProtect = YES;
+//    self.sysScreenShotProtect = YES;
     
     // 设置系统录屏防护
     [self configVideoCaptureProtect:self.sysScreenRecordProtect];

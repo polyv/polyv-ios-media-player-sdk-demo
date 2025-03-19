@@ -80,10 +80,13 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     // 设置刷新定时器
     [self setupPlaybackTimer];
     
-    // 加密视频，配置外部传递token 播放
+//    __weak typeof(self) weakSelf = self;
+//    // 加密视频，配置外部传递token 播放
+//    self.player.customSeed = @"654321";
+//    // 加密视频 自定义token
 //    [self.player setRequestCustomKeyTokenBlock:^NSString * _Nonnull(NSString * _Nonnull vid) {
 //        // 同步请求获取到token
-//        return @"token";
+//        return weakSelf.token;
 //    }];
 }
 
