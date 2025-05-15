@@ -1,3 +1,16 @@
+### 2.5.1
+### Added
+- [SDK] 升级httpdns 到3.2.0 版本
+
+### Fixed
+- [DEMO] 推动进度条控制栏隐藏修复
+- [DEMO] 屏幕左右滑动，进度条同步更新修复
+
+# 注意：
+## 旧版点播PLVVodSDK，升级到新版本点播PolyvMediaPlayerSDK，必须设置 单例PLVDownloadMediaManager 的 previousDownloadDir 属性，用于缓存视频的迁移
+## 新版PolyvMediaPlayerSDK 下载功能的使用，必须调用setAccountID 方法，用于初始化设置
+## 下载功能使用，具体参考DEMO中AppDelegate 的配置，和下载中心api 使用
+
 ### 2.5.0
 ### Added
 - [SDK] 自定义加密因子

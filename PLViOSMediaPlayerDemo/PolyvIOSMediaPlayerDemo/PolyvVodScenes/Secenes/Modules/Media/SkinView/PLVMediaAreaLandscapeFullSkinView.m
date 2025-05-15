@@ -254,33 +254,6 @@
     // 横屏不需要显示提示，仅重写覆盖即可
 }
 
-#pragma mark Father Animation
-- (void)controlsSwitchShowStatusWithAnimation:(BOOL)showStatus{
-    if (self.isSkinShowing == showStatus) {
-        NSLog(@"PLVLCBasePlayerSkinView - controlsSwitchShowAnimationWithShow failed , state is same");
-        return;
-    }
-    
-    self.isSkinShowing = showStatus;
-    CGFloat alpha = self.isSkinShowing ? 1.0 : 0.0;
-    __weak typeof(self) weakSelf = self;
-    void (^animationBlock)(void) = ^{
-        weakSelf.topShadowLayer.opacity = alpha;
-        weakSelf.bottomShadowLayer.opacity = alpha;
-        for (UIView * subview in weakSelf.subviews) {
-            if ([subview isKindOfClass:PLVMediaProgressPreviewView.class]) {
-                continue;
-            }
-            subview.alpha = alpha;
-        }
-    };
-    [UIView animateWithDuration:0.3 animations:animationBlock completion:^(BOOL finished) {
-        if (finished) {
-            [self autoHideSkinView];
-        }
-    }];
-}
-
 #pragma mark Father Getter
 - (UILabel *)titleLabel{
     if (!_titleLabel) {

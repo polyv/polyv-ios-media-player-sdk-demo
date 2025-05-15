@@ -12,6 +12,7 @@
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 
 typedef NS_ENUM(NSInteger, PLVMediaPlayerBaseSkinViewPanType) {
+    PLVBasePlayerSkinViewTypeAdjustDefault    = 0,  //默认状态
     PLVBasePlayerSkinViewTypeAdjustVolume     = 1, //在屏幕左边，上下滑动调节声音
     PLVBasePlayerSkinViewTypeAdjustBrightness = 2, //在屏幕右边，上下滑动调节亮度
     PLVBasePlayerSKinViewTyoeAdjusttProgress  = 3  //在屏幕中间，左右滑动调节进度
@@ -176,9 +177,12 @@ UIGestureRecognizerDelegate
                          durationTime:(NSTimeInterval)durationTime
                     currentTimeString:(NSString *)currentTimeString
                        durationString:(NSString *)durationString{
-    [self.progressSlider setProgressWithCachedProgress:cachedProgress playedProgress:playedProgress];
-    self.progressSlider.userInteractionEnabled = (durationTime > 0 ? YES : NO);
-    
+    // 当前正在拖动进度面板 此处不更新进度条
+    if (self.panType != PLVBasePlayerSKinViewTyoeAdjusttProgress) {
+        [self.progressSlider setProgressWithCachedProgress:cachedProgress playedProgress:playedProgress];
+         self.progressSlider.userInteractionEnabled = (durationTime > 0 ? YES : NO); 
+    }
+   
     BOOL needUpdate = NO;
     if (self.currentTimeLabel.text.length !=  currentTimeString.length) {
 //        [self setNeedsLayout];
@@ -200,7 +204,11 @@ UIGestureRecognizerDelegate
 }
 
 - (void)setProgressLabelWithCurrentTime:(NSTimeInterval)currentTime durationTime:(NSTimeInterval)durationTime {
+    // 进度面板更新
     [self.progressPreviewView updateProgressTime:currentTime];
+    // 进图条更新
+    NSTimeInterval playedProgress = durationTime > 0 ? currentTime/ durationTime : 0;
+    [self.progressSlider setProgressWithCachedProgress:0 playedProgress:playedProgress];
 }
 
 - (void)refreshPlayTimesLabelFrame{
@@ -243,6 +251,10 @@ UIGestureRecognizerDelegate
         return;
     }
     
+    // 进度条 进度面板推动期间 不要隐藏皮肤
+    if ((self.progressSlider.sliderDragging || self.panType == PLVBasePlayerSKinViewTyoeAdjusttProgress) && !showStatus) {
+        return;
+    }
     self.isSkinShowing = showStatus;
     CGFloat alpha = self.isSkinShowing ? 1.0 : 0.0;
     __weak typeof(self) weakSelf = self;
@@ -460,6 +472,10 @@ UIGestureRecognizerDelegate
                     }
                     self.scrubTime = 0;
                     [self showProgressView:NO];
+
+                    // 自动隐藏皮肤
+                    self.panType = PLVBasePlayerSkinViewTypeAdjustDefault;
+                    [self autoHideSkinView];
                 }
             }
             default:
@@ -596,6 +612,10 @@ UIGestureRecognizerDelegate
     
     if ([self.baseDelegate respondsToSelector:@selector(plvMediaAreaBaseSkinView:sliderDragEnd:)]){
         [self.baseDelegate plvMediaAreaBaseSkinView:self sliderDragEnd:currentSliderProgress];
+    }
+    // 竖屏全屏 一直显示皮肤
+    if (self.skinViewType != PLVMediaAreaBaseSkinViewType_Portrait_Full){
+        [self autoHideSkinView];
     }
 }
 

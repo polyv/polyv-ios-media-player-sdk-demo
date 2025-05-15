@@ -112,7 +112,7 @@ typedef NS_ENUM(NSUInteger, PLVMediaAreaBaseSkinViewType) {
 /// 全屏 按钮事件 回调方法
 - (void)plvMediaAreaBaseSkinViewFullScreenOpenButtonClicked:(PLVMediaAreaBaseSkinView *)skinView;
 
-
+/// 进度面板拖动结束 回调方法
 - (void)plvMediaAreaBaseSkinViewProgressViewPaned:(PLVMediaAreaBaseSkinView *)skinView scrubTime:(NSTimeInterval)scrubTime;
 
 @optional
@@ -125,8 +125,10 @@ typedef NS_ENUM(NSUInteger, PLVMediaAreaBaseSkinViewType) {
 /// @return BOOL 是否有其他视图处理 (YES:有，则skinView不再处理此触摸事件 NO:没有，则由skinView处理此触摸事件)
 - (BOOL)plvMediaAreaBaseSkinView:(PLVMediaAreaBaseSkinView *)skinView askHandlerForTouchPointOnSkinView:(CGPoint)point;
 
+/// 皮肤显示状态 改变 回调方法
 - (void)plvMediaAreaBaseSkinView:(PLVMediaAreaBaseSkinView *)skinView didChangedSkinShowStatus:(BOOL)skinShow;
 
+/// 进度条拖动结束 回调方法
 - (void)plvMediaAreaBaseSkinView:(PLVMediaAreaBaseSkinView *)skinView sliderDragEnd:(CGFloat)currentSliderProgress;
 
 /// 长按开始 手势事件 回调方法
