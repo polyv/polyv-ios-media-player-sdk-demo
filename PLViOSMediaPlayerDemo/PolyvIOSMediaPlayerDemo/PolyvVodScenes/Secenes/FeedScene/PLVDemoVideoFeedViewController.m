@@ -101,15 +101,19 @@ PLVShortVideoMediaAreaVCDelegate
     
     BOOL isLandscape = [PLVVodMediaOrientationUtil isLandscape];
     if (isLandscape){ // 横向-全屏
-        if (@available(iOS 14.0, *)){
-            // 不响应, 系统函数调用，子控件自动更细布局
+        if (@available(iOS 26.0, *)){
+            // iOS 26: 系统可能不会自动触发布局更新，需要手动调用
+            [self.currentFeedItemView adaptUIForLandscape];
+        }
+        else if (@available(iOS 14.0, *)){
+            // iOS 14-17: 系统函数调用，子控件自动更新布局
             // 部分设备需要手动调用
             if ([PLVVodMediaOrientationUtil isIPhone8Plus]){
                 [self.currentFeedItemView adaptUIForLandscape];
             }
         }
         else{
-            // 系统函数不自动调用，手动更新，feed流当前活动视图横屏适配
+            // iOS 14以下: 系统函数不自动调用，手动更新，feed流当前活动视图横屏适配
             [self.currentFeedItemView adaptUIForLandscape];
         }
     } else { // 竖向-全屏

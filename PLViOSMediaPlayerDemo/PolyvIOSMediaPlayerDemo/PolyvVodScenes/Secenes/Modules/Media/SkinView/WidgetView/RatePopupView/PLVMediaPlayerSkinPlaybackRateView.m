@@ -12,10 +12,9 @@
 @interface PLVMediaPlayerSkinPlaybackRateView()
 
 @property (nonatomic, strong) UIButton *closeBtn;
-@property (nonatomic, strong) UIButton *playRate1Btn; // 0.5
-@property (nonatomic, strong) UIButton *playRate2Btn; // 1
-@property (nonatomic, strong) UIButton *playRate3Btn; // 1.5
-@property (nonatomic, strong) UIButton *playRate4Btn; // 2
+@property (nonatomic, strong) NSArray<NSNumber *> *playbackRates;
+@property (nonatomic, strong) NSMutableArray<UIButton *> *playRateButtons;
+@property (nonatomic, strong) UIScrollView *rateScrollView;
 
 @property (nonatomic, strong) CAGradientLayer *bgLayer;
 
@@ -40,10 +39,8 @@
     [self.layer addSublayer:self.bgLayer];
     [self addSubview:self.closeBtn];
     
-    [self addSubview:self.playRate1Btn];
-    [self addSubview:self.playRate2Btn];
-    [self addSubview:self.playRate3Btn];
-    [self addSubview:self.playRate4Btn];
+    [self addSubview:self.rateScrollView];
+    [self setupPlaybackRateButtonsIfNeeded];
     
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
     [self addGestureRecognizer:tapGes];
@@ -52,57 +49,53 @@
 - (void)updateUI{
     CGFloat rightInset = 160;
     CGFloat topInset = 80;
-    CGSize buttonSize = CGSizeMake(40, 20);
+    CGSize buttonSize = CGSizeMake(48, 28);
     
     // 背景虚化图层
     self.bgLayer.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
 
     self.closeBtn.frame = CGRectMake(self.bounds.size.width - 24 - 20, 20, 24, 24);
 
-    CGPoint origin = CGPointMake(self.bounds.size.width - rightInset - buttonSize.width, topInset);
-    self.playRate1Btn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
-    origin = CGPointMake(origin.x, CGRectGetMaxY(self.playRate1Btn.frame) + 43);
-    self.playRate2Btn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
-    origin = CGPointMake(origin.x, CGRectGetMaxY(self.playRate2Btn.frame) + 43);
-    self.playRate3Btn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
-    origin = CGPointMake(origin.x, CGRectGetMaxY(self.playRate3Btn.frame) + 43);
-    self.playRate4Btn.frame = CGRectMake(origin.x, origin.y, buttonSize.width, buttonSize.height);
+    CGFloat scrollWidth = buttonSize.width + 8;
+    CGFloat scrollX = self.bounds.size.width - rightInset - scrollWidth;
+
+    CGFloat maxVisibleHeight = MAX(0, self.bounds.size.height - topInset - 40);
+    self.rateScrollView.frame = CGRectMake(scrollX, topInset, scrollWidth, maxVisibleHeight);
+    CGFloat verticalSpacing = 32;
+    CGFloat contentY = 0;
+    for (UIButton *button in self.playRateButtons){
+        button.frame = CGRectMake(4, contentY, buttonSize.width, buttonSize.height);
+        contentY = CGRectGetMaxY(button.frame) + verticalSpacing;
+    }
+    CGFloat contentHeight = MAX(buttonSize.height, contentY - verticalSpacing);
+    self.rateScrollView.contentSize = CGSizeMake(self.rateScrollView.frame.size.width, contentHeight);
+    if (self.rateScrollView.contentOffset.x != 0) {
+        self.rateScrollView.contentOffset = CGPointMake(0, self.rateScrollView.contentOffset.y);
+    }
 }
 
-- (UIButton *)playRate1Btn{
-    if (!_playRate1Btn){
-        _playRate1Btn = [self buttonWithTitle:@"0.5x" tag:1];
-        [_playRate1Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+- (void)setupPlaybackRateButtonsIfNeeded{
+    if (self.playRateButtons.count > 0){
+        return;
     }
-    
-    return _playRate1Btn;
-}
-
-- (UIButton *)playRate2Btn{
-    if (!_playRate2Btn){
-        _playRate2Btn = [self buttonWithTitle:@"1.0x" tag:2];
-        [_playRate2Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    if (@available(iOS 15.0, *)) {
+        self.playbackRates = @[@0.5, @0.75, @1.0, @1.25, @1.5, @2.0, @3.0];
+    } else {
+        self.playbackRates = @[@0.5, @0.75, @1.0, @1.25, @1.5, @2.0];
     }
-    
-    return _playRate2Btn;
-}
-
-- (UIButton *)playRate3Btn{
-    if (!_playRate3Btn){
-        _playRate3Btn = [self buttonWithTitle:@"1.5x" tag:3];
-        [_playRate3Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.playRateButtons = [NSMutableArray array];
+    for (NSInteger i = 0; i < (NSInteger)self.playbackRates.count; i++){
+        CGFloat rate = self.playbackRates[i].floatValue;
+        NSString *rateString = [NSString stringWithFormat:@"%.2f", rate];
+        while ([rateString hasSuffix:@"0"] && ![rateString hasSuffix:@".0"]) {
+            rateString = [rateString substringToIndex:rateString.length - 1];
+        }
+        NSString *title = [NSString stringWithFormat:@"%@ X", rateString];
+        UIButton *button = [self buttonWithTitle:title tag:i];
+        [button addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.rateScrollView addSubview:button];
+        [self.playRateButtons addObject:button];
     }
-    
-    return _playRate3Btn;
-}
-
-- (UIButton *)playRate4Btn{
-    if (!_playRate4Btn){
-        _playRate4Btn = [self buttonWithTitle:@"2.0x" tag:4];
-        [_playRate4Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    return _playRate4Btn;
 }
 
 - (CAGradientLayer *)bgLayer{
@@ -144,7 +137,10 @@
     
     playRateButton.selected = YES;
     NSInteger index = playRateButton.tag;
-    CGFloat rate = index/2.0;
+    if (index < 0 || index >= (NSInteger)self.playbackRates.count){
+        return;
+    }
+    CGFloat rate = self.playbackRates[index].floatValue;
     if (self.delegate && [self.delegate respondsToSelector:@selector(mediaPlayerSkinPlaybackRateView_SwitchPlayRate:)]){
         [self.delegate mediaPlayerSkinPlaybackRateView_SwitchPlayRate:rate];
     }
@@ -156,10 +152,9 @@
 }
 
 - (void)resetButtonState{
-    self.playRate1Btn.selected = NO;
-    self.playRate2Btn.selected = NO;
-    self.playRate3Btn.selected = NO;
-    self.playRate4Btn.selected = NO;
+    for (UIButton *btn in self.playRateButtons){
+        btn.selected = NO;
+    }
 }
 
 - (void)closeButtonClick:(UIButton *)closeButton{
@@ -172,28 +167,37 @@
 }
 
 - (void)showPlayRateViewWithModel:(PLVMediaPlayerState *)mediaState{
+    [self setupPlaybackRateButtonsIfNeeded];
     [self resetButtonState];
     self.hidden = NO;
 
-    NSInteger rate = mediaState.curPlayRate *2;
-    
-    switch (rate) {
-        case 1:
-            self.playRate1Btn.selected = YES;
-            break;
-        case 2:
-            self.playRate2Btn.selected = YES;
-            break;
-        case 3:
-            self.playRate3Btn.selected = YES;
-            break;
-        case 4:
-            self.playRate4Btn.selected = YES;
-            break;
-            
-        default:
-            break;
+    // 选中当前倍速（就近匹配）
+    CGFloat target = mediaState.curPlayRate;
+    NSInteger selIndex = 0;
+    CGFloat minDiff = CGFLOAT_MAX;
+    for (NSInteger i = 0; i < (NSInteger)self.playbackRates.count; i++){
+        CGFloat r = self.playbackRates[i].floatValue;
+        CGFloat diff = fabs(r - target);
+        if (diff < minDiff){
+            minDiff = diff;
+            selIndex = i;
+        }
     }
+    if (selIndex >= 0 && selIndex < (NSInteger)self.playRateButtons.count){
+        self.playRateButtons[selIndex].selected = YES;
+    }
+}
+
+- (UIScrollView *)rateScrollView{
+    if (!_rateScrollView){
+        _rateScrollView = [[UIScrollView alloc] init];
+        _rateScrollView.showsHorizontalScrollIndicator = NO;
+        _rateScrollView.showsVerticalScrollIndicator = YES;
+        _rateScrollView.bounces = YES;
+        _rateScrollView.alwaysBounceHorizontal = NO;
+        _rateScrollView.clipsToBounds = YES;
+    }
+    return _rateScrollView;
 }
 
 /*

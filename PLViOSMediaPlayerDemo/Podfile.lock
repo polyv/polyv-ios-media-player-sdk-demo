@@ -2,18 +2,18 @@ PODS:
   - MJRefresh (3.5.0)
   - PLVAliHttpDNS (3.2.0)
   - PLVFDB (1.0.5)
-  - PLVIJKPlayer (0.15.0)
+  - PLVIJKPlayer (0.15.3)
   - PLVSecureView (1.0.0)
   - PLVTimer (0.0.4)
-  - PolyvMediaPlayerSDK (2.5.1):
-    - PolyvMediaPlayerSDK/Core (= 2.5.1)
-    - PolyvMediaPlayerSDK/Player (= 2.5.1)
-    - PolyvMediaPlayerSDK/ThirdPart (= 2.5.1)
-  - PolyvMediaPlayerSDK/Core (2.5.1):
+  - PolyvMediaPlayerSDK (2.7.0):
+    - PolyvMediaPlayerSDK/Core (= 2.7.0)
+    - PolyvMediaPlayerSDK/Player (= 2.7.0)
+    - PolyvMediaPlayerSDK/ThirdPart (= 2.7.0)
+  - PolyvMediaPlayerSDK/Core (2.7.0):
     - PLVTimer (~> 0.0.2)
-  - PolyvMediaPlayerSDK/Player (2.5.1):
-    - PLVIJKPlayer (~> 0.15.0)
-  - PolyvMediaPlayerSDK/ThirdPart (2.5.1):
+  - PolyvMediaPlayerSDK/Player (2.7.0):
+    - PLVIJKPlayer (~> 0.15.3)
+  - PolyvMediaPlayerSDK/ThirdPart (2.7.0):
     - PLVAliHttpDNS (~> 3.2.0)
   - SDWebImage (4.4.0):
     - SDWebImage/Core (= 4.4.0)
@@ -24,20 +24,20 @@ DEPENDENCIES:
   - MJRefresh (~> 3.5.0)
   - PLVFDB (= 1.0.5)
   - PLVSecureView (~> 1.0.0)
-  - PolyvMediaPlayerSDK (~> 2.5.1)
+  - PolyvMediaPlayerSDK (~> 2.7.0)
   - SDWebImage (= 4.4.0)
   - SSZipArchive (~> 2.1.5)
 
 SPEC REPOS:
   https://gitee.com/polyv_ef/plvspecs.git:
     - PLVSecureView
+    - PolyvMediaPlayerSDK
   https://github.com/CocoaPods/Specs.git:
     - MJRefresh
     - PLVAliHttpDNS
     - PLVFDB
     - PLVIJKPlayer
     - PLVTimer
-    - PolyvMediaPlayerSDK
     - SDWebImage
     - SSZipArchive
 
@@ -45,13 +45,13 @@ SPEC CHECKSUMS:
   MJRefresh: 6afc955813966afb08305477dd7a0d9ad5e79a16
   PLVAliHttpDNS: a32b1be5d57f179cd86cef208da7946c8c3cef11
   PLVFDB: d3dd7f38f9a80e7db05737c18f56f6fb2013e6f3
-  PLVIJKPlayer: 3ec536781438d8504304ea329f7bf49900d4c62e
+  PLVIJKPlayer: 50b5423e5970c7401ec0f3e6cc1b29aba9831aa3
   PLVSecureView: e93fef7333ebf99f3d89f9fbd9706abcb78faf7b
   PLVTimer: 80d2d24d32bb2e9588d089fc25974ff778259ae1
-  PolyvMediaPlayerSDK: a98ab66b73ee0eb9803331b3dedf32c7467df445
+  PolyvMediaPlayerSDK: 546d4279b9f8f52eb8392aa1cef6d0cbac125857
   SDWebImage: b534502786e43dde36dfcaee89356fe6df30e203
   SSZipArchive: cefe1364104a0231268a5deb8495bdf2861f52f0
 
-PODFILE CHECKSUM: 2869a68cd90d78b1826e9a3242ecc76880dfab38
+PODFILE CHECKSUM: 46c5cf94a66a3182f89409313e8117600be5f64e
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.16.2

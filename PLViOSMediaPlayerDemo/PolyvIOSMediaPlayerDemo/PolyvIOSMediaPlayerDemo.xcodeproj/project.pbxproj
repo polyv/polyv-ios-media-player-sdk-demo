@@ -42,6 +42,10 @@
 		046A34E52AAEA91400933D64 /* PLVMediaPlayerSkinLockScreenView.m in Sources */ = {isa = PBXBuildFile; fileRef = 046A34E42AAEA91400933D64 /* PLVMediaPlayerSkinLockScreenView.m */; };
 		046A34E82AAEAA1300933D64 /* PLVMediaPlayerSkinDefinitionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 046A34E72AAEAA1300933D64 /* PLVMediaPlayerSkinDefinitionView.m */; };
 		046A34EB2AAEAA5900933D64 /* PLVMediaPlayerSkinPlaybackRateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 046A34EA2AAEAA5900933D64 /* PLVMediaPlayerSkinPlaybackRateView.m */; };
+		04880EE82EE28B3D00EAFB97 /* PLVVodMediaVideoListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04880EE52EE28B3D00EAFB97 /* PLVVodMediaVideoListView.m */; };
+		04880EE92EE28B3D00EAFB97 /* PLVVodMediaVideoListVM.m in Sources */ = {isa = PBXBuildFile; fileRef = 04880EE72EE28B3D00EAFB97 /* PLVVodMediaVideoListVM.m */; };
+		04880EEA2EE28B3D00EAFB97 /* PLVVodMediaVideoListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04880EE32EE28B3D00EAFB97 /* PLVVodMediaVideoListCell.m */; };
+		04880EEB2EE28B3D00EAFB97 /* PLVDemoVodCourseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04880EE12EE28B3D00EAFB97 /* PLVDemoVodCourseViewController.m */; };
 		048850762B10924F00717363 /* PLVTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 048850752B10924F00717363 /* PLVTabBarViewController.m */; };
 		04B0C0052B171F520007E5BA /* PLVVodMediaAreaVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B0C0032B171F510007E5BA /* PLVVodMediaAreaVC.m */; };
 		04B0C0062B171F520007E5BA /* PLVVodMediaPlayerSkinContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04B0C0012B171F510007E5BA /* PLVVodMediaPlayerSkinContainerView.m */; };
@@ -171,6 +175,14 @@
 		046A34E72AAEAA1300933D64 /* PLVMediaPlayerSkinDefinitionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinDefinitionView.m; sourceTree = "<group>"; };
 		046A34E92AAEAA5900933D64 /* PLVMediaPlayerSkinPlaybackRateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVMediaPlayerSkinPlaybackRateView.h; sourceTree = "<group>"; };
 		046A34EA2AAEAA5900933D64 /* PLVMediaPlayerSkinPlaybackRateView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVMediaPlayerSkinPlaybackRateView.m; sourceTree = "<group>"; };
+		04880EE02EE28B3D00EAFB97 /* PLVDemoVodCourseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVDemoVodCourseViewController.h; sourceTree = "<group>"; };
+		04880EE12EE28B3D00EAFB97 /* PLVDemoVodCourseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVDemoVodCourseViewController.m; sourceTree = "<group>"; };
+		04880EE22EE28B3D00EAFB97 /* PLVVodMediaVideoListCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVVodMediaVideoListCell.h; sourceTree = "<group>"; };
+		04880EE32EE28B3D00EAFB97 /* PLVVodMediaVideoListCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaVideoListCell.m; sourceTree = "<group>"; };
+		04880EE42EE28B3D00EAFB97 /* PLVVodMediaVideoListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVVodMediaVideoListView.h; sourceTree = "<group>"; };
+		04880EE52EE28B3D00EAFB97 /* PLVVodMediaVideoListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaVideoListView.m; sourceTree = "<group>"; };
+		04880EE62EE28B3D00EAFB97 /* PLVVodMediaVideoListVM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVVodMediaVideoListVM.h; sourceTree = "<group>"; };
+		04880EE72EE28B3D00EAFB97 /* PLVVodMediaVideoListVM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaVideoListVM.m; sourceTree = "<group>"; };
 		048850742B10924F00717363 /* PLVTabBarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PLVTabBarViewController.h; sourceTree = "<group>"; };
 		048850752B10924F00717363 /* PLVTabBarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVTabBarViewController.m; sourceTree = "<group>"; };
 		04B0C0012B171F510007E5BA /* PLVVodMediaPlayerSkinContainerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PLVVodMediaPlayerSkinContainerView.m; sourceTree = "<group>"; };
@@ -579,6 +591,14 @@
 		046A34BE2AAC97EE00933D64 /* VodScene */ = {
 			isa = PBXGroup;
 			children = (
+				04880EE02EE28B3D00EAFB97 /* PLVDemoVodCourseViewController.h */,
+				04880EE12EE28B3D00EAFB97 /* PLVDemoVodCourseViewController.m */,
+				04880EE22EE28B3D00EAFB97 /* PLVVodMediaVideoListCell.h */,
+				04880EE32EE28B3D00EAFB97 /* PLVVodMediaVideoListCell.m */,
+				04880EE42EE28B3D00EAFB97 /* PLVVodMediaVideoListView.h */,
+				04880EE52EE28B3D00EAFB97 /* PLVVodMediaVideoListView.m */,
+				04880EE62EE28B3D00EAFB97 /* PLVVodMediaVideoListVM.h */,
+				04880EE72EE28B3D00EAFB97 /* PLVVodMediaVideoListVM.m */,
 				04B0C0072B171F750007E5BA /* MediaArea */,
 				046A34C52AAC9E3A00933D64 /* PLVDemoVodMediaViewController.h */,
 				046A34C62AAC9E3A00933D64 /* PLVDemoVodMediaViewController.m */,
@@ -1043,6 +1063,10 @@
 				046A34EB2AAEAA5900933D64 /* PLVMediaPlayerSkinPlaybackRateView.m in Sources */,
 				0434EE442AB85394008A4DB1 /* PLVMediaPlayerState.m in Sources */,
 				04B8A9E52A9F249A00F861AC /* PLVMediaAreaPortraitHalfSkinView.m in Sources */,
+				04880EE82EE28B3D00EAFB97 /* PLVVodMediaVideoListView.m in Sources */,
+				04880EE92EE28B3D00EAFB97 /* PLVVodMediaVideoListVM.m in Sources */,
+				04880EEA2EE28B3D00EAFB97 /* PLVVodMediaVideoListCell.m in Sources */,
+				04880EEB2EE28B3D00EAFB97 /* PLVDemoVodCourseViewController.m in Sources */,
 				04B0C00C2B172C180007E5BA /* PLVVodMediaOrientationUtil.m in Sources */,
 				043A607F2C6DE3EB00C00576 /* PLVMediaPlayerSkinLandscapeSubtitleSetCell.m in Sources */,
 				04EE42B72CBA6AC5005B9D98 /* PLVDownloadCircularProgressView.m in Sources */,
@@ -1248,7 +1272,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ETRBR9HA5V;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				GCC_PREFIX_HEADER = "$(SRCROOT)//PolyvIOSMediaPlayerDemo/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1284,7 +1308,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ETRBR9HA5V;
 				GCC_PREFIX_HEADER = "$(SRCROOT)//PolyvIOSMediaPlayerDemo/PrefixHeader.pch";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PolyvIOSMediaPlayerDemo/Info.plist;

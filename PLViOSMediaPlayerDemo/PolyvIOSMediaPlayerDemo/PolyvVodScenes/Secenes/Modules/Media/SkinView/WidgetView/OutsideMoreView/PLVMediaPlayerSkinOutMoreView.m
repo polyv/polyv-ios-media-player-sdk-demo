@@ -28,10 +28,9 @@ PLVDownloadCircularProgressViewDelegate>
 @property (nonatomic, strong) UIButton *highQualtiyBtn;
 
 @property (nonatomic, strong) UILabel *playRateLbl;
-@property (nonatomic, strong) UIButton *playRate1Btn; // 0.5
-@property (nonatomic, strong) UIButton *playRate2Btn; // 1
-@property (nonatomic, strong) UIButton *playRate3Btn; // 1.5
-@property (nonatomic, strong) UIButton *playRate4Btn; // 2
+@property (nonatomic, strong) NSArray<NSNumber *> *playbackRates;
+@property (nonatomic, strong) NSMutableArray<UIButton *> *playRateButtons;
+@property (nonatomic, strong) UIScrollView *playRateScrollView;
 
 @property (nonatomic, strong) PLVMediaPlayerSkinSubtitleSetView *subtitleSetView;
 
@@ -78,10 +77,8 @@ PLVDownloadCircularProgressViewDelegate>
     
     // rate
     [self.contentView addSubview:self.playRateLbl];
-    [self.contentView addSubview:self.playRate1Btn];
-    [self.contentView addSubview:self.playRate2Btn];
-    [self.contentView addSubview:self.playRate3Btn];
-    [self.contentView addSubview:self.playRate4Btn];
+    [self.contentView addSubview:self.playRateScrollView];
+    [self setupPlaybackRateButtonsIfNeeded];
     
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureAction:)];
     [self.bgView addGestureRecognizer:tapGes];
@@ -154,16 +151,22 @@ PLVDownloadCircularProgressViewDelegate>
     if (self.qualityLbl.hidden){
         start_y = CGRectGetMinY(self.qualityLbl.frame);
     }
-    origin = CGPointMake(leftInset + 4, start_y + 12);
+    origin = CGPointMake(leftInset + 4, start_y + 8);
     self.playRateLbl.frame = CGRectMake(origin.x, origin.y, 60, 20);
-    origin = CGPointMake(CGRectGetMaxX(self.playRateLbl.frame) + 20, origin.y);
-    self.playRate1Btn.frame = CGRectMake(origin.x, origin.y, 50, 20);
-    origin = CGPointMake(CGRectGetMaxX(self.playRate1Btn.frame) + 20, origin.y);
-    self.playRate2Btn.frame = CGRectMake(origin.x, origin.y, 50, 20);
-    origin = CGPointMake(CGRectGetMaxX(self.playRate2Btn.frame) + 20, origin.y);
-    self.playRate3Btn.frame = CGRectMake(origin.x, origin.y, 50, 20);
-    origin = CGPointMake(CGRectGetMaxX(self.playRate3Btn.frame) + 20, origin.y);
-    self.playRate4Btn.frame = CGRectMake(origin.x, origin.y, 50, 20);
+    // 滚动容器区域
+    CGFloat scrollX = CGRectGetMaxX(self.playRateLbl.frame) + 12;
+    CGFloat scrollW = self.bounds.size.width - scrollX - 20;
+    CGFloat scrollH = 20;
+    self.playRateScrollView.frame = CGRectMake(scrollX, origin.y, scrollW, scrollH);
+    CGFloat buttonWidth = 48;
+    CGFloat buttonHeight = 20;
+    CGFloat spacing = 12;
+    CGFloat contentX = 0;
+    for (UIButton *button in self.playRateButtons){
+        button.frame = CGRectMake(contentX, 0, buttonWidth, buttonHeight);
+        contentX = CGRectGetMaxX(button.frame) + spacing;
+    }
+    self.playRateScrollView.contentSize = CGSizeMake(MAX(contentX - spacing, scrollW), scrollH);
     
     [self drawCorners];
 }
@@ -303,40 +306,32 @@ PLVDownloadCircularProgressViewDelegate>
     return _playRateLbl;
 }
 
-- (UIButton *)playRate1Btn{
-    if (!_playRate1Btn){
-        _playRate1Btn = [self buttonWithTitle:@"0.5x" tag:1];
-        [_playRate1Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+- (void)setupPlaybackRateButtonsIfNeeded{
+    if (self.playRateButtons.count > 0){
+        return;
     }
-    
-    return _playRate1Btn;
-}
-
-- (UIButton *)playRate2Btn{
-    if (!_playRate2Btn){
-        _playRate2Btn = [self buttonWithTitle:@"1.0x" tag:2];
-        [_playRate2Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    // 配置可用倍速
+    if (@available(iOS 15.0, *)) {
+        self.playbackRates = @[@0.5, @0.75, @1.0, @1.25, @1.5, @2.0, @3.0];
+    } else {
+        self.playbackRates = @[@0.5, @0.75, @1.0, @1.25, @1.5, @2.0];
     }
-    
-    return _playRate2Btn;
-}
-
-- (UIButton *)playRate3Btn{
-    if (!_playRate3Btn){
-        _playRate3Btn = [self buttonWithTitle:@"1.5x" tag:3];
-        [_playRate3Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.playRateButtons = [NSMutableArray array];
+    NSInteger index = 0;
+    for (NSNumber *rateNumber in self.playbackRates){
+        CGFloat rate = rateNumber.floatValue;
+        // 先到两位小数，再去掉多余末尾0，但至少保留一位小数
+        NSString *rateString = [NSString stringWithFormat:@"%.2f", rate];
+        while ([rateString hasSuffix:@"0"] && ![rateString hasSuffix:@".0"]) {
+            rateString = [rateString substringToIndex:rateString.length - 1];
+        }
+        NSString *title = [NSString stringWithFormat:@"%@x", rateString];
+        UIButton *button = [self buttonWithTitle:title tag:index];
+        [button addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.playRateScrollView addSubview:button];
+        [self.playRateButtons addObject:button];
+        index++;
     }
-    
-    return _playRate3Btn;
-}
-
-- (UIButton *)playRate4Btn{
-    if (!_playRate4Btn){
-        _playRate4Btn = [self buttonWithTitle:@"2.0x" tag:4];
-        [_playRate4Btn addTarget:self action:@selector(playRateButtonClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    return _playRate4Btn;
 }
 
 - (UIButton *)buttonWithTitle:(NSString *)title tag:(NSInteger )tag{
@@ -424,13 +419,17 @@ PLVDownloadCircularProgressViewDelegate>
 
 - (void)playRateButtonClick:(UIButton *)playRateButton{
     [self hideMoreView];
-
     if (playRateButton.selected)
         return;
-    
-    playRateButton.selected = !playRateButton.selected;
+    for (UIButton *btn in self.playRateButtons){
+        btn.selected = NO;
+    }
+    playRateButton.selected = YES;
     NSInteger index = playRateButton.tag;
-    CGFloat rate = index/2.0;
+    if (index < 0 || index >= (NSInteger)self.playbackRates.count){
+        return;
+    }
+    CGFloat rate = self.playbackRates[index].floatValue;
     if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_SwitchPlayRate:)]){
         [self.skinOutMoreViewDelegate mediaPlayerSkinOutMoreView_SwitchPlayRate:rate];
     }
@@ -480,27 +479,23 @@ PLVDownloadCircularProgressViewDelegate>
     }
   
     // 当前倍速
-    self.playRate1Btn.selected = NO;
-    self.playRate2Btn.selected = NO;
-    self.playRate3Btn.selected = NO;
-    self.playRate4Btn.selected = NO;
-    NSInteger playrate = mediaPlayerState.curPlayRate *2;
-    switch (playrate) {
-        case 1:
-            self.playRate1Btn.selected = YES;
-            break;
-        case 2:
-            self.playRate2Btn.selected = YES;
-            break;
-        case 3:
-            self.playRate3Btn.selected = YES;
-            break;
-        case 4:
-            self.playRate4Btn.selected = YES;
-            break;
-            
-        default:
-            break;
+    [self setupPlaybackRateButtonsIfNeeded];
+    for (UIButton *btn in self.playRateButtons){
+        btn.selected = NO;
+    }
+    CGFloat target = mediaPlayerState.curPlayRate;
+    NSInteger selIndex = 0;
+    CGFloat minDiff = CGFLOAT_MAX;
+    for (NSInteger i = 0; i < (NSInteger)self.playbackRates.count; i++){
+        CGFloat r = self.playbackRates[i].floatValue;
+        CGFloat diff = fabs(r - target);
+        if (diff < minDiff){
+            minDiff = diff;
+            selIndex = i;
+        }
+    }
+    if (selIndex >= 0 && selIndex < (NSInteger)self.playbackRates.count && selIndex < (NSInteger)self.playRateButtons.count){
+        self.playRateButtons[selIndex].selected = YES;
     }
     
     self.audioModeBtn.hidden = !mediaPlayerState.isSupportAudioMode;
@@ -596,6 +591,18 @@ PLVDownloadCircularProgressViewDelegate>
     if (self.skinOutMoreViewDelegate && [self.skinOutMoreViewDelegate respondsToSelector:@selector(mediaPlayerSkinOutMoreView_SetSubtitle)]){
         [self.skinOutMoreViewDelegate mediaPlayerSkinOutMoreView_SetSubtitle];
     }
+}
+
+- (UIScrollView *)playRateScrollView{
+    if (!_playRateScrollView){
+        _playRateScrollView = [[UIScrollView alloc] init];
+        _playRateScrollView.showsHorizontalScrollIndicator = NO;
+        _playRateScrollView.showsVerticalScrollIndicator = NO;
+        _playRateScrollView.bounces = YES;
+        _playRateScrollView.alwaysBounceHorizontal = YES;
+        _playRateScrollView.clipsToBounds = YES;
+    }
+    return _playRateScrollView;
 }
 
 #pragma mark [PLVDownloadCircularProgressViewDelegate]

@@ -9,6 +9,7 @@
 #import "PLVDemoVideoFeedViewController.h"
 #import "PLVDemoVodMediaViewController.h"
 #import "PLVDownloadCenterViewController.h"
+#import "PLVDemoVodCourseViewController.h"
 #import "AppDelegate.h"
 
 // 依赖库
@@ -118,7 +119,9 @@
 
 // 长视频观看
 - (void)watchVodButtonAction:(id)sender {
-    PLVDemoVodMediaViewController *vodMediaVC = [[PLVDemoVodMediaViewController alloc] init];
+    //PLVDemoVodMediaViewController *vodMediaVC = [[PLVDemoVodMediaViewController alloc] init];
+    PLVDemoVodCourseViewController *vodMediaVC = [[PLVDemoVodCourseViewController alloc] init];
+
     if (PushOrModel) {
         vodMediaVC.hidesBottomBarWhenPushed = YES;
         // 公共账号

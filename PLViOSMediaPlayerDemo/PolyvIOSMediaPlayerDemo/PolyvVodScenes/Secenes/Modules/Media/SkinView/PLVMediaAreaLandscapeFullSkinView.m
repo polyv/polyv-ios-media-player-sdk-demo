@@ -172,26 +172,14 @@
 }
 
 - (void)updatePlayRate:(CGFloat)playRate{
-    NSInteger playRateLevel = playRate *2;
-    NSString *title = @"1.0 X";
-    switch (playRateLevel) {
-        case 1:
-            title = @"0.5 X";
-            break;
-        case 2:
-            title = @"1.0 X";
-            break;
-        case 3:
-            title = @"1.5 X";
-            break;
-        case 4:
-            title = @"2.0 X";
-            break;
-            
-        default:
-            break;
+    NSString *rateString = [NSString stringWithFormat:@"%.2f", playRate];
+    if ([rateString hasSuffix:@"00"]) {
+        rateString = [rateString stringByReplacingOccurrencesOfString:@"00" withString:@"0" options:NSBackwardsSearch range:NSMakeRange(0, rateString.length)];
     }
-    
+    while ([rateString hasSuffix:@"0"] && ![rateString hasSuffix:@".0"]) {
+        rateString = [rateString substringToIndex:rateString.length - 1];
+    }
+    NSString *title = [NSString stringWithFormat:@"%@ X", rateString];
     [self.playRateButton setTitle:title forState:UIControlStateNormal];
 }
 
