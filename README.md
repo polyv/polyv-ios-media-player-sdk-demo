@@ -35,7 +35,7 @@ polyv-ios-media-player-sdk-demo
 [集成文档](./docs/public)
 
 #### 2.2 接口文档
-[v2.6.0 接口文档](https://repo.polyv.net/ios/documents/mediaplayersdk/2.6.0-250630/index.html)
+[v2.7.0 接口文档](https://repo.polyv.net/ios/documents/mediaplayersdk/2.7.0-251205/index.html)
 
 #### 2.3 版本更新记录
 [全版本更新记录](./CHANGELOG.md)
