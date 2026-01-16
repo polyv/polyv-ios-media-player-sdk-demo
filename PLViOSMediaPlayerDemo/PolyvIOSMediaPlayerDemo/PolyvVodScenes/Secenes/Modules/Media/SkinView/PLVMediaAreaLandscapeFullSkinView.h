@@ -17,9 +17,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIButton *playRateButton;   // 倍速
 @property (nonatomic, strong) UIButton *qualityButton;    // 清晰度切换
+@property (nonatomic, strong) UIButton *knowledgeButton;  // 知识点清单
+@property (nonatomic, strong) UIButton *scaleResetButton; // 还原屏幕
 
 /// 是否需要显示皮肤控件，当通过外部控件 调用 hiddenMediaPlayerFullSkinView 关闭皮肤时内部会记录此皮肤当前显示状态
 @property (nonatomic, assign) BOOL needShowSkin;
+
+/// 弹幕是否开启
+@property (nonatomic, assign) BOOL enableDanmu;
+/// 是否显示弹幕开关
+@property (nonatomic, assign) BOOL showDanmuSwitch;
 
 @property (nonatomic, weak) id<PLVMediaAreaLandscapeFullSkinViewDelegate> fullSkinDelegate;
 
@@ -36,6 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// 音频、视频模式切换更新
 - (void)updateWithMediaPlayerState:(PLVMediaPlayerState *)playerState;
 
+/// 更新知识点按钮显示状态
+/// @param show 是否显示
+/// @param title 按钮标题
+- (void)updateKnowledgeButton:(BOOL)show title:(NSString *)title;
+
+/// 更新还原屏幕按钮显示状态
+/// @param show 是否显示（当播放器缩放时显示，还原后隐藏）
+- (void)updateScaleResetButton:(BOOL)show;
+
 @end
 
 @protocol PLVMediaAreaLandscapeFullSkinViewDelegate <NSObject>
@@ -48,6 +64,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 清晰度切换
 - (void)mediaAreaLandscapeFullSkinView_SwitchQuality:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView;
+
+/// 知识点按钮点击
+- (void)mediaAreaLandscapeFullSkinView_KnowledgeButtonClick:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView;
+
+/// 弹幕开关切换
+- (void)mediaAreaLandscapeFullSkinView_DanmuSwitch:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView enable:(BOOL)enable;
+
+/// 弹幕输入按钮点击
+- (void)mediaAreaLandscapeFullSkinView_DanmuEnter:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView;
+
+/// 还原屏幕按钮点击
+- (void)mediaAreaLandscapeFullSkinView_ScaleResetButtonClick:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView;
 
 @end
 

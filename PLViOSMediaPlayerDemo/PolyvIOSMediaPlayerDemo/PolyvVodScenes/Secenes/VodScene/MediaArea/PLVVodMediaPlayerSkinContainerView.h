@@ -70,6 +70,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param doubleSubtitle YES  双语字幕 NO 单语字幕
 - (void)updateSubtitleViewUIWithDouble:(BOOL)doubleSubtitle;
 
+/// 更新知识点按钮
+/// @param show 是否显示
+/// @param title 按钮标题
+- (void)updateKnowledgeButton:(BOOL)show title:(NSString *)title;
+
+/// 更新还原屏幕按钮显示状态
+/// @param show 是否显示（当播放器缩放时显示，还原后隐藏）
+- (void)updateScaleResetButton:(BOOL)show;
+
 @end
 
 @protocol PLVVodMediaPlayerSkinContainerViewDelegate <NSObject>
@@ -113,6 +122,17 @@ NS_ASSUME_NONNULL_BEGIN
 /// 横屏 - 开始下载
 - (void)mediaPlayerSkinContainerView_StartDownload:(PLVVodMediaPlayerSkinContainerView *)skinContainer;
 
+/// 横屏 - 显示知识清单
+- (void)mediaPlayerSkinContainerView_ShowKnowledgeList:(PLVVodMediaPlayerSkinContainerView *)skinContainer;
+
+/// 横屏 - 弹幕开关切换
+- (void)mediaPlayerSkinContainerView_DanmuSwitch:(PLVVodMediaPlayerSkinContainerView *)skinContainer enable:(BOOL)enable;
+
+/// 横屏 - 发送弹幕
+- (void)mediaPlayerSkinContainerView_DanmuSend:(PLVVodMediaPlayerSkinContainerView *)skinContainer content:(NSString *)content colorHex:(NSUInteger)colorHex fontSize:(int)fontSize mode:(NSInteger)mode;
+
+/// 横屏 - 还原屏幕缩放
+- (void)mediaPlayerSkinContainerView_ScaleResetButtonClick:(PLVVodMediaPlayerSkinContainerView *)skinContainer;
 
 @end
 

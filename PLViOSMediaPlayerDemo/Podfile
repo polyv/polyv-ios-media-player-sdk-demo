@@ -14,13 +14,16 @@ project 'PolyvIOSMediaPlayerDemo/PolyvIOSMediaPlayerDemo.xcodeproj'
 #点播 Demo
 target :PolyvIOSMediaPlayerDemo do
     
-  pod 'PolyvMediaPlayerSDK', '~> 2.7.1'
+  pod 'PolyvMediaPlayerSDK', '~> 2.7.2'
 
   pod 'SDWebImage', '4.4.0'
   pod 'MJRefresh', '~> 3.5.0'
   pod 'SSZipArchive', '~> 2.1.5'
   pod 'PLVFDB', '1.0.5'
   pod 'PLVSecureView' , '~> 1.0.0'
+  
+  # 弹幕配置
+  pod 'PLVVodDanmu', '~> 0.0.1'
     
 end
 

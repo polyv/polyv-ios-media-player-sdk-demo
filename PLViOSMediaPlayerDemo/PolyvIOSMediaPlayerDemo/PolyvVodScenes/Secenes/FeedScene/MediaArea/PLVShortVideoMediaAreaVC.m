@@ -547,6 +547,11 @@ PLVMediaPlayerSkinOutMoreViewDelegate
     dispatch_async(dispatch_get_main_queue(), ^{
         // 封面图移除
         [self.displayCoverView removeFromSuperview];
+        
+        self.mediaPlayerState.firstFrameRendered = rendered;
+        
+        // 刷新皮肤，更新小窗按钮显示状态
+        [self.mediaSkinContainer syncSkinWithMode:self.mediaPlayerState];
     });
 }
 

@@ -21,6 +21,8 @@
 #import "PLVMediaPlayerSkinToastView.h"
 #import "PLVMediaPlayerSkinPicInPicPlaceholderView.h"
 #import "PLVMediaPlayerSkinLandscapeSubtitleSetView.h"
+#import "PLVMediaPlayerDanmuSendView.h"
+
 #import "PLVVodMediaOrientationUtil.h"
 
 /// UI View Hierarchy
@@ -39,7 +41,8 @@ PLVMediaPlayerSkinDefinitionViewDelegate,
 PLVMediaPlayerSkinPlaybackRateViewDelegate,
 PLVMediaPlayerSkinDefinitionTipsViewDelegate,
 PLVMediaPlayerSkinLoopPlayViewDelegate,
-PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
+PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage,
+PLVMediaPlayerDanmuSendViewDelegate
 >
 
 @property (nonatomic, strong) PLVMediaPlayerSkinAudioModeView *audioModeView;
@@ -53,6 +56,7 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
 @property (nonatomic, strong) PLVMediaPlayerSkinToastView *progressToastView;
 @property (nonatomic, strong) PLVMediaPlayerSkinPicInPicPlaceholderView *picInPicHolderView;
 @property (nonatomic, strong) PLVMediaPlayerSkinLandscapeSubtitleSetView *landscapeSubtitleSetView;
+@property (nonatomic, strong) PLVMediaPlayerDanmuSendView *danmuSendView;
 
 @end
 
@@ -108,6 +112,9 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
         if (!self.fastForwardView.hidden){
             self.fastForwardView.frame = self.bounds;
         }
+        if (!self.danmuSendView.hidden && self.danmuSendView.superview){
+            self.danmuSendView.frame = self.bounds;
+        }
     } else { // 竖向-半屏
         self.landscapeFullSkinView.hidden = YES;
         self.lockScreenView.hidden = YES;
@@ -116,6 +123,7 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
         self.playbackRateView.hidden = YES;
         self.portraitHalfSkinView.hidden = NO;
         self.landscapeSubtitleSetView.hidden = YES;
+        self.danmuSendView.hidden = YES;
         self.portraitHalfSkinView.frame = self.bounds;
         self.audioModeView.frame = self.bounds;
 
@@ -267,6 +275,17 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
     return _landscapeSubtitleSetView;
 }
 
+/// 弹幕发送视图
+- (PLVMediaPlayerDanmuSendView *)danmuSendView{
+    if (!_danmuSendView){
+        _danmuSendView = [[PLVMediaPlayerDanmuSendView alloc] init];
+        _danmuSendView.delegate = self;
+        _danmuSendView.hidden = YES;
+    }
+    
+    return _danmuSendView;
+}
+
 #pragma mark 【Public Method】
 - (void)syncSkinWithMode:(PLVMediaPlayerState *)mediaPlayerState{
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -382,6 +401,14 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
 /// 实时更新字幕布局
 - (void)updateSubtitleViewUIWithDouble:(BOOL)doubleSubtitle{
     [self.subtitleView freshUIWithDoubleSubtile:doubleSubtitle];
+}
+
+- (void)updateKnowledgeButton:(BOOL)show title:(NSString *)title{
+    [self.landscapeFullSkinView updateKnowledgeButton:show title:title];
+}
+
+- (void)updateScaleResetButton:(BOOL)show{
+    [self.landscapeFullSkinView updateScaleResetButton:show];
 }
 
 /// 横屏模式 - 字幕设置界面
@@ -568,6 +595,51 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
     [self bringSubviewToFront:self.playbackRateView];
     [self.playbackRateView showPlayRateViewWithModel:self.mediaPlayerState];
     [self.landscapeFullSkinView hiddenMediaPlayerFullSkinView:YES];
+}
+
+- (void)mediaAreaLandscapeFullSkinView_KnowledgeButtonClick:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView{
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_ShowKnowledgeList:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_ShowKnowledgeList:self];
+    }
+}
+
+/// 弹幕开关切换事件
+- (void)mediaAreaLandscapeFullSkinView_DanmuSwitch:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView enable:(BOOL)enable{
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_DanmuSwitch:enable:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_DanmuSwitch:self enable:enable];
+    }
+}
+
+/// 弹幕输入按钮点击事件
+- (void)mediaAreaLandscapeFullSkinView_DanmuEnter:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView{
+    // 显示弹幕发送视图
+    if (self.danmuSendView){
+        [_danmuSendView removeFromSuperview];
+        _danmuSendView = nil;
+    }
+    
+    [self addSubview:self.danmuSendView];
+    [self bringSubviewToFront:self.danmuSendView];
+    self.danmuSendView.hidden = NO;
+    self.danmuSendView.frame = self.bounds;
+    [self.landscapeFullSkinView hiddenMediaPlayerFullSkinView:YES];
+}
+
+/// 还原屏幕按钮点击事件
+- (void)mediaAreaLandscapeFullSkinView_ScaleResetButtonClick:(PLVMediaAreaLandscapeFullSkinView *)fullSkinView{
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_ScaleResetButtonClick:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_ScaleResetButtonClick:self];
+    }
+}
+
+#pragma mark 【PLVMediaPlayerDanmuSendViewDelegate - 弹幕发送视图回调方法】
+- (void)danmuSendView:(PLVMediaPlayerDanmuSendView *)sendView didSendDanmuWithContent:(NSString *)content colorHex:(NSUInteger)colorHex fontSize:(int)fontSize mode:(NSInteger)mode{
+    if (self.containerDelegate && [self.containerDelegate respondsToSelector:@selector(mediaPlayerSkinContainerView_DanmuSend:content:colorHex:fontSize:mode:)]){
+        [self.containerDelegate mediaPlayerSkinContainerView_DanmuSend:self content:content colorHex:colorHex fontSize:fontSize mode:mode];
+    }
+    // 隐藏弹幕发送视图
+    [self.danmuSendView removeFromSuperview];
+    self.danmuSendView.hidden = YES;
 }
 
 #pragma mark 【PLVMediaPlayerSkinMoreView Delegate - 外部更多弹层 回调方法】

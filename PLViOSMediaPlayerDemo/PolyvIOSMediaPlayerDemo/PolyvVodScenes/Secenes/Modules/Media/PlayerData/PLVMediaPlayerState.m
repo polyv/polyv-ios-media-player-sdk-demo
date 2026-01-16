@@ -34,6 +34,10 @@
     if (_curPlayMode == PLVMediaPlayerPlayModeAudio){
         support = NO;
     }
+    // 必须首帧渲染后才能开启小窗，否则会黑屏
+    if (!_firstFrameRendered){
+        support = NO;
+    }
   
     return support;
 }

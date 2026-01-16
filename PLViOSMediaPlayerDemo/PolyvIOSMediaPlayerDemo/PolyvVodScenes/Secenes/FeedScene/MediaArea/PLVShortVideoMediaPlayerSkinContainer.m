@@ -150,6 +150,8 @@ PLVMediaPlayerSkinLandscapeSubtitleSetViewDelegage
         _landscapeFullSkinView = [[PLVMediaAreaLandscapeFullSkinView alloc] initWithSkinType:PLVMediaAreaBaseSkinViewType_Landscape_Full];
         _landscapeFullSkinView.baseDelegate = self;
         _landscapeFullSkinView.fullSkinDelegate = self;
+        // 短视频隐藏弹幕开关
+        _landscapeFullSkinView.showDanmuSwitch = NO;
         _landscapeFullSkinView.hidden = YES;
     }
     return _landscapeFullSkinView;

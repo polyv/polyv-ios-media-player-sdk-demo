@@ -18,6 +18,7 @@
 #import "PLVSecureView.h"
 #import "PLVVodMediaVideoListView.h"
 #import "PLVVodMediaVideoListVM.h"
+#import "PLVMediaKnowledgeModel.h"
 
 /// UI View Hierarchy
 ///
@@ -79,6 +80,9 @@ PLVVodMediaVideoListViewDelegate
 
     // Play Vid
     [self.vodMediaAreaVC playWithVid:self.vid];
+
+    // 加载知识清单测试数据
+//    [self reloadKnowledgeListData];
     
     // Request Video List
     [self.videoListVM requestVideoListWithCompletion:^(NSArray<PLVVodMediaVideo *> *videoList, NSError *error) {
@@ -179,6 +183,42 @@ PLVVodMediaVideoListViewDelegate
     vid = @"e97dbe3e648aefc2eb6f68b96db9db6c_e"; // 公号点播
     vid = @"a0f97cbb56ae78349fb12567623fb411_a"; // 字幕测试
     return vid;
+}
+
+/// 加载知识清单测试数据
+- (void)reloadKnowledgeListData {
+    NSMutableArray *typeList = [NSMutableArray arrayWithCapacity:10];
+    for (int k = 0; k < 5; k++) {
+        
+        NSMutableArray *keyList = [NSMutableArray arrayWithCapacity:10];
+        for (int j = 0; j < 10; j++) {
+            NSMutableArray *pointList = [NSMutableArray arrayWithCapacity:10];
+            for (int i = 0; i < 10; i++) {
+                PLVMediaKnowledgePoint *point = [[PLVMediaKnowledgePoint alloc]init];
+                point.name = [NSString stringWithFormat:@"%d_%d_%d_知识点知识点知识点", k, j, i];
+                point.time = i * 10;
+                [pointList addObject:point];
+            }
+            
+            PLVMediaKnowledgeWorkKey *key = [[PLVMediaKnowledgeWorkKey alloc]init];
+            key.name = [NSString stringWithFormat:@"%d_%d_二级分类", k, j];
+            key.knowledgePoints = pointList;
+            [keyList addObject:key];
+        }
+        
+        PLVMediaKnowledgeWorkType *type = [[PLVMediaKnowledgeWorkType alloc]init];
+        type.name = [NSString stringWithFormat:@"%d_一级分类", k];
+        type.knowledgeWorkKeys = keyList;
+        [typeList addObject:type];
+    }
+    
+    PLVMediaKnowledgeModel *knowledgeModel = [[PLVMediaKnowledgeModel alloc] init];
+    knowledgeModel.knowledgeWorkTypes = typeList;
+    knowledgeModel.fullScreenStyle = YES;
+    knowledgeModel.buttonName = @"知识点";
+    
+    // 给播放器设置知识点数据
+    self.vodMediaAreaVC.knowledgeModel = knowledgeModel;
 }
 
 #pragma mark 【Orientation 横竖屏设置】

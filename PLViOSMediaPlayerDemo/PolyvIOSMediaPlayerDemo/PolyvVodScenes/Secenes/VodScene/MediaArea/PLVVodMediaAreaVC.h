@@ -10,6 +10,8 @@
 #import "PLVMediaPlayerState.h"
 #import "PLVVodMediaPlayerSkinContainerView.h"
 
+@class PLVMediaKnowledgeModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol PLVVodMediaAreaVCDelegate;
@@ -52,6 +54,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 更新字幕
 - (void)updateVideoSubtile;
+
+// 设置知识清单数据
+- (void)setKnowledgeModel:(PLVMediaKnowledgeModel *)knowledgeModel;
 
 @end
 

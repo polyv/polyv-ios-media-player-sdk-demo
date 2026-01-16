@@ -55,6 +55,7 @@ typedef NS_ENUM(NSInteger) {
 @property (nonatomic, strong) PLVMediaPlayerSubtitleConfigModel *subtitleConfig; // 视频字幕配置信息
 
 @property (nonatomic, assign) BOOL isOffPlayMode; // 离线播放模式 隐藏下载按钮 默认NO
+@property (nonatomic, assign) BOOL firstFrameRendered; // 首帧是否已渲染，从播放器同步，用于控制小窗按钮显示
 
 @end
 

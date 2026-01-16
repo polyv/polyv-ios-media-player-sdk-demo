@@ -10,8 +10,14 @@
 #import <PolyvMediaPlayerSDK/PolyvMediaPlayerSDK.h>
 #import "PLVVodMediaMarqueeView.h"
 #import "PLVMediaPlayerSubtitleModule.h"
+#import "PLVMediaPlayerDanmuModule.h"
+#import "PLVVodDanmuManager.h"
+#import "PLVMediaPlayerContentScaleView.h"
+
 #import <PLVTimer.h>
 #import "PLVMediaPlayerConst.h"
+#import "PLVMediaKnowledgeListView.h"
+
 
 /// UI View Hierarchy
 ///
@@ -22,14 +28,20 @@
 @interface PLVVodMediaAreaVC ()<
 PLVMediaPlayerCoreDelegate,
 PLVVodMediaPlayerDelegate,
-PLVVodMediaPlayerSkinContainerViewDelegate
+PLVVodMediaPlayerSkinContainerViewDelegate,
+PLVMediaPlayerContentScaleViewDelegate
 >
 
 @property (nonatomic, strong) PLVVodMediaMarqueeView *marqueeView; /// 跑马灯
 @property (nonatomic, strong) PLVMediaPlayerSubtitleModule *subtitleModule; /// 字幕模块
+@property (nonatomic, strong) PLVMediaKnowledgeListView *knowledgeListView; /// 知识清单
 @property (nonatomic, strong) PLVTimer *playbackTimer;     /// 播放过程定时器，用于UI相关实时更新
 @property (nonatomic, strong) NSString *vid; /// 视频ID
 @property (nonatomic, strong) PLVVodMediaVideo *videoModel; /// 视频数据模型
+@property (nonatomic, strong) PLVMediaPlayerContentScaleView *contentScaleView; /// 播放器内容缩放视图
+
+///弹幕管理
+@property (nonatomic, strong) PLVVodDanmuManager *danmuManager;
 
 @end
 
@@ -60,8 +72,11 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 - (void)setupUI {
     self.view.backgroundColor = [UIColor blackColor];
     
+    // 创建并添加播放器内容缩放视图
+    [self.view addSubview:self.contentScaleView];
+    
     // 绑定 播放器核心
-    [self.player setupDisplaySuperview:self.view];
+    [self.player setupDisplaySuperview:self.contentScaleView];
     
     // 添加 播放器皮肤
     [self.view addSubview:self.mediaSkinContainer];
@@ -76,9 +91,15 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     
     // 设置新版跑马灯（2.0）
     [self initMarqueeView];
+
+    /// 知识清单设置
+    [self initKnowledgeListView];
     
     // 设置刷新定时器
     [self setupPlaybackTimer];
+    
+    // 将缩放手势添加到顶层视图（解决视图遮挡问题）
+    [self.contentScaleView attachGesturesToView:self.view];
     
 //    __weak typeof(self) weakSelf = self;
 //    // 加密视频，配置外部传递token 播放
@@ -90,6 +111,84 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 //    }];
 }
 
+- (void)initDanmu {
+    [self clearDanmu];
+    if (!self.vid || self.vid.length == 0) {
+        return;
+    }
+        
+    // 配置弹幕
+    __weak typeof(self) weakSelf = self;
+    [PLVMediaPlayerDanmuModule requestDanmusWithVid:self.vid completion:^(NSArray<PLVVodDanmu *> *danmus, NSError *error) {
+        if (error) {
+            NSLog(@"request danmus error: %@", error);
+            return;
+        }
+        
+        __block PLVVodDanmuManager *danmuManager = [[PLVVodDanmuManager alloc] initWithDanmus:danmus inView:weakSelf.mediaSkinContainer];
+        BOOL enableDanmu = weakSelf.mediaSkinContainer.landscapeFullSkinView.enableDanmu;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (enableDanmu) {
+                [danmuManager resume];
+            } else {
+                [danmuManager stop];
+            }
+            weakSelf.danmuManager = danmuManager;
+        });
+    }];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(danmuDidSend:) name:PLVVodDanmuDidSendNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(danmuWillSend:) name:PLVVodDanmuWillSendNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(danmuDidEnd:) name:PLVVodDanmuEndSendNotification object:nil];
+}
+
+- (void)clearDanmu{
+    // 清除监听
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:PLVVodDanmuDidSendNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:PLVVodDanmuWillSendNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:PLVVodDanmuEndSendNotification object:nil];
+    
+    if(self.danmuManager){
+        [self.danmuManager stop];
+        self.danmuManager = nil;
+    }
+}
+
+- (void)danmuDidSend:(NSNotification *)notification {
+    PLVVodDanmu *danmu = notification.object;
+    //NSLog(@"danmu: %@", danmu);
+    // 确保 UI 操作在主线程执行
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.danmuManager insetDanmu:danmu];
+    });
+}
+
+- (void)danmuWillSend:(NSNotification *)notification {
+    [self.danmuManager pause];
+    [self.player pause];
+}
+
+- (void)danmuDidEnd:(NSNotification *)notification {
+    [self.danmuManager resume];
+    [self.player play];
+}
+
+- (void)sendDanmuWithContent:(NSString *)content colorHex:(NSUInteger)colorHex fontSize:(int)fontSize mode:(NSInteger)mode {
+    if (!self.vid || self.vid.length == 0) {
+        return;
+    }
+    
+    NSTimeInterval currentTime = self.player.currentPlaybackTime;
+    
+    // 发送到服务器，成功后通过通知自动插入弹幕
+    [PLVMediaPlayerDanmuModule sendDammuWithContent:content vid:self.vid time:currentTime fontSize:fontSize colorHex:colorHex mode:mode completion:^(NSError *error, NSString *danmuId) {
+        if (error) {
+            NSLog(@"send danmu error: %@", error);
+        } else {
+            NSLog(@"send danmu success, danmuId: %@", danmuId);
+        }
+    }];
+}
+
 - (void)initMarqueeView{
     self.marqueeView = [[PLVVodMediaMarqueeView alloc] init];
     PLVVodMediaMarqueeModel *marqueeModel = [[PLVVodMediaMarqueeModel alloc] init];
@@ -99,14 +198,56 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     [self.view addSubview:self.marqueeView];
 }
 
+- (void)initKnowledgeListView{
+    self.knowledgeListView = [[PLVMediaKnowledgeListView alloc] init];
+    self.knowledgeListView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
+    [self.view addSubview:self.knowledgeListView];
+    
+    // 默认侧边栏样式，使用 frame 布局（稍后在 setKnowledgeModel 中设置）
+    
+    // 设置知识点选中回调
+    __weak typeof(self) weakSelf = self;
+    self.knowledgeListView.selectKnowledgePointBlock = ^(PLVMediaKnowledgePoint *point) {
+        // 跳转到指定时间点播放
+        [weakSelf.player seekToTime:point.time];
+        [weakSelf.player play];
+        
+        // 可选：自动隐藏知识清单
+        [weakSelf.knowledgeListView hideKnowledgeListView];
+    };
+}
+
 - (void)updateUI {
     [self updateUIForOrientation];
+    
+    // 更新播放器内容缩放视图布局
+    self.contentScaleView.frame = self.view.bounds;
+    
+    // 更新知识清单布局
+    if (self.knowledgeListView.knowledgeModel) {
+        if (self.knowledgeListView.knowledgeModel.fullScreenStyle) {
+            // 全屏样式
+            self.knowledgeListView.frame = self.view.bounds;
+        } else {
+            // 侧边栏样式（默认，宽度占59%）
+            CGFloat width = self.view.bounds.size.width * 0.59;
+            self.knowledgeListView.frame = CGRectMake(self.view.bounds.size.width - width,
+                                                       0,
+                                                       width,
+                                                       self.view.bounds.size.height);
+        }
+    }
+    
+    // 更新弹幕横竖屏布局
+    if (@available(iOS 11.0, *)) {
+        self.danmuManager.insets = UIEdgeInsetsMake(self.view.safeAreaInsets.top, 0, self.view.safeAreaInsets.bottom, 0);
+    }
 }
 
 #pragma mark [player timer]
 - (void)setupPlaybackTimer{
     __weak typeof(self) weakSelf = self;
-    self.playbackTimer = [PLVTimer repeatWithInterval:0.5 repeatBlock:^{
+    self.playbackTimer = [PLVTimer repeatWithInterval:0.1 repeatBlock:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             // 网络加载速度更新
             [weakSelf updateLoadSpeed];
@@ -116,6 +257,14 @@ PLVVodMediaPlayerSkinContainerViewDelegate
                 [weakSelf.subtitleModule showSubtilesWithPlaytime:weakSelf.player.currentPlaybackTime];
                 // 更新字幕位置
                 [weakSelf.mediaSkinContainer updateSubtitleViewUIWithDouble:weakSelf.mediaPlayerState.subtitleConfig.isCurDouble];
+            }
+            
+            // 同步显示弹幕
+            if (weakSelf.mediaSkinContainer.landscapeFullSkinView.enableDanmu && weakSelf.danmuManager){
+                if (weakSelf.player.playing){
+                    weakSelf.danmuManager.currentTime = weakSelf.player.currentPlaybackTime;
+                    [weakSelf.danmuManager synchronouslyShowDanmu];
+                }
             }
         });
     }];
@@ -137,8 +286,18 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         _player.videoToolBox = NO;
         _player.rememberLastPosition = YES;
         _player.enablePIPInBackground = YES;
+        _player.seekType = PLVVodMediaPlaySeekTypePrecise;
+    
     }
     return _player;
+}
+
+- (PLVMediaPlayerContentScaleView *)contentScaleView {
+    if (!_contentScaleView) {
+        _contentScaleView = [[PLVMediaPlayerContentScaleView alloc] init];
+        _contentScaleView.delegate = self;
+    }
+    return _contentScaleView;
 }
 
 - (PLVVodMediaPlayerSkinContainerView *)mediaSkinContainer{
@@ -200,6 +359,11 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     
     // 保存视频信息
     self.videoModel = videoModel;
+    
+    // 初始化弹幕（如果vid已设置）
+    if (self.vid && self.vid.length > 0) {
+        [self initDanmu];
+    }
 }
 
 - (void)setPlayRate:(CGFloat)rate{
@@ -249,6 +413,7 @@ PLVVodMediaPlayerSkinContainerViewDelegate
         self.mediaPlayerState.videoTitle = videoModel.title;
         self.mediaPlayerState.progressImageString = videoModel.progressImage;
         self.mediaPlayerState.duration = videoModel.duration;
+        
         // 字幕信息配置
         self.mediaPlayerState.subtitleConfig = [[PLVMediaPlayerSubtitleConfigModel alloc] initWithVideoModel:videoModel];
         // 加载字幕信息
@@ -292,6 +457,54 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     self.mediaPlayerState.isChangingPlaySource = YES;
 }
 
+#pragma mark -- 【知识点处理】
+// 设置知识清单
+/// @param knowledgeModel 知识清单model
+- (void)setKnowledgeModel:(PLVMediaKnowledgeModel *)knowledgeModel {
+    // 处理知识清单数据（过滤空数据）
+    PLVMediaKnowledgeModel *knowledge = [self dealKnowledgeListData:knowledgeModel];
+    
+    // 判断是否显示知识点按钮
+    BOOL hasKnowledge = (knowledge.buttonName.length > 0 &&
+                         knowledge.knowledgeWorkTypes.count > 0);
+    
+    // 更新皮肤上的知识点按钮
+    [self.mediaSkinContainer updateKnowledgeButton:hasKnowledge 
+                                             title:knowledge.buttonName ?: @"知识点"];
+    
+    // 设置知识清单布局样式（全屏或侧边栏），使用 frame 布局
+    // 布局会在 viewWillLayoutSubviews 中动态更新
+    
+    // 填充知识点数据到控件
+    self.knowledgeListView.knowledgeModel = knowledge;
+}
+
+
+/// 处理知识清单数据
+- (PLVMediaKnowledgeModel *)dealKnowledgeListData:(PLVMediaKnowledgeModel *)knowledgeModel {
+    
+    NSMutableArray *workTypeList = [NSMutableArray arrayWithCapacity:1];
+    for (PLVMediaKnowledgeWorkType *workTypeModel in knowledgeModel.knowledgeWorkTypes) {
+        //过滤空 知识点 的workkey
+        NSMutableArray *workKeyList = [NSMutableArray arrayWithCapacity:1];
+        for (PLVMediaKnowledgeWorkKey *workkeyModel in workTypeModel.knowledgeWorkKeys) {
+            if (workkeyModel.knowledgePoints.count != 0) {
+                [workKeyList addObject:workkeyModel];
+            }
+        }
+        workTypeModel.knowledgeWorkKeys = workKeyList;
+        
+        // 过滤空 workkey的worktype
+        if (workTypeModel.knowledgeWorkKeys.count != 0) {
+            [workTypeList addObject:workTypeModel];
+        }
+    }
+    knowledgeModel.knowledgeWorkTypes = workTypeList;
+    
+    return knowledgeModel;
+}
+
+
 #pragma mark 【Orientation 横竖屏设置】
 /// 切换到 横向-全屏皮肤
 - (void)changeToLandscape{
@@ -306,6 +519,18 @@ PLVVodMediaPlayerSkinContainerViewDelegate
 /// 更新 播放器皮肤 —— 触发 竖向-半屏皮肤 和 横向-全屏皮肤 的切换
 - (void)updateUIForOrientation{
     self.mediaSkinContainer.frame = self.view.bounds;
+    
+    // 根据横竖屏启用/禁用缩放
+    BOOL isFullScreen = [PLVVodMediaOrientationUtil isLandscape];
+    
+    // 切换到竖屏时重置缩放（横屏时不重置，保持缩放状态）
+    if (!isFullScreen && self.contentScaleView.currentScale != 1.0) {
+        [self.contentScaleView resetZoom];
+    }
+    
+    // 设置缩放启用状态（必须在 resetZoom 之后设置）
+    self.contentScaleView.zoomEnabled = isFullScreen;
+
 }
 
 #pragma mark 【PictureInPicture 画中画功能】
@@ -407,6 +632,49 @@ PLVVodMediaPlayerSkinContainerViewDelegate
     if (self.mediaAreaVcDelegate && [self.mediaAreaVcDelegate respondsToSelector:@selector(vodMediaAreaVC_StartDownloadEvent:)]){
         [self.mediaAreaVcDelegate vodMediaAreaVC_StartDownloadEvent:self];
     }
+}
+
+/// 显示知识清单
+- (void)mediaPlayerSkinContainerView_ShowKnowledgeList:(PLVVodMediaPlayerSkinContainerView *)skinContainer {
+    if (self.knowledgeListView.showing) {
+        // 如果已显示，则隐藏
+        [self.knowledgeListView hideKnowledgeListView];
+        // 恢复播放器皮肤控件显示
+        [self.mediaSkinContainer.landscapeFullSkinView hiddenMediaPlayerFullSkinView:NO];
+    } else {
+        // 否则显示
+        [self.knowledgeListView showKnowledgeListView];
+        // 隐藏播放器皮肤控件，避免遮挡
+        [self.mediaSkinContainer.landscapeFullSkinView hiddenMediaPlayerFullSkinView:YES];
+    }
+}
+
+/// 弹幕开关切换
+- (void)mediaPlayerSkinContainerView_DanmuSwitch:(PLVVodMediaPlayerSkinContainerView *)skinContainer enable:(BOOL)enable {
+    if (enable) {
+        [self.danmuManager resume];
+    } else {
+        [self.danmuManager stop];
+    }
+}
+
+/// 发送弹幕
+- (void)mediaPlayerSkinContainerView_DanmuSend:(PLVVodMediaPlayerSkinContainerView *)skinContainer content:(NSString *)content colorHex:(NSUInteger)colorHex fontSize:(int)fontSize mode:(NSInteger)mode {
+    [self sendDanmuWithContent:content colorHex:colorHex fontSize:fontSize mode:mode];
+}
+
+/// 还原按钮点击事件
+- (void)mediaPlayerSkinContainerView_ScaleResetButtonClick:(PLVVodMediaPlayerSkinContainerView *)skinContainer {
+    [self.contentScaleView resetZoomWithAnimation:YES];
+}
+
+#pragma mark - PLVMediaPlayerContentScaleViewDelegate
+
+/// 缩放状态改变回调
+- (void)mediaPlayerContentScaleView:(PLVMediaPlayerContentScaleView *)scaleView didChangeScale:(CGFloat)scale {
+    // 可以在这里更新还原按钮状态
+     BOOL isZooming = (scale != 1.0);
+    [self.mediaSkinContainer updateScaleResetButton:isZooming];
 }
 
 #pragma mark 【PLVMediaPlayerCore Delegate 播放器核心（播放状态时间）的回调方法】
