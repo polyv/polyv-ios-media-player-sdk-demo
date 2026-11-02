@@ -14,7 +14,7 @@ project 'PolyvIOSMediaPlayerDemo/PolyvIOSMediaPlayerDemo.xcodeproj'
 #点播 Demo
 target :PolyvIOSMediaPlayerDemo do
     
-  pod 'PolyvMediaPlayerSDK', '~> 2.7.2'
+  pod 'PolyvMediaPlayerSDK', '~> 2.7.4'
 
   pod 'SDWebImage', '4.4.0'
   pod 'MJRefresh', '~> 3.5.0'
@@ -31,8 +31,9 @@ post_install do |installer|
   installer.generated_projects.each do |project|
     project.targets.each do |target|
         target.build_configurations.each do |config|
-            # 支持模拟器
-            config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+            # Apple Silicon 模拟器需要 arm64，清掉依赖里可能残留的排除项
+            config.build_settings.delete('EXCLUDED_ARCHS[sdk=iphonesimulator*]')
          end
     end
   end
