@@ -3,11 +3,7 @@
 
 - [SDK] 新增 `setSdkNameSuffix:`，可在 SDK 名称后追加标识（如 uniapp、flutter），用于 User-Agent、日志和统计，适配跨端 SDK
 
-### Github地址
-https://github.com/polyv/polyv-ios-media-player-sdk-demo/releases/tag/2.7.5
 
-###  集成方式
-pod 'PolyvMediaPlayerSDK', '~> 2.7.5'
 
 # 注意：
 ## 旧版点播PLVVodSDK，升级到新版本点播PolyvMediaPlayerSDK，必须设置 单例PLVDownloadMediaManager 的 previousDownloadDir 属性，用于缓存视频的迁移
